@@ -1,0 +1,46 @@
+name: ATP Lab CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: Python ${{ matrix.python-version }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install package and test/ML dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[test,ml]"
+
+      - name: Run complete automated test suite
+        run: python -m pytest -q
+
+      - name: Check safe default gate
+        run: python -m atp_gate evaluate examples/synthetic_unvalidated.json
+
+      - name: Smoke-test historical synthetic data audit
+        run: python -m atp_gate research-audit examples/research_synthetic.csv
