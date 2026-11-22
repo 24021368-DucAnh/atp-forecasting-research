@@ -56,6 +56,19 @@ Option 2: acquire the ATP season files from `https://www.tennis-data.co.uk/data.
 
 Download names depend on the provider. Files are **not provided** in this ZIP; obey the providers' terms and check whether a file's contents and date precision actually match the expected schema. You may also pass multiple `.csv` files in one command. Training/replay use all recognized ATP250/500/Masters/Slams for history; target holdout evaluation is only ATP500/Masters/Slams.
 
+## C2. Verify research report provenance (after generating a report)
+
+The following checks that the input files are byte-for-byte identical to the
+SHA-256 manifest recorded in a historical report, and that the report remains
+research-only. It does **not** rerun the model or validate an odds edge.
+
+```powershell
+.\.venv\Scripts\python.exe -m atp_gate research-verify reports\ATP_2026_research.json data\ATP_2026.csv
+```
+
+Expect `status: MATCH` on an unchanged source, or a nonzero exit code and
+`status: REJECT` if mismatched. See `docs/EXPERIMENT_INTEGRITY.md`.
+
 ## What V0.2 actually does
 
 1. `research_data.py` validates historical winner/loser CSV/XLSX, supported categories, surfaces, format, completion status, odds/overround and duplicate match keys. Canonical A/B side is alphabetical, **not winner-first**. Audits skipped and incomplete rows.
