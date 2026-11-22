@@ -1,0 +1,74 @@
+"""ATP Gate: fail-closed paper decisions and separate historical research commands."""
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from pathlib import Path
+from zoneinfo import ZoneInfoNotFoundError
+from pydantic import ValidationError
+
+from .contracts import DecisionInput
+from .historical_audit import audit_tennis_data_csv
+from .policy import evaluate
+
+
+def main() -> int:
+    parser=argparse.ArgumentParser(prog='python -m atp_gate',description='ATP paper-only gate and historical research')
+    sub=parser.add_subparsers(dest='cmd',required=True)
+    sub.add_parser('evaluate',help='Validate one pre-match JSON; default model registry is empty').add_argument('path')
+    sub.add_parser('audit',help='Legacy historical tennis-data CSV quality check').add_argument('path')
+    research_audit=sub.add_parser('research-audit',help='Audit one or more historical ATP result/odds CSVs')
+    research_audit.add_argument('paths',nargs='+')
+    research_train=sub.add_parser('research-train',help='XGBoost research with chronological split; NO live allocation')
+    research_train.add_argument('paths',nargs='+')
+    research_train.add_argument('--out',required=True,help='JSON research report output path')
+    research_train.add_argument('--minimum-total',type=int,default=200)
+    research_train.add_argument('--minimum-target',type=int,default=30)
+    research_train.add_argument('--seed',type=int,default=20261123)
+    args=parser.parse_args()
+
+    if args.cmd in ('research-audit','research-train'):
+        try:
+            from .research_data import load_historical_matches
+            if args.cmd=='research-audit':
+                _matches,result=load_historical_matches(args.paths)
+            else:
+                from .research_train import run_research
+                result=run_research(args.paths,minimum_total=args.minimum_total,
+                                    minimum_target=args.minimum_target,seed=args.seed)
+                dest=Path(args.out)
+                dest.parent.mkdir(parents=True,exist_ok=True)
+                dest.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+            print(json.dumps(result,ensure_ascii=False,indent=2))
+            return 0
+        except (ValueError,OSError,RuntimeError) as exc:
+            print(json.dumps({'status':'ERROR','mode':'HISTORICAL_RESEARCH_ONLY',
+                              'reason':str(exc),'live_eligible':False,
+                              'allocation_enabled':False},ensure_ascii=False,indent=2))
+            return 2
+
+    try:
+        if args.cmd=='audit':
+            print(json.dumps(audit_tennis_data_csv(args.path),ensure_ascii=False,indent=2))
+            return 0
+        data=DecisionInput.model_validate_json(Path(args.path).read_text(encoding='utf-8'))
+        decision=evaluate(data)
+        print(decision.model_dump_json(indent=2))
+        return 0
+    except ZoneInfoNotFoundError:
+        print(json.dumps({'decision':'ABSTAIN','stake':'0',
+                          'reasons':['TIMEZONE_DATABASE_MISSING'],
+                          'help':'Install tzdata in this Python environment: python -m pip install tzdata'},
+                         ensure_ascii=False, indent=2))
+        return 3
+    except (ValidationError,ValueError,KeyError,FileNotFoundError) as exc:
+        print(json.dumps({'decision':'ABSTAIN','stake':'0',
+                          'reasons':['INVALID_CONTRACT'],
+                          'error_count':len(exc.errors()) if isinstance(exc,ValidationError) else 1},
+                         ensure_ascii=False,indent=2))
+        return 2
+
+
+if __name__=='__main__':
+    sys.exit(main())

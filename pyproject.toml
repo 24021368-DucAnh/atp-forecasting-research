@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "atp-selective-gate"
+version = "0.2.1"
+description = "Strict ATP paper forecast gate and honest chronological research pipeline"
+requires-python = ">=3.11"
+dependencies = ["pydantic>=2.12,<3", "tzdata>=2025.1; platform_system == 'Windows'"]
+
+[project.optional-dependencies]
+test = ["pytest>=8,<10"]
+ml = ["numpy>=1.24,<3", "pandas>=2.0,<3", "scikit-learn>=1.4,<2", "xgboost>=2.0,<4", "openpyxl>=3.1,<4"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
