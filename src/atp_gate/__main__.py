@@ -58,6 +58,12 @@ def main() -> int:
     legacy_crosswalk.add_argument('calendar',help='Curated official ATP February 2024 event reference')
     legacy_crosswalk.add_argument('manifest',help='Curated legacy provider HTML tournament-index metadata')
     legacy_crosswalk.add_argument('--out',help='Optional local JSON report under ignored reports directory')
+    source_intake=sub.add_parser('historical-source-intake',help='Verify pinned local correction-source bytes and permission review; never unlock training')
+    source_intake.add_argument('artifact',help='Local, separately acquired match-level CSV')
+    source_intake.add_argument('manifest',help='Correction-source provenance/rights manifest JSON')
+    source_intake.add_argument('inventory',help='Pinned historical inventory JSON')
+    source_intake.add_argument('official',help='Curated official ATP event reference JSON')
+    source_intake.add_argument('--out',help='Optional local review report (never an input path)')
     research_train=sub.add_parser('research-train',help='XGBoost research with chronological split; NO live allocation')
     research_train.add_argument('paths',nargs='+')
     research_train.add_argument('--out',required=True,help='JSON research report output path')
@@ -65,6 +71,56 @@ def main() -> int:
     research_train.add_argument('--minimum-target',type=int,default=30)
     research_train.add_argument('--seed',type=int,default=20261123)
     args=parser.parse_args()
+
+    if args.cmd=='historical-source-intake':
+        try:
+            from datetime import datetime, timezone
+            import hashlib
+            from .source_intake import audit_source_intake
+
+            artifact=Path(args.artifact)
+            manifest_path=Path(args.manifest)
+            inventory_path=Path(args.inventory)
+            official_path=Path(args.official)
+            original_inputs={p.resolve() for p in (
+                artifact,manifest_path,inventory_path,official_path
+            )}
+            if args.out and Path(args.out).resolve() in original_inputs:
+                raise ValueError('intake report cannot overwrite an input')
+            inventory_bytes=inventory_path.read_bytes()
+            digest=hashlib.sha256(inventory_bytes).hexdigest()
+            official=json.loads(official_path.read_text(encoding='utf-8-sig'))
+            if (not isinstance(official,dict)
+                    or official.get('inventory_sha256')!=digest
+                    or not isinstance(official.get('events'),list)):
+                raise ValueError('official event calendar not bound to inventory SHA256')
+            keys=set()
+            for item in official['events']:
+                if not isinstance(item,dict) or not isinstance(item.get('event_key'),str):
+                    raise ValueError('invalid official event reference')
+                if item['event_key'] in keys:
+                    raise ValueError('duplicate official event reference')
+                keys.add(item['event_key'])
+            manifest=json.loads(manifest_path.read_text(encoding='utf-8-sig'))
+            result=audit_source_intake(
+                artifact,manifest,inventory_sha256=digest,
+                allowed_event_keys=keys,as_of=datetime.now(timezone.utc),
+            )
+            if args.out:
+                dest=Path(args.out)
+                dest.parent.mkdir(parents=True,exist_ok=True)
+                dest.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\\n',encoding='utf-8')
+            print(json.dumps(result,ensure_ascii=False,indent=2))
+            return 0
+        except (ValueError,OSError,UnicodeError,TypeError,KeyError) as exc:
+            print(json.dumps({
+                'status':'ERROR','mode':'HISTORICAL_RESEARCH_ONLY',
+                'reason':str(exc),'rights_reviewed':False,
+                'event_identity_verified':False,'main_draw_verified':False,
+                't60_quote_verified':False,'eligible_for_model_training':0,
+                'allocation_enabled':False,'stake':0,
+            },ensure_ascii=False,indent=2))
+            return 2
 
     if args.cmd=='valuebetennis-legacy-crosswalk':
         try:
