@@ -216,3 +216,26 @@ def test_cli_summary_and_no_input_overwrite(tmp_path):
                            capture_output=True, text=True)
     assert stale.returncode == 2
     assert not out_path.exists()
+
+
+def test_curated_snapshot_seed_is_explicit_and_never_claims_data_completeness():
+    seed_path = ROOT / "docs" / "registries" / "valuebetennis_2022_2026_tiers_v1.json"
+    seed = json.loads(seed_path.read_text(encoding="utf-8"))
+    assert seed["registry_version"] == "P1_EDITION_TIER_REGISTRY_1"
+    assert seed["inventory_sha256"] == (
+        "eccb403bb6c0874e30f4e304c7be23678d2d1e6db095fd9174ee1753a225665b"
+    )
+    assert len(seed["entries"]) == 11
+    assert {(r["utc_year"],r["tournament_id"]) for r in seed["entries"]} >= {
+        (2024, "12440"), (2024, "12589"),
+        (2024, "12777"), (2025, "14114"),
+        (2025, "14168"), (2025, "14416")
+    }
+    assert all(
+        entry["dataset_coverage"] in {"UNVERIFIED", "KNOWN_INCOMPLETE"}
+        for entry in seed["entries"]
+    )
+    assert all(entry["official_tier"] in {
+        "ATP_250", "ATP_500", "MASTERS_1000", "GRAND_SLAM", "OTHER"
+    } for entry in seed["entries"])
+    assert seed["expected_absent_events"][0]["match_markers"] == ["Rotterdam"]
