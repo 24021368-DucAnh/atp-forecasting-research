@@ -14,6 +14,33 @@ FEATURES_FOR_MODEL = FEATURE_NAMES
 TARGET_TIERS = {'GRAND_SLAM', 'MASTERS_1000', 'ATP_500'}
 
 
+def _execution_environment() -> dict:
+    """Record dependencies and normalized source code for reproducible research."""
+    import hashlib
+    import sys
+    from importlib.metadata import PackageNotFoundError, version
+
+    packages = ('numpy', 'pandas', 'scikit-learn', 'xgboost', 'openpyxl', 'pydantic')
+    installed = {}
+    for package in packages:
+        try:
+            installed[package] = version(package)
+        except PackageNotFoundError:
+            installed[package] = 'not-installed'
+
+    digest = hashlib.sha256()
+    folder = Path(__file__).resolve().parent
+    for name in ('feature_schema.py', 'research_data.py',
+                 'research_features.py', 'research_train.py'):
+        data = (folder / name).read_bytes().replace(b'\r\n', b'\n')
+        digest.update(name.encode('utf-8') + b'\x00' + data + b'\x00')
+    return {
+        'python': f'{sys.version_info.major}.{sys.version_info.minor}',
+        'packages': installed,
+        'code_sha256': digest.hexdigest(),
+    }
+
+
 def _score(y, p):
     from sklearn.metrics import brier_score_loss, log_loss
     return {'log_loss': round(float(log_loss(y, p, labels=[0, 1])), 6),
@@ -103,7 +130,10 @@ def run_research_from_matches(matches: list[HistoricalMatch], *, minimum_total: 
             'train_end':str(train.date.max()), 'calibrate_start':str(calibrate.date.min()),
             'calibrate_end':str(calibrate.date.max()), 'holdout_start':str(holdout.date.min()),
             'holdout_end':str(holdout.date.max())},
-        'holdout_target':{'n':len(test_tiers),'tiers':sorted(TARGET_TIERS),
+        'holdout_target':{'n':len(test_tiers),
+                          'tiers':sorted(test_tiers.tier.unique().tolist()),
+                          'tier_counts':{str(t):int(n) for t,n in sorted(test_tiers.tier.value_counts().items())},
+                          'configured_target_tiers':sorted(TARGET_TIERS),
                           'xgb_log_loss':calibrated_metrics['log_loss'],
                           'xgb_brier':calibrated_metrics['brier'],
                           'xgb_uncalibrated_log_loss':raw_metrics['log_loss'],
@@ -144,4 +174,7 @@ def run_research(paths, *, minimum_total: int = 200, minimum_target: int = 30,
     result=run_research_from_matches(matches,minimum_total=minimum_total,
                                     minimum_target=minimum_target,seed=seed)
     result['data_audit']=audit
+    result['training_configuration']['minimum_total'] = minimum_total
+    result['training_configuration']['minimum_target'] = minimum_target
+    result['execution_environment'] = _execution_environment()
     return result
