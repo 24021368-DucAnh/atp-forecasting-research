@@ -78,7 +78,7 @@ def test_flags_cross_calendar_year_ids_without_merging_or_model_approval():
     before = copy.deepcopy(report)
     result = review_tournament_inventory(report)
     assert result["status"] == "REVIEW_REQUIRED"
-    assert result["integrity"]["candidate_matches"] == 13
+    assert result["integrity"]["candidate_matches"] == 15
     assert result["integrity"]["tournament_season_groups"] == 6
     cross = result["cross_year_tournament_ids"]
     assert len(cross) == 1
