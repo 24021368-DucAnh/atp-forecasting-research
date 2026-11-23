@@ -237,3 +237,25 @@ approval. The official reference covers **February 2024 only**; matching
 by city/time is a review candidate rather than a verified ID, and absent
 results must not be imputed. Opening/closing prices are not verified T−60
 odds. See `docs/OFFICIAL_CALENDAR_COVERAGE.md`.
+
+
+## P1.4b — Investigate February 2024 gaps in the original local CSV
+
+P1.4a confirmed that all **12 independently sourced ATP February 2024 events**
+are absent from the accepted source inventory, including four ATP500s.
+To distinguish *absent raw CSV rows* from rows rejected by the ATP
+candidate filter, audit the **original** 2024 provider file against the
+same exact-SHA P1.3a tournament JSON and official February reference:
+
+```powershell
+git pull --ff-only
+.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe -m atp_gate valuebetennis-gap-forensics data\valuebetennis-matchs-2024.csv reports\valuebetennis_tournaments_2022_2026.json docs\registries\atp_2024_february_official_events_v1.json --month 2024-02 --out reports\valuebetennis_raw_gap_2024_feb.json
+```
+
+The source CSV byte size and SHA-256 must match the saved inventory manifest;
+otherwise the command exits `ERROR`. The report lists raw February
+genre/category totals and filter rejection reasons; strict city/date matching
+is only an investigation hint, **not** official event/main-draw verification.
+No files are edited, no missing results are invented, and all training and
+allocation permission flags remain disabled. See `docs/RAW_SOURCE_GAP_FORENSICS.md`.
