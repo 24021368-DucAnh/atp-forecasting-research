@@ -109,7 +109,7 @@ def main() -> int:
             if args.out:
                 dest=Path(args.out)
                 dest.parent.mkdir(parents=True,exist_ok=True)
-                dest.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\\n',encoding='utf-8')
+                dest.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
             print(json.dumps(result,ensure_ascii=False,indent=2))
             return 0
         except (ValueError,OSError,UnicodeError,TypeError,KeyError) as exc:
