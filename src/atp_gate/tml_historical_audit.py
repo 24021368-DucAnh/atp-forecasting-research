@@ -100,7 +100,7 @@ def audit_tml_february_2024(csv_path: Path, crosswalk: dict, official_calendar: 
     path = Path(csv_path)
     source_sha, size = _digest(path)
     if path.name != "2024.csv":
-        match = re.fullmatch(r"2024-([a-f0-9]{64})\\.csv", path.name)
+        match = re.fullmatch(r"2024-([a-f0-9]{64})\.csv", path.name)
         if match is None or match.group(1) != source_sha:
             raise ValueError("TML versioned snapshot filename/content hash mismatch")
     ids = {entry["source_tourney_id"]: entry for entry in entries}
