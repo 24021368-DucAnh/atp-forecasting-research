@@ -62,9 +62,20 @@ def _check_csv(content: bytes, year: int) -> int:
             if key in keys:
                 raise ValueError("duplicate TML tournament/match identifier")
             keys.add(key)
-            if (not record["tourney_date"].startswith(str(year))
-                    or len(record["tourney_date"]) != 8
-                    or not record["tourney_date"].isdigit()):
+            raw_date = record["tourney_date"]
+            if len(raw_date) != 8 or not raw_date.isdigit():
+                raise ValueError("TML CSV record has invalid season date")
+            try:
+                tournament_start = datetime.strptime(raw_date, "%Y%m%d").date()
+            except ValueError as exc:
+                raise ValueError("TML CSV record has invalid season date") from exc
+            # ATP next-season tournaments can legitimately start in late
+            # December of the previous calendar year (e.g. 2025 CSV:
+            # 2024-12-29). Do not quarantine a valid season for that.
+            if not (tournament_start.year == year or
+                    (tournament_start.year == year - 1
+                     and tournament_start.month == 12
+                     and tournament_start.day >= 25)):
                 raise ValueError("TML CSV record has unexpected season start date")
             if (not record["winner_id"] or not record["loser_id"]
                     or record["winner_id"] == record["loser_id"]):
