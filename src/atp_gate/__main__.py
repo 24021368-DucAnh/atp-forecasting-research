@@ -63,6 +63,11 @@ def main() -> int:
     tml_feb.add_argument('crosswalk',help='Curated TML-to-official 2024 February event registry')
     tml_feb.add_argument('official',help='Pinned official ATP 2024 February calendar registry')
     tml_feb.add_argument('--out',help='Optional ignored local JSON audit report')
+    tml_update=sub.add_parser('tml-update',help='Owner-invoked daily versioned TML CSV refresh; private noncommercial only')
+    tml_update.add_argument('--year',required=True,type=int,help='ATP season year')
+    tml_update.add_argument('--root',default='data/tml',help='Private locally ignored versioned snapshot directory')
+    tml_update.add_argument('--force',action='store_true',help='Explicitly bypass daily freshness check')
+
     research_train=sub.add_parser('research-train',help='XGBoost research with chronological split; NO live allocation')
     research_train.add_argument('paths',nargs='+')
     research_train.add_argument('--out',required=True,help='JSON research report output path')
@@ -70,6 +75,25 @@ def main() -> int:
     research_train.add_argument('--minimum-target',type=int,default=30)
     research_train.add_argument('--seed',type=int,default=20261123)
     args=parser.parse_args()
+
+    if args.cmd=='tml-update':
+        try:
+            from datetime import datetime,timezone
+            from .tml_snapshot import update_tml_season
+            result=update_tml_season(
+                args.year,Path(args.root),at=datetime.now(timezone.utc),
+                force=args.force,
+            )
+            print(json.dumps(result,ensure_ascii=False,indent=2))
+            return 0
+        except (ValueError,OSError,TypeError,UnicodeError) as exc:
+            print(json.dumps({
+                'status':'ERROR','mode':'PERSONAL_NONCOMMERCIAL_RESEARCH',
+                'reason':str(exc),'eligible_for_model_training':0,
+                'allocation_enabled':False,'t60_quote_verified':False,
+                'stake':0,
+            },ensure_ascii=False,indent=2))
+            return 2
 
     if args.cmd=='tml-february-audit':
         try:
