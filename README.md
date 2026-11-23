@@ -259,3 +259,26 @@ genre/category totals and filter rejection reasons; strict city/date matching
 is only an investigation hint, **not** official event/main-draw verification.
 No files are edited, no missing results are invented, and all training and
 allocation permission flags remain disabled. See `docs/RAW_SOURCE_GAP_FORENSICS.md`.
+
+
+## P1.4c — Reviewed February 2024 legacy tournament index (not match data)
+
+The legacy Valuebetennis 2.0 tournament HTML page lists **12 men's tour-level
+February 2024 events with provider IDs** even though the pinned 2024 public
+CSV has **zero raw February-dated matches**. This is evidence of a metadata
+vs published-CSV gap, **not** proof that old match-detail pages can be reused.
+
+After merging the corresponding PR:
+
+```powershell
+git pull --ff-only
+.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe -m atp_gate valuebetennis-legacy-crosswalk reports\valuebetennis_tournaments_2022_2026.json docs\registries\atp_2024_february_official_events_v1.json docs\registries\valuebetennis_legacy_2024_02_crosswalk_v1.json --out reports\valuebetennis_legacy_crosswalk_2024_02.json
+```
+
+The CLI verifies exact snapshot SHA256, official event keys and legacy source
+IDs/names/cities/dates. It **never fetches or imports old match pages**. Legacy
+HTML rights are unverified and not assumed to inherit the newer CSV CC BY 4.0.
+`LEGACY_CROSSWALK_REVIEW_REQUIRED` is an audit status, not permission to
+train, claim complete historical draws or deploy automated stakes. See
+`docs/LEGACY_ARCHIVE_CROSSWALK.md`.
