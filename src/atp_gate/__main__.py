@@ -20,6 +20,9 @@ def main() -> int:
     sub.add_parser('audit',help='Legacy historical tennis-data CSV quality check').add_argument('path')
     research_audit=sub.add_parser('research-audit',help='Audit one or more historical ATP result/odds CSVs')
     research_audit.add_argument('paths',nargs='+')
+    research_verify=sub.add_parser('research-verify',help='Check input hashes of a historical report; NO model certification')
+    research_verify.add_argument('report',help='Path to research JSON report')
+    research_verify.add_argument('sources',nargs='+',help='Original historical source CSV/XLSX files')
     research_train=sub.add_parser('research-train',help='XGBoost research with chronological split; NO live allocation')
     research_train.add_argument('paths',nargs='+')
     research_train.add_argument('--out',required=True,help='JSON research report output path')
@@ -27,6 +30,12 @@ def main() -> int:
     research_train.add_argument('--minimum-target',type=int,default=30)
     research_train.add_argument('--seed',type=int,default=20261123)
     args=parser.parse_args()
+
+    if args.cmd=='research-verify':
+        from .report_integrity import verify_research_report
+        result=verify_research_report(Path(args.report),[Path(x) for x in args.sources])
+        print(json.dumps(result,ensure_ascii=False,indent=2))
+        return 0 if result['status']=='MATCH' else 2
 
     if args.cmd in ('research-audit','research-train'):
         try:
