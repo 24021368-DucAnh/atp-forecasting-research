@@ -167,3 +167,32 @@ def test_cli_success_and_corrupt_source_error(tmp_path):
     assert failed.returncode == 2
     assert json.loads(failed.stdout)["status"] == "ERROR"
     assert not output.exists()
+
+
+def test_cli_never_overwrites_the_original_inventory(tmp_path):
+    original = tmp_path / "original.json"
+    contents = json.dumps(sample_report())
+    original.write_text(contents, encoding="utf-8")
+    env = {**os.environ, "PYTHONPATH": str(ROOT / "src")}
+    result = subprocess.run(
+        [sys.executable, "-m", "atp_gate", "valuebetennis-review",
+         str(original), "--out", str(original)],
+        cwd=ROOT, env=env, capture_output=True, text=True,
+    )
+    assert result.returncode == 2
+    assert json.loads(result.stdout)["status"] == "ERROR"
+    assert original.read_text(encoding="utf-8") == contents
+
+
+def test_cli_without_output_file_is_read_only(tmp_path):
+    original = tmp_path / "original.json"
+    original.write_text(json.dumps(sample_report()), encoding="utf-8")
+    env = {**os.environ, "PYTHONPATH": str(ROOT / "src")}
+    before = sorted(p.name for p in tmp_path.iterdir())
+    result = subprocess.run(
+        [sys.executable, "-m", "atp_gate", "valuebetennis-review",
+         str(original)], cwd=ROOT, env=env, capture_output=True, text=True,
+    )
+    assert result.returncode == 0
+    assert json.loads(result.stdout)["status"] == "REVIEW_REQUIRED"
+    assert sorted(p.name for p in tmp_path.iterdir()) == before
