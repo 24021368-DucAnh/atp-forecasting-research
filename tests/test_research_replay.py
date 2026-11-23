@@ -98,3 +98,22 @@ def test_replay_rejects_untrusted_report_with_changed_safety_flags(tmp_path):
     result = replay_saved_report(saved, [source])
     assert result["status"] == "REJECT"
     assert "UNSAFE_REPORT" in result["reasons"]
+
+
+def test_windows_friendly_replay_cli_returns_nonzero_on_tampering(tmp_path):
+    import os
+    import subprocess
+    import sys
+
+    source, report, saved = _make_report(tmp_path)
+    command = [sys.executable, str(ROOT / "scripts" / "replay_research.py"),
+               str(saved), str(source)]
+    ok = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
+    assert ok.returncode == 0, ok.stderr + ok.stdout
+    assert json.loads(ok.stdout)["status"] == "REPRODUCED"
+
+    report["holdout_target"]["elo_brier"] += 0.015
+    saved.write_text(json.dumps(report), encoding="utf-8")
+    bad = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
+    assert bad.returncode != 0
+    assert json.loads(bad.stdout)["status"] == "REJECT"
