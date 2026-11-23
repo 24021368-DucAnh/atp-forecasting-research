@@ -181,3 +181,20 @@ def test_historical_audit_accepts_sha_versioned_2024_filename(tmp_path):
     assert report["source_sha256"]==sha
     assert report["status"]=="SOURCE_CANDIDATE_INCONSISTENT"
     assert report["eligible_for_model_training"]==0
+
+
+def test_season_2025_may_start_in_prior_december(tmp_path):
+    # Real TML 2025 season begins with a tournament start 2024-12-29.
+    rows=sample_csv(year=2025).replace(b"20251101", b"20241229")
+    result=update_tml_season(
+        2025,tmp_path,at=NOW,fetcher=lambda _:rows,
+    )
+    assert result["status"]=="NEW_SNAPSHOT_REVIEW_REQUIRED"
+    assert result["source_rows"]==1
+    assert result["eligible_for_model_training"]==0
+
+
+def test_previous_season_early_december_cannot_sneak_into_update(tmp_path):
+    data=sample_csv(year=2025).replace(b"20251101", b"20241201")
+    with pytest.raises(ValueError,match="season"):
+        update_tml_season(2025,tmp_path,at=NOW,fetcher=lambda _:data)
