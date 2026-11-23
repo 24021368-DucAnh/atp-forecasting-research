@@ -1,6 +1,9 @@
 """TML February 2024 personal noncommercial source-audit RED contracts."""
 import csv
 import json
+import os
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -145,3 +148,45 @@ def test_date_is_never_individual_match_date(tmp_path):
     r=audit_tml_february_2024(source,REGISTRY,OFFICIAL)
     assert r["source_date_semantics"]=="TOURNAMENT_START_DATE_NOT_MATCH_START"
     assert r["t60_quote_verified"] is False
+
+
+def run_cli(*args):
+    env={**os.environ,"PYTHONPATH":str(ROOT/"src")}
+    process=subprocess.run(
+        [sys.executable,"-m","atp_gate",*map(str,args)],
+        env=env,cwd=ROOT,text=True,capture_output=True,timeout=30,
+    )
+    return process,json.loads(process.stdout)
+
+
+def test_tml_cli_produces_safe_audit_report_without_copying_source(tmp_path):
+    source=tmp_path/"2024.csv"
+    write_csv(source,synthetic_rows())
+    registry=tmp_path/"registry.json"
+    registry.write_text(json.dumps(REGISTRY),encoding="utf-8")
+    official=tmp_path/"official.json"
+    official.write_text(json.dumps(OFFICIAL),encoding="utf-8")
+    destination=tmp_path/"reports"/"tml.json"
+    before=source.read_bytes()
+    process,result=run_cli("tml-february-audit",source,registry,official,"--out",destination)
+    assert process.returncode==0,process.stderr+process.stdout
+    assert result["observed_target_matches"]==340
+    assert result["mode"]=="PERSONAL_NONCOMMERCIAL_RESEARCH"
+    assert result["eligible_for_model_training"]==0
+    assert json.loads(destination.read_text())==result
+    assert source.read_bytes()==before
+
+
+def test_tml_cli_prevents_output_overwriting_raw_csv(tmp_path):
+    source=tmp_path/"2024.csv"
+    write_csv(source,synthetic_rows())
+    registry=tmp_path/"registry.json"
+    registry.write_text(json.dumps(REGISTRY),encoding="utf-8")
+    official=tmp_path/"official.json"
+    official.write_text(json.dumps(OFFICIAL),encoding="utf-8")
+    original=source.read_bytes()
+    process,result=run_cli("tml-february-audit",source,registry,official,"--out",source)
+    assert process.returncode==2
+    assert result["status"]=="ERROR"
+    assert result["eligible_for_model_training"]==0
+    assert source.read_bytes()==original
