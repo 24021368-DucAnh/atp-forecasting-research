@@ -208,3 +208,29 @@ def test_cli_refuses_to_replace_source_file_with_aggregate_report(tmp_path):
     assert report["status"]=="ERROR"
     assert report["allocation_enabled"] is False
     assert files[0].read_bytes()==untouched
+
+
+def test_2025_public_rows_without_match_num_are_excluded_not_invented(tmp_path):
+    files=season_files(tmp_path)
+    # A second result with unknown match number cannot be de-duplicated safely.
+    src=files[4]
+    header=src.read_bytes().split(b"\n",1)[0]
+    duplicate=src.read_bytes().split(b"\n",1)[1].splitlines()[0].replace(
+        b"2025-warm,warm,Hard,32,500,,20250301,1,",
+        b"2025-warm,warm,Hard,32,500,,20250301,,",
+    )
+    src.write_bytes(src.read_bytes()+duplicate+b"\n")
+    report=run_tml_elo_experiment(files,bootstrap_replicates=50)
+    assert report["excluded_reasons"]["MISSING_MATCH_ID"]==1
+    assert report["folds"][2]["n"]==4
+    assert report["stake"]==0
+
+
+def test_truncated_2025_out_of_scope_row_is_quarantined(tmp_path):
+    files=season_files(tmp_path)
+    files[4].write_bytes(
+        files[4].read_bytes()+b"2025-7696,Next Gen ATP Finals,Hard,8,A,I,20251222,15\n"
+    )
+    report=run_tml_elo_experiment(files,bootstrap_replicates=50)
+    assert report["excluded_reasons"]["MALFORMED_ROWS"]==1
+    assert report["mode"]=="PERSONAL_NONCOMMERCIAL_RESEARCH"
