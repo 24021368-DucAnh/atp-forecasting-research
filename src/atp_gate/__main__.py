@@ -58,6 +58,11 @@ def main() -> int:
     legacy_crosswalk.add_argument('calendar',help='Curated official ATP February 2024 event reference')
     legacy_crosswalk.add_argument('manifest',help='Curated legacy provider HTML tournament-index metadata')
     legacy_crosswalk.add_argument('--out',help='Optional local JSON report under ignored reports directory')
+    tml_feb=sub.add_parser('tml-february-audit',help='Audit local TML ATP February 2024 candidates; personal noncommercial research only')
+    tml_feb.add_argument('csv_path',help='Locally downloaded TML 2024.csv')
+    tml_feb.add_argument('crosswalk',help='Curated TML-to-official 2024 February event registry')
+    tml_feb.add_argument('official',help='Pinned official ATP 2024 February calendar registry')
+    tml_feb.add_argument('--out',help='Optional ignored local JSON audit report')
     research_train=sub.add_parser('research-train',help='XGBoost research with chronological split; NO live allocation')
     research_train.add_argument('paths',nargs='+')
     research_train.add_argument('--out',required=True,help='JSON research report output path')
@@ -65,6 +70,36 @@ def main() -> int:
     research_train.add_argument('--minimum-target',type=int,default=30)
     research_train.add_argument('--seed',type=int,default=20261123)
     args=parser.parse_args()
+
+    if args.cmd=='tml-february-audit':
+        try:
+            from .tml_historical_audit import audit_tml_february_2024
+
+            source=Path(args.csv_path)
+            crosswalk_file=Path(args.crosswalk)
+            official_file=Path(args.official)
+            inputs={p.resolve() for p in (source,crosswalk_file,official_file)}
+            if args.out and Path(args.out).resolve() in inputs:
+                raise ValueError('TML audit report cannot overwrite any source/registry input')
+            crosswalk=json.loads(crosswalk_file.read_text(encoding='utf-8-sig'))
+            official=json.loads(official_file.read_text(encoding='utf-8-sig'))
+            report=audit_tml_february_2024(source,crosswalk,official)
+            if args.out:
+                dest=Path(args.out)
+                dest.parent.mkdir(parents=True,exist_ok=True)
+                dest.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',
+                                encoding='utf-8')
+            print(json.dumps(report,ensure_ascii=False,indent=2))
+            return 0
+        except (ValueError,OSError,UnicodeError,TypeError,KeyError) as exc:
+            print(json.dumps({
+                'status':'ERROR','mode':'PERSONAL_NONCOMMERCIAL_RESEARCH',
+                'reason':str(exc),'main_draw_verified':False,
+                'individual_match_start_verified':False,
+                'eligible_for_model_training':0,'allocation_enabled':False,
+                't60_quote_verified':False,'stake':0,
+            },ensure_ascii=False,indent=2))
+            return 2
 
     if args.cmd=='valuebetennis-legacy-crosswalk':
         try:
