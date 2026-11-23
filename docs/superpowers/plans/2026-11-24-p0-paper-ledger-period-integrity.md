@@ -2,6 +2,8 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
+**Execution context:** Merge of design PR #19 was observed during execution; code work moved to Draft PR #20 without changes to `main` in this branch. The RED checkpoint was observed in GitHub Actions run `45233399071` (Ubuntu 3.11/3.12: import failure for `reconcile_periods`). GREEN candidate checked by GitHub Actions run `45234012613`, with final CI evidence to be recorded when complete.
+
 **Goal:** Eliminate stale daily/weekly risk counters without inventing history, preserve per-week loss evidence across month close, and refuse selection on an unverified calendar period.
 
 **Architecture:** A pure `period_risk.py` derives Asia/Bangkok day and Monday-start week keys, and replays a timestamped journal to verify reservations and settled losses. `paper_ledger.py` reconciles counters against that replay, while the existing pure `policy.evaluate()` rejects stale/missing markers. Preserve current stake and risk constants; paper-only with no data permissions changes.
@@ -11,7 +13,7 @@
 **Spec:** `docs/superpowers/specs/2026-11-24-p0-paper-ledger-period-integrity-design.md`
 
 ## Global Constraints
-- `main` base `1b44f26`; implement on isolated existing branch `design/p0-paper-ledger-period-reconciliation`, Draft PR #19; never merge automatically.
+- `main` base `1b44f26`; design PR #19 was merged before code execution; implement on isolated `feat/p0-risk-periods`, Draft code PR #20; never merge automatically.
 - All dates use Asia/Bangkok; keys are date objects. Weeks begin Monday.
 - Keep `MIN_EV=0.02`, `0.25` Kelly, `MAX_STAKE=10`, `MAX_OPEN=20`, and all current caps unchanged.
 - No new real-money actions, model training, feature changes or historical-source permission assumptions. Incomplete historical data remains ineligible.
