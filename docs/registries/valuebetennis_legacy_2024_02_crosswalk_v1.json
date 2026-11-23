@@ -1,0 +1,118 @@
+{
+  "manifest_version": "P1_LEGACY_INDEX_CROSSWALK_1",
+  "inventory_sha256": "eccb403bb6c0874e30f4e304c7be23678d2d1e6db095fd9174ee1753a225665b",
+  "archive_url": "https://www.valuebetennis.com/tournaments/2024/02/archive.htm",
+  "archive_record_type": "HISTORICAL_TOURNAMENT_INDEX_ONLY",
+  "archive_page_rights": "UNVERIFIED_NOT_CSV_CC_BY_GRANT",
+  "provenance_note": "Hand-checked 12 men's Main tour index entries from Valuebetennis 2.0 legacy February 2024 tournament HTML. These are tournament listings, not match-level results and not covered by an independently verified HTML reuse grant.",
+  "entries": [
+    {
+      "official_event_key": "ATP_2024_CORDOBA",
+      "legacy_provider_tournament_id": "12492",
+      "legacy_tournament_name": "Cordoba Open - Cordoba",
+      "legacy_start_date": "2024-02-05",
+      "legacy_sex_marker": "H",
+      "legacy_category": "Main tour",
+      "evidence_url": "https://www.valuebetennis.com/tournaments/2024/02/archive.htm"
+    },
+    {
+      "official_event_key": "ATP_2024_DALLAS",
+      "legacy_provider_tournament_id": "12493",
+      "legacy_tournament_name": "Dallas Open - Dallas",
+      "legacy_start_date": "2024-02-05",
+      "legacy_sex_marker": "H",
+      "legacy_category": "Main tour",
+      "evidence_url": "https://www.valuebetennis.com/tournaments/2024/02/archive.htm"
+    },
+    {
+      "official_event_key": "ATP_2024_MARSEILLE",
+      "legacy_provider_tournament_id": "12494",
+      "legacy_tournament_name": "Open 13 Provence - Marseille",
+      "legacy_start_date": "2024-02-05",
+      "legacy_sex_marker": "H",
+      "legacy_category": "Main tour",
+      "evidence_url": "https://www.valuebetennis.com/tournaments/2024/02/archive.htm"
+    },
+    {
+      "official_event_key": "ATP_2024_ROTTERDAM",
+      "legacy_provider_tournament_id": "12495",
+      "legacy_tournament_name": "ABN AMRO Open - Rotterdam",
+      "legacy_start_date": "2024-02-12",
+      "legacy_sex_marker": "H",
+      "legacy_category": "Main tour",
+      "evidence_url": "https://www.valuebetennis.com/tournaments/2024/02/archive.htm"
+    },
+    {
+      "official_event_key": "ATP_2024_BUENOS_AIRES",
+      "legacy_provider_tournament_id": "12496",
+      "legacy_tournament_name": "Argentina Open - Buenos Aires",
+      "legacy_start_date": "2024-02-12",
+      "legacy_sex_marker": "H",
+      "legacy_category": "Main tour",
+      "evidence_url": "https://www.valuebetennis.com/tournaments/2024/02/archive.htm"
+    },
+    {
+      "official_event_key": "ATP_2024_DELRAY_BEACH",
+      "legacy_provider_tournament_id": "12497",
+      "legacy_tournament_name": "Delray Beach Open - Delray Beach",
+      "legacy_start_date": "2024-02-12",
+      "legacy_sex_marker": "H",
+      "legacy_category": "Main tour",
+      "evidence_url": "https://www.valuebetennis.com/tournaments/2024/02/archive.htm"
+    },
+    {
+      "official_event_key": "ATP_2024_DOHA",
+      "legacy_provider_tournament_id": "12542",
+      "legacy_tournament_name": "Qatar ExxonMobil Open - Doha",
+      "legacy_start_date": "2024-02-19",
+      "legacy_sex_marker": "H",
+      "legacy_category": "Main tour",
+      "evidence_url": "https://www.valuebetennis.com/tournaments/2024/02/archive.htm"
+    },
+    {
+      "official_event_key": "ATP_2024_RIO_DE_JANEIRO",
+      "legacy_provider_tournament_id": "12543",
+      "legacy_tournament_name": "Rio Open - Rio de Janeiro",
+      "legacy_start_date": "2024-02-19",
+      "legacy_sex_marker": "H",
+      "legacy_category": "Main tour",
+      "evidence_url": "https://www.valuebetennis.com/tournaments/2024/02/archive.htm"
+    },
+    {
+      "official_event_key": "ATP_2024_LOS_CABOS",
+      "legacy_provider_tournament_id": "12544",
+      "legacy_tournament_name": "Mifel Tennis Open - Los Cabos",
+      "legacy_start_date": "2024-02-19",
+      "legacy_sex_marker": "H",
+      "legacy_category": "Main tour",
+      "evidence_url": "https://www.valuebetennis.com/tournaments/2024/02/archive.htm"
+    },
+    {
+      "official_event_key": "ATP_2024_DUBAI",
+      "legacy_provider_tournament_id": "12570",
+      "legacy_tournament_name": "Dubai Duty Free Tennis Championships - Dubai",
+      "legacy_start_date": "2024-02-26",
+      "legacy_sex_marker": "H",
+      "legacy_category": "Main tour",
+      "evidence_url": "https://www.valuebetennis.com/tournaments/2024/02/archive.htm"
+    },
+    {
+      "official_event_key": "ATP_2024_ACAPULCO",
+      "legacy_provider_tournament_id": "12571",
+      "legacy_tournament_name": "Abierto Mexicano Telcel - Acapulco",
+      "legacy_start_date": "2024-02-26",
+      "legacy_sex_marker": "H",
+      "legacy_category": "Main tour",
+      "evidence_url": "https://www.valuebetennis.com/tournaments/2024/02/archive.htm"
+    },
+    {
+      "official_event_key": "ATP_2024_SANTIAGO",
+      "legacy_provider_tournament_id": "12572",
+      "legacy_tournament_name": "Movistar Chile Open - Santiago",
+      "legacy_start_date": "2024-02-26",
+      "legacy_sex_marker": "H",
+      "legacy_category": "Main tour",
+      "evidence_url": "https://www.valuebetennis.com/tournaments/2024/02/archive.htm"
+    }
+  ]
+}
