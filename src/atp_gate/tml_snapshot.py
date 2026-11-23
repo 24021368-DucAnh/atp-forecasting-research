@@ -42,7 +42,13 @@ def _fetch_official(url: str) -> bytes:
     return content
 
 
-def _check_csv(content: bytes, year: int) -> int:
+def _check_csv(content: bytes, year: int) -> tuple[int, int, dict[str, int]]:
+    """Preserve original source bytes while quarantining unusable source rows.
+
+    No inferred match IDs: missing IDs or broken trailing columns may be
+    present in a public historical CSV and must remain visible as anomalies.
+    A hard source/header/season mismatch still rejects the entire download.
+    """
     if not isinstance(content, bytes) or not 0 < len(content) <= MAX_BYTES:
         raise ValueError("TML CSV bytes empty, oversized or not a byte payload")
     try:
@@ -51,17 +57,14 @@ def _check_csv(content: bytes, year: int) -> int:
         if reader.fieldnames != TML_COLUMNS:
             raise ValueError("TML source CSV schema drift or invalid header")
         rows = 0
+        accepted = 0
+        anomalies: dict[str, int] = {}
         keys: set[tuple[str, str]] = set()
         for record in reader:
+            rows += 1
             if None in record or any(v is None for v in record.values()):
-                raise ValueError("TML CSV row with malformed column count")
-            sid, match = record["tourney_id"], record["match_num"]
-            if not sid or not match:
-                raise ValueError("TML CSV row lacks match/tournament ID")
-            key = (sid, match)
-            if key in keys:
-                raise ValueError("duplicate TML tournament/match identifier")
-            keys.add(key)
+                anomalies["MALFORMED_ROWS"] = anomalies.get("MALFORMED_ROWS", 0) + 1
+                continue
             raw_date = record["tourney_date"]
             if len(raw_date) != 8 or not raw_date.isdigit():
                 raise ValueError("TML CSV record has invalid season date")
@@ -69,23 +72,30 @@ def _check_csv(content: bytes, year: int) -> int:
                 tournament_start = datetime.strptime(raw_date, "%Y%m%d").date()
             except ValueError as exc:
                 raise ValueError("TML CSV record has invalid season date") from exc
-            # ATP next-season tournaments can legitimately start in late
-            # December of the previous calendar year (e.g. 2025 CSV:
-            # 2024-12-29). Do not quarantine a valid season for that.
             if not (tournament_start.year == year or
                     (tournament_start.year == year - 1
                      and tournament_start.month == 12
                      and tournament_start.day >= 25)):
                 raise ValueError("TML CSV record has unexpected season start date")
+
+            sid, match = record["tourney_id"], record["match_num"]
+            if not sid or not match:
+                anomalies["MISSING_MATCH_ID"] = anomalies.get("MISSING_MATCH_ID", 0) + 1
+                continue
+            key = (sid, match)
+            if key in keys:
+                raise ValueError("duplicate TML tournament/match identifier")
+            keys.add(key)
             if (not record["winner_id"] or not record["loser_id"]
                     or record["winner_id"] == record["loser_id"]):
-                raise ValueError("TML CSV incomplete/invalid player IDs")
-            rows += 1
+                anomalies["INVALID_PLAYER_IDS"] = anomalies.get("INVALID_PLAYER_IDS", 0) + 1
+                continue
+            accepted += 1
     except (UnicodeError, csv.Error) as exc:
         raise ValueError("invalid TML CSV encoding/structure") from exc
-    if rows == 0:
-        raise ValueError("TML CSV contains no completed matches")
-    return rows
+    if accepted == 0:
+        raise ValueError("TML CSV contains no eligible identifiable matches")
+    return rows, accepted, dict(sorted(anomalies.items()))
 
 
 def _atomic_write(path: Path, payload: bytes) -> None:
@@ -155,7 +165,7 @@ def update_tml_season(
             return _result("SKIPPED_INTERVAL", year, url, prior, folder)
 
     data = (fetcher if fetcher is not None else _fetch_official)(url)
-    row_count = _check_csv(data, year)
+    row_count, accepted_count, anomalies = _check_csv(data, year)
     sha = hashlib.sha256(data).hexdigest()
     folder.mkdir(parents=True, exist_ok=True)
     snapshot = folder / f"{year}-{sha}.csv"
@@ -171,12 +181,15 @@ def update_tml_season(
         "last_checked_at_utc": at.isoformat(),
         "snapshot_filename": snapshot.name,
         "source_rows": row_count,
+        "accepted_rows": accepted_count,
+        "source_anomalies": anomalies,
         "schema_sha256": _HEADER_DIGEST,
         "mode": "PERSONAL_NONCOMMERCIAL_RESEARCH",
     }
     _atomic_write(folder / "index.json", (json.dumps(index, sort_keys=True, indent=2) + "\n").encode("utf-8"))
     status = (
-        "UNCHANGED" if prior and prior["latest_sha256"] == sha
+        "SOURCE_ANOMALY_REVIEW_REQUIRED" if anomalies
+        else "UNCHANGED" if prior and prior["latest_sha256"] == sha
         else "NEW_SNAPSHOT_REVIEW_REQUIRED"
     )
     return _result(status, year, url, index, folder)
@@ -190,6 +203,8 @@ def _result(status: str, year: int, url: str, index: dict, folder: Path) -> dict
         "source_url": url,
         "sha256": index["latest_sha256"],
         "source_rows": index["source_rows"],
+        "accepted_rows": index.get("accepted_rows", index["source_rows"]),
+        "source_anomalies": index.get("source_anomalies", {}),
         "checked_at_utc": index["last_checked_at_utc"],
         "local_snapshot": str(folder / f"{year}-{index['latest_sha256']}.csv"),
         "license_scope": "PERSONAL_EDUCATIONAL_NONCOMMERCIAL_ONLY",
@@ -203,5 +218,7 @@ def _result(status: str, year: int, url: str, index: dict, folder: Path) -> dict
             "VERSIONED_LOCAL_SNAPSHOT_NOT_REVIEWED",
             "SOURCE_BYTES_NOT_CERTIFIED_AS_OFFICIAL_MATCH_DRAW",
             "NO_RAW_CSV_REDISTRIBUTION_OR_AUTO_TRAINING",
+            *([ "UNIDENTIFIABLE_SOURCE_ROWS_QUARANTINED" ]
+              if index.get("source_anomalies") else []),
         ],
     }
