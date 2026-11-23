@@ -82,12 +82,15 @@ def audit_source_intake(
     allowed_event_keys: set[str],
     as_of: datetime,
     trusted_permission_reports: Mapping[str, str] | None = None,
+    intended_use: str = "PERSONAL_NONCOMMERCIAL_RESEARCH",
 ) -> dict:
     """Check source bytes and independent permission-receipt identity.
 
     Never sets training readiness or proves rights solely from a manifest.
     Neither draw review flags nor HTML index IDs are match-level certification.
     """
+    if intended_use not in ("PERSONAL_NONCOMMERCIAL_RESEARCH", "COMMERCIAL"):
+        raise ValueError("unsupported intended-use scope")
     if as_of.tzinfo is None or as_of.utcoffset() is None:
         raise ValueError("audit as-of must be timezone-aware")
     artifact_path = Path(artifact_path)
@@ -131,8 +134,8 @@ def audit_source_intake(
         "scope", "evidence_url", "report_id", "report_sha256",
         "ai_training_allowed", "commercial_use_allowed",
     }, "source permission")
-    if permission["scope"] != "2024_FEB_MATCH_LEVEL_EXPORT":
-        raise ValueError("permission scope must identify February 2024 match-level export")
+    if permission["scope"] not in ("2024_FEB_MATCH_LEVEL_EXPORT", "2024_ATP_SEASONAL_MATCH_RESULTS"):
+        raise ValueError("permission scope must identify an applicable 2024 ATP result export")
     _url(permission["evidence_url"], "permission evidence")
     rid = _id(permission["report_id"], "permission")
     report_hash = _sha(permission["report_sha256"], "permission report")
@@ -157,7 +160,8 @@ def audit_source_intake(
     rights_reviewed = (
         trusted.get(rid) == report_hash
         and permission["ai_training_allowed"] is True
-        and permission["commercial_use_allowed"] is True
+        and (intended_use == "PERSONAL_NONCOMMERCIAL_RESEARCH"
+             or permission["commercial_use_allowed"] is True)
     )
     return {
         "status": (
@@ -166,6 +170,7 @@ def audit_source_intake(
         ),
         "mode": "HISTORICAL_RESEARCH_ONLY",
         "intake_version": VERSION,
+        "intended_use": intended_use,
         "inventory_sha256": inventory_sha256,
         "source_sha256": actual_sha,
         "source_size_bytes": size,
