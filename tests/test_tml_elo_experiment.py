@@ -1,6 +1,10 @@
 """Synthetic TML event-level Elo timeline regression contracts (no third-party rows)."""
 import csv
 import hashlib
+import json
+import os
+import subprocess
+import sys
 from datetime import date
 from pathlib import Path
 
@@ -169,3 +173,38 @@ def test_experiment_rejects_tournament_date_source_that_claims_future_season(tmp
     files[1]=make_file(tmp_path,2022,[row(2022,"wrong","20240101",1)])
     with pytest.raises(ValueError, match="season|date"):
         run_tml_elo_experiment(files)
+
+
+ROOT=Path(__file__).resolve().parents[1]
+
+
+def _run_cli(*args):
+    env={**os.environ,"PYTHONPATH":str(ROOT/"src")}
+    proc=subprocess.run([sys.executable,"-m","atp_gate",*map(str,args)],
+                        cwd=ROOT,env=env,text=True,capture_output=True,timeout=30)
+    return proc,json.loads(proc.stdout)
+
+
+def test_cli_persists_only_aggregate_experiment_report(tmp_path):
+    files=season_files(tmp_path)
+    report_path=tmp_path/"reports"/"elo.json"
+    proc,report=_run_cli("tml-elo-experiment",*files,"--out",report_path)
+    assert proc.returncode==0,proc.stderr+proc.stdout
+    assert report["fold_count"]==3
+    assert report["mode"]=="PERSONAL_NONCOMMERCIAL_RESEARCH"
+    assert report["test_matches"]>=12
+    assert json.loads(report_path.read_text(encoding="utf-8"))==report
+    serialized=json.dumps(report)
+    assert "Synthetic W" not in serialized
+    assert "Synthetic L" not in serialized
+    assert report["stake"]==0
+
+
+def test_cli_refuses_to_replace_source_file_with_aggregate_report(tmp_path):
+    files=season_files(tmp_path)
+    untouched=files[0].read_bytes()
+    proc,report=_run_cli("tml-elo-experiment",*files,"--out",files[0])
+    assert proc.returncode==2
+    assert report["status"]=="ERROR"
+    assert report["allocation_enabled"] is False
+    assert files[0].read_bytes()==untouched
