@@ -2,6 +2,10 @@
 import csv
 import hashlib
 import json
+import os
+import subprocess
+import sys
+from pathlib import Path
 from datetime import datetime, timedelta, timezone
 from io import StringIO
 
@@ -141,3 +145,22 @@ def test_manual_force_bypasses_refresh_interval_only(tmp_path):
     assert called
     assert report["status"]=="UNCHANGED"
     assert report["allocation_enabled"] is False
+
+
+ROOT=Path(__file__).resolve().parents[1]
+
+
+def run_cli(*args):
+    env={**os.environ,"PYTHONPATH":str(ROOT/"src")}
+    p=subprocess.run([sys.executable,"-m","atp_gate",*map(str,args)],
+                     env=env,cwd=ROOT,text=True,capture_output=True,timeout=30)
+    return p,json.loads(p.stdout)
+
+
+def test_updater_cli_rejects_future_season_without_any_network(tmp_path):
+    proc,report=run_cli("tml-update","--year","2027","--root",tmp_path)
+    assert proc.returncode==2
+    assert report["status"]=="ERROR"
+    assert report["eligible_for_model_training"]==0
+    assert report["allocation_enabled"] is False and report["stake"]==0
+    assert not list(tmp_path.iterdir())
