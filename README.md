@@ -104,3 +104,35 @@ Successful replay reports `status: REPRODUCED`. A mismatch returns
 `status: REJECT` and a nonzero exit code. Neither result grants permission
 for live wagers or capital allocation; there are still no verified T-60
 price snapshots. See `docs/RESEARCH_REPRODUCIBILITY.md`.
+
+
+## P1.1 — Profile historical source coverage (no model training)
+
+`research-profile` inventories **accepted matches only** using the same
+existing loader as `research-train`. It groups by actual observed year, tier,
+surface and original file, with missing odds/rank counts, SHA-256 manifest,
+dropped-duplicate counts and explicit source/rights warnings.
+
+After this PR is merged, from the original Windows PowerShell project folder:
+
+```powershell
+git pull --ff-only
+.\.venv\Scripts\python.exe -m atp_gate research-profile data\ATP_2026.csv
+```
+
+To require multiple specific calendar years:
+
+```powershell
+.\.venv\Scripts\python.exe -m atp_gate research-profile --start-year 2022 --end-year 2026 data\ATP_2026.csv
+```
+
+The second command **must** print `status: INCOMPLETE` and exit with code 2
+when only the partial 2026 file is supplied. This is a correct failure and
+does NOT mean the system is broken. To profile multiple seasons, provide
+**actual**, legally obtained, schema-compatible source files in year order.
+
+A profile does not verify data rights, stable player IDs, first-serve times,
+T−60 odds, sample completeness, or any market edge. Do not supply a
+Valuebetennis CSV directly to the current Tennis-Data-style loader; its schema
+and ATP 250/500 taxonomy need a separately validated adapter. See
+`docs/DATA_SOURCE_DECISIONS.md`.
