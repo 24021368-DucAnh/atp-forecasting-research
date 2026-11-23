@@ -178,3 +178,21 @@ git-ignored `reports/` folder. `INVENTORIED_UNMAPPED` means a source
 inventory was generated, **not** that ATP tier, qualifiers/main draw or
 T−60 market odds were verified. For schema, limitations and next official
 mapping work, see `docs/TOURNAMENT_SEASON_INVENTORY.md`.
+
+
+## P1.3b — Diagnose calendar-year splits and missing match stages
+
+Review the **already exported** `valuebetennis-tournaments` JSON (no need to
+re-read five annual CSVs):
+
+```powershell
+.\.venv\Scripts\python.exe -m atp_gate valuebetennis-review reports\valuebetennis_tournaments_2022_2026.json --out reports\valuebetennis_inventory_review_2022_2026.json
+```
+
+The reviewer validates group and round-count reconciliation and flags
+event IDs split across UTC calendar years, special-format events wrongly
+implied by broad provider categories, missing raw final-round codes and
+unusually long gaps between observed in-season tournament starts.
+`REVIEW_REQUIRED` means inspection succeeded while **training is still
+blocked**. See `docs/INVENTORY_ANOMALY_REVIEW.md` for provider caveats,
+actual 2024 anomalies and mandatory official tournament evidence.
