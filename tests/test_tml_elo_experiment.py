@@ -234,3 +234,27 @@ def test_truncated_2025_out_of_scope_row_is_quarantined(tmp_path):
     report=run_tml_elo_experiment(files,bootstrap_replicates=50)
     assert report["excluded_reasons"]["MALFORMED_ROWS"]==1
     assert report["mode"]=="PERSONAL_NONCOMMERCIAL_RESEARCH"
+
+
+def test_one_day_variant_tourney_dates_are_grouped_before_elo_predictions(tmp_path):
+    # Real TML 2024 Winston-Salem/Metz/Belgrade rows vary by one day.
+    # A source's row date must never split one tournament into two updates.
+    paths=season_files(tmp_path)
+    paths[3]=make_file(tmp_path,2024,[
+        row(2024,"variation","20240818",1,winner="A",loser="Z"),
+        row(2024,"variation","20240819",2,winner="A",loser="Z"),
+    ])
+    result=run_tml_elo_experiment(paths,bootstrap_replicates=50)
+    assert result["event_date_variants_grouped"]==1
+    assert result["folds"][1]["n"]==2
+    assert result["folds"][1]["global_elo_brier"] < 0.25
+
+
+def test_multiweek_tournament_date_conflict_is_not_silently_normalized(tmp_path):
+    paths=season_files(tmp_path)
+    paths[3]=make_file(tmp_path,2024,[
+        row(2024,"impossible","20240801",1),
+        row(2024,"impossible","20240826",2),
+    ])
+    with pytest.raises(ValueError,match="start|date|spread"):
+        run_tml_elo_experiment(paths,bootstrap_replicates=50)
