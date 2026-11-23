@@ -37,7 +37,8 @@ def _positive_id(value: object) -> str | None:
 
 def _utc(value: object) -> datetime | None:
     raw = str(value or "").strip()
-    if not raw:
+    if not raw or ":" not in raw or not ("T" in raw or " " in raw):
+        # A bare calendar date is NOT a match timestamp.
         return None
     try:
         candidate = datetime.fromisoformat(raw[:-1] + "+00:00" if raw.endswith("Z") else raw)
@@ -123,8 +124,9 @@ def inspect_valuebetennis_sources(
                 if None in row:
                     counts["malformed_row"] += 1
                     continue
-                if str(row["genre"] or "").strip().casefold() != "atp":
-                    counts["excluded_wta"] += 1
+                genre = str(row["genre"] or "").strip().casefold()
+                if genre != "atp":
+                    counts["excluded_wta" if genre == "wta" else "excluded_other_genre"] += 1
                     continue
                 category = _CATEGORIES.get(str(row["categorie"] or "").strip().casefold())
                 if category is None:
@@ -217,6 +219,7 @@ def inspect_valuebetennis_sources(
             key: int(counts[key])
             for key in (
                 "total_rows", "atp_candidate_matches", "excluded_wta",
+                "excluded_other_genre",
                 "excluded_other_category", "malformed_row", "invalid_identity",
                 "invalid_winner", "invalid_round", "invalid_date",
                 "duplicate_match_id",
