@@ -36,6 +36,9 @@ def main() -> int:
     tourney_inventory.add_argument('--end-year',type=int)
     tourney_inventory.add_argument('--out',required=True,help='Local ignored JSON report filename')
     tourney_inventory.add_argument('paths',nargs='+',help='Valuebetennis seasonal CSV inputs')
+    inventory_review=sub.add_parser('valuebetennis-review',help='Read-only integrity and anomaly review of saved tournament JSON')
+    inventory_review.add_argument('report',help='P1.3a saved source inventory JSON')
+    inventory_review.add_argument('--out',help='Optional separate JSON report under ignored reports directory')
     research_train=sub.add_parser('research-train',help='XGBoost research with chronological split; NO live allocation')
     research_train.add_argument('paths',nargs='+')
     research_train.add_argument('--out',required=True,help='JSON research report output path')
@@ -43,6 +46,47 @@ def main() -> int:
     research_train.add_argument('--minimum-target',type=int,default=30)
     research_train.add_argument('--seed',type=int,default=20261123)
     args=parser.parse_args()
+
+    if args.cmd=='valuebetennis-review':
+        try:
+            import hashlib
+            from .inventory_review import review_tournament_inventory
+            source=Path(args.report)
+            if args.out and Path(args.out).resolve()==source.resolve():
+                raise ValueError('review output cannot overwrite the source inventory')
+            raw=source.read_bytes()
+            result=review_tournament_inventory(json.loads(raw.decode('utf-8-sig')))
+            digest=hashlib.sha256(raw).hexdigest()
+            result['input_report_sha256']=digest
+            if args.out:
+                destination=Path(args.out)
+                destination.parent.mkdir(parents=True,exist_ok=True)
+                destination.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+            print(json.dumps({
+                'status':result['status'],
+                'mode':result['mode'],
+                'input_report_sha256':digest,
+                'tournament_season_groups':result['integrity']['tournament_season_groups'],
+                'candidate_matches':result['integrity']['candidate_matches'],
+                'cross_year_event_ids':len(result['cross_year_tournament_ids']),
+                'special_format_groups':result['special_format_candidates']['group_count'],
+                'special_format_matches':result['special_format_candidates']['candidate_matches'],
+                'missing_final_code_groups':len(result['missing_final_code_candidates']),
+                'large_event_start_gaps':len(result['large_event_start_gaps']),
+                'warnings':result['warnings'],
+                'report_path':str(args.out) if args.out else None,
+                'tier_mapping_verified':False,'main_draw_verified':False,
+                'eligible_for_model_training':0,'allocation_enabled':False,'stake':0,
+            },ensure_ascii=False,indent=2))
+            return 0
+        except (ValueError,OSError,UnicodeError,TypeError,KeyError) as exc:
+            print(json.dumps({
+                'status':'ERROR','mode':'HISTORICAL_RESEARCH_ONLY',
+                'reason':str(exc),'tier_mapping_verified':False,
+                'main_draw_verified':False,'eligible_for_model_training':0,
+                'allocation_enabled':False,'stake':0,
+            },ensure_ascii=False,indent=2))
+            return 2
 
     if args.cmd=='valuebetennis-tournaments':
         try:
