@@ -52,3 +52,33 @@ Every report records local SHA256/size, per-event counts and provider source lev
 Use the publisher's official documented downloadable season CSVs or `/api/data-files` list; cap checks to once daily (not scraping live match pages). Each download needs an immutable **content-hash version**, source URL, downloaded UTC timestamp, source count/schema, and separate accepted/review-required status. A change of hash may reflect a correction rather than new completed matches.
 
 Once a local source version passes quality checks, **do not auto-promote it into training**. First reconcile stable player IDs and official main-draw history, confirm chronology for point-in-time features, and pre-register P2's out-of-time test split. Source-only acceptance never upgrades model validation or trading readiness.
+
+## Opt-in automatic local source snapshots (P1.5)
+
+Once the stacked updater PR is merged and the Windows venv has the package installed, run manually:
+
+```powershell
+.\.venv\Scripts\python.exe -m atp_gate tml-update --year 2026 --root data/tml
+.\.venv\Scripts\python.exe -m atp_gate tml-update --year 2024 --root data/tml
+```
+
+Each command downloads **directly from the official TML CSV endpoint** only when explicitly invoked. The default cache limit is one check per 24 hours per season. If the bytes match the last snapshot, status is `UNCHANGED`; if they differ, `NEW_SNAPSHOT_REVIEW_REQUIRED` is written. Older snapshots are never silently replaced. Snapshot files live privately under `data/tml/<year>/<year>-<SHA256>.csv`; the `index.json` stores the latest digest and check timestamp. `data/` and `reports/` are ignored by Git. Never commit these third-party raw files.
+
+### Local Windows Task Scheduler option
+
+The versioned update script is `scripts/tml_daily_update.ps1`. It checks 2024 for historical corrections and the current year for ongoing results. To run daily **on the owner's computer**, create a Task Scheduler task with:
+
+- Trigger: Daily, e.g. 08:30 Hanoi time, only when the PC is available.
+- Action program: `powershell.exe`.
+- Action arguments: `-NoProfile -File "C:\path\to\atp_selective_gate\scripts\tml_daily_update.ps1"` (replace with the actual repo path).
+- Working directory: the local repo. User should ensure the local virtual environment exists and the installed source is up to date.
+
+This configuration is a **user action**. Committing a script does **not** install or start a scheduled task, and a powered-off PC cannot refresh local data. The script creates per-run *metadata only* reports under `reports/tml_updates/`. It does not upload raw CSV, train a model, or connect to gambling systems.
+
+For each new 2024 hash, run `tml-february-audit` on the **hash-qualified snapshot** (supported by the updater branch) before considering any source corrections. The report remains `SOURCE_CANDIDATE_REVIEW_REQUIRED` unless the provider changes the event/rounds, in which case it flags inconsistencies. Both results are still untrusted for official-draw certification and point-in-time match timing.
+
+### Provider updates and drift
+
+The publisher states that corrections, additions and removals may occur, including historical seasons. A new hash therefore represents a new data version, not necessarily more matches. Compare the exact source SHA and source rows before discussing model improvements; preserve all previous experiment inputs. New match results become available after the event, not as future-known prematch features.
+
+The official source updates are for personal/educational/noncommercial research. No automated redistribution of CSVs and no public model service are permitted by the source's stated terms.
