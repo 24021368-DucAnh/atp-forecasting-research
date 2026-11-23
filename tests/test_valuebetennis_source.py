@@ -40,7 +40,7 @@ def write_csv(path, records, columns=COLUMNS):
     with path.open("w", encoding="utf-8-sig", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=columns, delimiter=";")
         writer.writeheader()
-        writer.writerows(records)
+        writer.writerows({name: record.get(name, '') for name in columns} for record in records)
     return path
 
 
@@ -113,7 +113,7 @@ def test_duplicate_match_id_across_files_is_not_double_counted(tmp_path):
 
 def test_missing_price_fields_do_not_create_t60_quote(tmp_path):
     source = write_csv(tmp_path / "a.csv", [
-        row(cote1_ouverture="", cote2_ouverture="", cote1_cloture="1.86"),
+        row(cote1_ouverture="", cote2_ouverture="", cote1_cloture="1.86", cote2_cloture=""),
         row(match_id="2", cote1_cloture="not-odds", cote2_cloture="2.04"),
     ])
     report = inspect_valuebetennis_sources(source)
