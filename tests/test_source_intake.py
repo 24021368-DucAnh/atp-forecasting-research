@@ -196,3 +196,44 @@ def test_cli_rejects_overwriting_source_and_preserves_bytes(source, tmp_path):
     assert body["status"] == "ERROR"
     assert body["eligible_for_model_training"] == 0
     assert source.read_bytes() == original
+
+
+def test_noncommercial_research_permission_can_be_reviewed_without_commercial_rights(source):
+    m = manifest(source)
+    m["permission"]["commercial_use_allowed"] = False
+    m["permission"]["ai_training_allowed"] = True
+    m["permission"]["scope"] = "2024_ATP_SEASONAL_MATCH_RESULTS"
+    result = audit_source_intake(
+        source, m, inventory_sha256=INVENTORY,
+        allowed_event_keys=EVENTS, as_of=ASOF,
+        intended_use="PERSONAL_NONCOMMERCIAL_RESEARCH",
+        trusted_permission_reports={"permission-001": "a" * 64},
+    )
+    assert result["status"] == "SOURCE_PERMISSION_REVIEWED_MATCH_AUDIT_PENDING"
+    assert result["rights_reviewed"] is True
+    assert result["intended_use"] == "PERSONAL_NONCOMMERCIAL_RESEARCH"
+    assert result["eligible_for_model_training"] == 0
+    assert result["allocation_enabled"] is False
+
+
+def test_noncommercial_permission_cannot_be_promoted_to_commercial_use(source):
+    m = manifest(source)
+    m["permission"]["commercial_use_allowed"] = False
+    result = audit_source_intake(
+        source, m, inventory_sha256=INVENTORY,
+        allowed_event_keys=EVENTS, as_of=ASOF,
+        intended_use="COMMERCIAL",
+        trusted_permission_reports={"permission-001": "a" * 64},
+    )
+    assert result["status"] == "NO_AUTHORIZED_HISTORICAL_REPAIR_SOURCE"
+    assert result["rights_reviewed"] is False
+
+
+def test_reject_unknown_intended_use(source):
+    with pytest.raises(ValueError):
+        audit_source_intake(
+            source, manifest(source), inventory_sha256=INVENTORY,
+            allowed_event_keys=EVENTS, as_of=ASOF,
+            intended_use="ANYTHING_GOES",
+            trusted_permission_reports={"permission-001": "a" * 64},
+        )
