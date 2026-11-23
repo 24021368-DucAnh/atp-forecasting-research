@@ -27,3 +27,37 @@ Valuebetennis, Tennis results and odds since 2021, https://www.valuebetennis.com
 - Source quality profiling and training are different operations; a `PROFILED` data inventory means neither license approval nor market edge.
 - For the existing 2026 partial-year experiment, source SHA-256 is `a9ff61474edcdd69b14333f02cbcf6ba21b5cf24e75080e2214e507e336a0c13` and `source_identity_verified=false`.
 - No source is allowed to create an `allocation_enabled=true` report. Research remains paper-only.
+
+
+## P1.4c source-permission finding (2026-11-23)
+
+**Empirical Windows source evidence:** the original pinned `valuebetennis-matchs-2024.csv`
+(SHA256 `09437d8208c937d9efb82af232edf6c6f8520be7ec2d6773dde71886b79c68ef`)
+contains **79,910 rows, no February 2024 UTC-dated row in any circuit and
+no undated rows**. The provisional ATP source filter accepts 3,409 rows,
+exactly matching the original P1.3a inventory manifest. This excludes the
+*current* filter as the cause of missing **February-dated** records in this
+specific source snapshot; it does not prove why they are absent upstream.
+
+**Valuebetennis legacy website:** the separate
+[February 2024 tournament index](https://www.valuebetennis.com/tournaments/2024/02/archive.htm)
+lists twelve ATP male `Main tour` tournament IDs including Rotterdam 12495,
+Dallas 12493, Doha 12542, Acapulco 12571. This is small event **metadata**,
+NOT an export of match outcomes, verified main draw or permission to bulk
+extract historical match-detail pages. The
+[CC BY 4.0 CSV licence](https://www.valuebetennis.com/en/donnees.htm)
+explicitly describes the downloadable **season CSV files**; do not presume
+it extends to legacy HTML. The
+[provider guide](https://www.valuebetennis.com/en/guide/base-de-donnees-tennis.htm)
+distinguishes live-imported CSV results from less reliable retrospective
+imports which are not necessarily published.
+
+**Decision:** keep the pinned legacy HTML **index-only** crosswalk in
+`docs/registries/valuebetennis_legacy_2024_02_crosswalk_v1.json`;
+do not fetch/scrape old match pages, add their results or relabel source
+permissions without the provider's explicit reuse terms and a separate
+match-level provenance/quality review. Alternate Sackmann results are
+CC BY-NC-SA 4.0 (noncommercial with ShareAlike); Tennis-Data.co.uk
+rights are provider-specific. Any independent correction must be kept
+separately identified, signed off for allowed use and verified against
+official match draws. Zero training permission remains for the new source.
