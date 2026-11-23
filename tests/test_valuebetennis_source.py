@@ -181,3 +181,22 @@ def test_cli_returns_nonzero_if_requested_seasons_missing(tmp_path):
     )
     assert bad.returncode == 2
     assert json.loads(bad.stdout)["status"] == "INCOMPLETE"
+
+
+def test_date_only_is_not_accepted_as_utc_match_timestamp(tmp_path):
+    source = write_csv(tmp_path / "date_only.csv", [row(date="2025-05-01")])
+    report = inspect_valuebetennis_sources(source)
+    assert report["counts"]["atp_candidate_matches"] == 0
+    assert report["counts"]["invalid_date"] == 1
+    assert report["status"] == "INCOMPLETE"
+
+
+def test_unknown_genre_is_not_mislabelled_as_wta(tmp_path):
+    source = write_csv(tmp_path / "mixed_genre.csv", [
+        row(genre="itf"),
+        row(match_id="2", genre="wta", joueur1_id="901",
+            joueur2_id="902", vainqueur_id="901"),
+    ])
+    report = inspect_valuebetennis_sources(source)
+    assert report["counts"]["excluded_wta"] == 1
+    assert report["counts"]["excluded_other_genre"] == 1
