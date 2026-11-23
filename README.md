@@ -218,3 +218,22 @@ audit completed, **not** that official tournament editions, main-draw
 eligibility, full match coverage or T−60 market quotes were established.
 This does not train a model. Full interpretation and source URLs:
 `docs/TIER_REGISTRY_AUDIT.md`.
+
+
+## P1.4a — Identify missing official ATP events before multi-season model training
+
+An independently researched ATP 2024 February calendar contains **12 tournaments**
+(eight ATP 250, four ATP 500) that did not appear in the pinned Valuebetennis
+tournament inventory. To independently reproduce the **read-only** gap audit:
+
+```powershell
+git pull --ff-only
+.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe -m atp_gate valuebetennis-calendar-audit reports\valuebetennis_tournaments_2022_2026.json docs\registries\atp_2024_february_official_events_v1.json --out reports\valuebetennis_official_calendar_audit_2024_feb.json
+```
+
+`COVERAGE_REVIEW_REQUIRED` is the expected audit status, not a data/model
+approval. The official reference covers **February 2024 only**; matching
+by city/time is a review candidate rather than a verified ID, and absent
+results must not be imputed. Opening/closing prices are not verified T−60
+odds. See `docs/OFFICIAL_CALENDAR_COVERAGE.md`.
