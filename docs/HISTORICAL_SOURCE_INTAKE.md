@@ -1,6 +1,6 @@
 # P1.4d — Historical Correction Source Intake (Fail Closed)
 
-**Goal:** Evaluate provenance and rights-review *of one proposed local artifact* without inventing February 2024 ATP results or enabling a model.
+**Goal:** Evaluate provenance and rights-review *of one proposed local artifact* for **personal noncommercial ML research** without inventing February 2024 ATP results or enabling a model. Commercial use is a separately gated, unsupported goal.
 
 ## Existing data blockers
 The pinned Valuebetennis 2024 export lacks all February-dated rows. The older February 2024 HTML tournament index supplies twelve event IDs but **no licensed match-level evidence**, verified ATP main-draw completeness or executable T−60 price. Those gaps cannot be repaired by re-labeling an index, downloading a mirror with different terms, or filling missing outcomes with guesses.
@@ -35,12 +35,12 @@ The command hashes the **original bytes** of the artifact and inventory, checks 
   },
   "scope_event_keys": ["ATP_2024_ROTTERDAM", "ATP_2024_DALLAS"],
   "permission": {
-    "scope": "2024_FEB_MATCH_LEVEL_EXPORT",
+    "scope": "2024_ATP_SEASONAL_MATCH_RESULTS",
     "evidence_url": "https://provider.example/explicit-reuse-agreement",
     "report_id": "independent-rights-review-id",
     "report_sha256": "<sha256 of independent rights review>",
     "ai_training_allowed": true,
-    "commercial_use_allowed": true
+    "commercial_use_allowed": false
   },
   "draw_review": {
     "report_id": "independent-draw-review-id",
@@ -54,10 +54,12 @@ The command hashes the **original bytes** of the artifact and inventory, checks 
 Replace all placeholders only when actual evidence exists; do not create purported approval reports or source rows to make validation pass. Real downloads may use an entirely different field schema. A row-count **claim** is metadata, not verified row count; the byte SHA/size alone do not prove data accuracy.
 
 ### Permission review
-- The normal CLI intentionally has **no switch to self-approve rights**. It always reports `NO_AUTHORIZED_HISTORICAL_REPAIR_SOURCE` until a separate independently managed trusted report registry is integrated.
+- The normal CLI intentionally has **no switch to self-approve rights**. It uses personal noncommercial research scope and always reports `NO_AUTHORIZED_HISTORICAL_REPAIR_SOURCE` until a separate independently managed trusted report registry is integrated.
 - The Python API `audit_source_intake(... trusted_permission_reports={report_id:sha256})` permits an external *trusted* reviewer to identify a rights-review artifact, but even then it reports only `SOURCE_PERMISSION_REVIEWED_MATCH_AUDIT_PENDING`. It must not be wired to training eligibility without inspecting actual permission documents and the legal scope.
 - A provider's published CC BY notice for **downloadable CSVs** does not automatically apply to unrelated legacy HTML match pages.
-- Rights check must also consider noncommercial restrictions and restrictions on model training or commercial reuse, without relying solely on publicly reachable URLs.
+- This project explicitly uses `intended_use=PERSONAL_NONCOMMERCIAL_RESEARCH` (the API default); a source can be eligible for **permission review** even when `commercial_use_allowed=false`, provided independent review of the actual terms confirms the intended noncommercial ML use and the supplied `ai_training_allowed=true` claim. For `intended_use=COMMERCIAL`, commercial approval remains mandatory.
+- The provider's express personal/research terms (e.g. TML) may support a separately approved noncommercial rights review; a public URL alone is not a rights-review receipt.
+- **No source intake result can independently unlock training or stake**, regardless of permission-review status.
 - The trust mapping authenticates the **review report identity** only if the caller itself protects that mapping. It is not a legal opinion or a cryptographic source-signature scheme.
 
 ### Readiness remains blocked
