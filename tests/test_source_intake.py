@@ -1,6 +1,11 @@
 """Fail-closed local P1.4d correction-source intake; synthetic bytes only."""
 from datetime import datetime, timezone
 from hashlib import sha256
+import json
+import os
+import subprocess
+import sys
+from pathlib import Path
 
 import pytest
 
@@ -140,3 +145,54 @@ def test_incomplete_draw_flags_even_with_rights_stay_quarantined(source):
     r = check(source, m, trusted={"permission-001": "a" * 64})
     assert r["eligible_for_model_training"] == 0
     assert r["main_draw_verified"] is False
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def cli(*args):
+    env = {**os.environ, "PYTHONPATH": str(ROOT / "src")}
+    process = subprocess.run(
+        [sys.executable, "-m", "atp_gate", *map(str, args)],
+        cwd=ROOT, env=env, text=True, capture_output=True, timeout=30,
+    )
+    return process, json.loads(process.stdout)
+
+
+def _write_cli_inputs(tmp_path, artifact):
+    inventory = tmp_path / "pinned-inventory.json"
+    inventory.write_text('{"test":"pinned inventory"}', encoding="utf-8")
+    official = tmp_path / "official-calendar.json"
+    actual_inv = sha256(inventory.read_bytes()).hexdigest()
+    official.write_text(json.dumps({
+        "inventory_sha256": actual_inv,
+        "events": [
+            {"event_key": "ATP_2024_DALLAS"},
+            {"event_key": "ATP_2024_ROTTERDAM"},
+        ],
+    }), encoding="utf-8")
+    m = manifest(artifact, inventory=actual_inv)
+    path = tmp_path / "intake-manifest.json"
+    path.write_text(json.dumps(m), encoding="utf-8")
+    return inventory, official, path
+
+
+def test_cli_reports_no_independently_verified_license_without_training(source, tmp_path):
+    inventory, official, m = _write_cli_inputs(tmp_path, source)
+    report = tmp_path / "reports" / "intake.json"
+    p, body = cli("historical-source-intake", source, m, inventory, official, "--out", report)
+    assert p.returncode == 0, p.stderr + p.stdout
+    assert body["status"] == "NO_AUTHORIZED_HISTORICAL_REPAIR_SOURCE"
+    assert body["eligible_for_model_training"] == 0
+    assert body["allocation_enabled"] is False and body["stake"] == 0
+    assert json.loads(report.read_text()) == body
+
+
+def test_cli_rejects_overwriting_source_and_preserves_bytes(source, tmp_path):
+    inventory, official, m = _write_cli_inputs(tmp_path, source)
+    original = source.read_bytes()
+    p, body = cli("historical-source-intake", source, m, inventory, official, "--out", source)
+    assert p.returncode == 2
+    assert body["status"] == "ERROR"
+    assert body["eligible_for_model_training"] == 0
+    assert source.read_bytes() == original
