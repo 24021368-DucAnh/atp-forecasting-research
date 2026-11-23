@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
 import pytest
 from pydantic import ValidationError
@@ -40,7 +40,9 @@ def valid(**changes):
         validation_report_id='test-holdout-artifact', validation_report_sha256='a'*64, market_edge_verified=True,
         calibration_verified=True, validation_n=1500, selected_n=200)
     risk=RiskState(month='2027-01', free_cash=Decimal('1000'), open_exposure=Decimal('0'),
-        phase='NORMAL', selections_today=0, month_loss_realized=Decimal('0'),
+        phase='NORMAL', selections_today=0,
+        selection_day=date(2027, 1, 20), loss_week_start=date(2027, 1, 18),
+        month_loss_realized=Decimal('0'),
         week_loss_realized=Decimal('0'), annual_negative_month_loss=Decimal('0'),
         seen_match_ids=[])
     data=dict(as_of=T,fixture=fixture,odds=odds,features=features,model=evidence,risk=risk)
@@ -265,3 +267,23 @@ def test_imputed_rankings_excluded():
 def test_missing_feature_vector_field_fails_contract():
     data=valid().model_dump(); del data['features']['vector']['rank_diff']
     with pytest.raises(ValidationError): DecisionInput.model_validate(data)
+
+
+def test_missing_risk_period_abstains_before_selection():
+    data = valid()
+    risk = data.risk.model_copy(update={"selection_day": None})
+    ans = evaluate(data.model_copy(update={"risk": risk}))
+    assert ans.decision == "ABSTAIN" and ans.stake == 0
+    assert "RISK_PERIOD_UNVERIFIED" in ans.reasons
+
+
+def test_stale_week_period_abstains_on_valid_positive_edge():
+    data = valid()
+    risk = data.risk.model_copy(update={"loss_week_start": date(2027, 1, 11)})
+    assert "RISK_PERIOD_UNVERIFIED" in evaluate(data.model_copy(update={"risk": risk})).reasons
+
+
+def test_future_day_period_abstains_on_valid_positive_edge():
+    data = valid()
+    risk = data.risk.model_copy(update={"selection_day": date(2027, 1, 21)})
+    assert "RISK_PERIOD_UNVERIFIED" in evaluate(data.model_copy(update={"risk": risk})).reasons
