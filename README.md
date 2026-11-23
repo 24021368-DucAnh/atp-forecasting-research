@@ -196,3 +196,25 @@ unusually long gaps between observed in-season tournament starts.
 `REVIEW_REQUIRED` means inspection succeeded while **training is still
 blocked**. See `docs/INVENTORY_ANOMALY_REVIEW.md` for provider caveats,
 actual 2024 anomalies and mandatory official tournament evidence.
+
+
+## P1.3c — Snapshot-pinned, source-backed tournament tiers
+
+Review a small set of **explicit** ATP tournament-tier claims in a source-
+anchored registry; unresolved ATP editions are **not inferred** from provider
+`Main tour` or `Masters` labels. Dallas/Doha/Munich changed from ATP250 to
+ATP500 in 2025. The 2024 AO/Indian Wells entries remain **known incomplete**.
+
+After merging the corresponding PR:
+
+```powershell
+git pull --ff-only
+.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe -m atp_gate valuebetennis-tier-audit reports\valuebetennis_tournaments_2022_2026.json docs\registries\valuebetennis_2022_2026_tiers_v1.json --out reports\valuebetennis_tier_audit_2022_2026.json
+```
+
+A mismatched source SHA-256 exits nonzero. `REVIEW_REQUIRED` means the
+audit completed, **not** that official tournament editions, main-draw
+eligibility, full match coverage or T−60 market quotes were established.
+This does not train a model. Full interpretation and source URLs:
+`docs/TIER_REGISTRY_AUDIT.md`.
