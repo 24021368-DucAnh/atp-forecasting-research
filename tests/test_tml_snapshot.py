@@ -198,3 +198,39 @@ def test_previous_season_early_december_cannot_sneak_into_update(tmp_path):
     data=sample_csv(year=2025).replace(b"20251101", b"20241201")
     with pytest.raises(ValueError,match="season"):
         update_tml_season(2025,tmp_path,at=NOW,fetcher=lambda _:data)
+
+
+def test_public_source_missing_match_numbers_are_pinned_but_quarantined(tmp_path):
+    # Real historical TML 2025 GitHub snapshot has many blank match_num rows.
+    # Preserve exact original bytes without inventing match identity.
+    first=sample_csv(year=2025)
+    second=sample_csv(year=2025,winner="ATPC").split(b"\n",1)[1]
+    # Same tournament but match_num blank is unidentifiable; never synthesize it.
+    second=second.replace(b"2025-407,Example,Hard,32,500,,20251101,1,",
+                          b"2025-407,Example,Hard,32,500,,20251101,,")
+    source=first+second
+    result=update_tml_season(2025,tmp_path,at=NOW,fetcher=lambda _:source)
+    assert result["status"]=="SOURCE_ANOMALY_REVIEW_REQUIRED"
+    assert result["source_rows"]==2
+    assert result["accepted_rows"]==1
+    assert result["source_anomalies"]["MISSING_MATCH_ID"]==1
+    assert result["eligible_for_model_training"]==0
+    assert (tmp_path/"2025"/f"2025-{result['sha256']}.csv").read_bytes()==source
+
+
+def test_public_source_short_trailing_row_is_quarantined_not_repaired(tmp_path):
+    good=sample_csv(year=2025)
+    short=b"2025-7696,Next Gen ATP Finals,Hard,8,A,I,20251222,15\n"
+    payload=good+short
+    result=update_tml_season(2025,tmp_path,at=NOW,fetcher=lambda _:payload)
+    assert result["status"]=="SOURCE_ANOMALY_REVIEW_REQUIRED"
+    assert result["source_anomalies"]["MALFORMED_ROWS"]==1
+    assert (tmp_path/"2025"/f"2025-{result['sha256']}.csv").read_bytes()==payload
+
+
+def test_unidentifiable_only_source_is_still_rejected(tmp_path):
+    all_missing=sample_csv(year=2025).replace(b"2025-407,Example,Hard,32,500,,20251101,1,",
+                                               b"2025-407,Example,Hard,32,500,,20251101,,")
+    with pytest.raises(ValueError,match="eligible|match"):
+        update_tml_season(2025,tmp_path,at=NOW,fetcher=lambda _:all_missing)
+    assert not (tmp_path/"2025"/"index.json").exists()
