@@ -53,6 +53,11 @@ def main() -> int:
     gap_forensics.add_argument('calendar',help='Curated official ATP event calendar JSON')
     gap_forensics.add_argument('--month',required=True,help='UTC month YYYY-MM')
     gap_forensics.add_argument('--out',help='Optional separate JSON report under ignored reports directory')
+    legacy_crosswalk=sub.add_parser('valuebetennis-legacy-crosswalk',help='Review metadata-only legacy provider event IDs against pinned official ATP calendar')
+    legacy_crosswalk.add_argument('inventory',help='Original pinned P1.3a tournament inventory JSON')
+    legacy_crosswalk.add_argument('calendar',help='Curated official ATP February 2024 event reference')
+    legacy_crosswalk.add_argument('manifest',help='Curated legacy provider HTML tournament-index metadata')
+    legacy_crosswalk.add_argument('--out',help='Optional local JSON report under ignored reports directory')
     research_train=sub.add_parser('research-train',help='XGBoost research with chronological split; NO live allocation')
     research_train.add_argument('paths',nargs='+')
     research_train.add_argument('--out',required=True,help='JSON research report output path')
@@ -60,6 +65,54 @@ def main() -> int:
     research_train.add_argument('--minimum-target',type=int,default=30)
     research_train.add_argument('--seed',type=int,default=20261123)
     args=parser.parse_args()
+
+    if args.cmd=='valuebetennis-legacy-crosswalk':
+        try:
+            import hashlib
+            from .legacy_archive_crosswalk import audit_legacy_archive_crosswalk
+            original_path=Path(args.inventory)
+            calendar_path=Path(args.calendar)
+            manifest_path=Path(args.manifest)
+            inputs={original_path.resolve(),calendar_path.resolve(),manifest_path.resolve()}
+            if args.out and Path(args.out).resolve() in inputs:
+                raise ValueError('legacy crosswalk output cannot overwrite any input')
+            original_bytes=original_path.read_bytes()
+            original_digest=hashlib.sha256(original_bytes).hexdigest()
+            inventory=json.loads(original_bytes.decode('utf-8-sig'))
+            calendar=json.loads(calendar_path.read_text(encoding='utf-8-sig'))
+            manifest=json.loads(manifest_path.read_text(encoding='utf-8-sig'))
+            result=audit_legacy_archive_crosswalk(
+                inventory,calendar,manifest,inventory_sha256=original_digest)
+            if args.out:
+                dest=Path(args.out)
+                dest.parent.mkdir(parents=True,exist_ok=True)
+                dest.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+            print(json.dumps({
+                'status':result['status'],
+                'mode':result['mode'],
+                'inventory_sha256':original_digest,
+                'official_event_count':result['official_event_count'],
+                'crosswalk_entries':result['crosswalk_entries'],
+                'archive_ids_absent_from_source':result['archive_ids_absent_from_source'],
+                'legacy_archive_rights_verified':result['legacy_archive_rights_verified'],
+                'legacy_match_results_available':result['legacy_match_results_available'],
+                'warnings':result['warnings'],
+                'report_path':str(args.out) if args.out else None,
+                'tier_mapping_verified':False,'main_draw_verified':False,
+                't60_quote_verified':False,
+                'eligible_for_model_training':0,'allocation_enabled':False,'stake':0,
+            },ensure_ascii=False,indent=2))
+            return 0
+        except (ValueError,OSError,UnicodeError,TypeError,KeyError) as exc:
+            print(json.dumps({
+                'status':'ERROR','mode':'HISTORICAL_RESEARCH_ONLY',
+                'reason':str(exc),'legacy_archive_rights_verified':False,
+                'legacy_match_results_available':False,
+                'tier_mapping_verified':False,'main_draw_verified':False,
+                't60_quote_verified':False,'eligible_for_model_training':0,
+                'allocation_enabled':False,'stake':0,
+            },ensure_ascii=False,indent=2))
+            return 2
 
     if args.cmd=='valuebetennis-gap-forensics':
         try:
