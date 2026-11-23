@@ -164,3 +164,20 @@ def test_updater_cli_rejects_future_season_without_any_network(tmp_path):
     assert report["eligible_for_model_training"]==0
     assert report["allocation_enabled"] is False and report["stake"]==0
     assert not list(tmp_path.iterdir())
+
+
+def test_historical_audit_accepts_sha_versioned_2024_filename(tmp_path):
+    from atp_gate.tml_historical_audit import audit_tml_february_2024
+    import json
+    from pathlib import Path
+
+    data=sample_csv(year=2024)
+    sha=hashlib.sha256(data).hexdigest()
+    path=tmp_path/f"2024-{sha}.csv"
+    path.write_bytes(data)
+    registry=json.loads((ROOT/"docs/registries/tml_2024_feb_source_crosswalk_v1.json").read_text())
+    official=json.loads((ROOT/"docs/registries/atp_2024_february_official_events_v1.json").read_text())
+    report=audit_tml_february_2024(path,registry,official)
+    assert report["source_sha256"]==sha
+    assert report["status"]=="SOURCE_CANDIDATE_INCONSISTENT"
+    assert report["eligible_for_model_training"]==0
