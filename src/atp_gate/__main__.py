@@ -47,6 +47,12 @@ def main() -> int:
     calendar_audit.add_argument('inventory',help='Original saved P1.3a Valuebetennis tournament JSON')
     calendar_audit.add_argument('calendar',help='Curated official ATP calendar reference JSON')
     calendar_audit.add_argument('--out',help='Optional separate local JSON report')
+    gap_forensics=sub.add_parser('valuebetennis-gap-forensics',help='Investigate original local CSV source rows behind official ATP gaps; no source mutation')
+    gap_forensics.add_argument('csv_path',help='One original local Valuebetennis season CSV')
+    gap_forensics.add_argument('inventory',help='Pinned P1.3a tournament source inventory JSON')
+    gap_forensics.add_argument('calendar',help='Curated official ATP event calendar JSON')
+    gap_forensics.add_argument('--month',required=True,help='UTC month YYYY-MM')
+    gap_forensics.add_argument('--out',help='Optional separate JSON report under ignored reports directory')
     research_train=sub.add_parser('research-train',help='XGBoost research with chronological split; NO live allocation')
     research_train.add_argument('paths',nargs='+')
     research_train.add_argument('--out',required=True,help='JSON research report output path')
@@ -54,6 +60,57 @@ def main() -> int:
     research_train.add_argument('--minimum-target',type=int,default=30)
     research_train.add_argument('--seed',type=int,default=20261123)
     args=parser.parse_args()
+
+    if args.cmd=='valuebetennis-gap-forensics':
+        try:
+            import hashlib
+            from .source_gap_forensics import audit_source_gap
+            raw_path=Path(args.csv_path)
+            inventory_path=Path(args.inventory)
+            calendar_path=Path(args.calendar)
+            if args.out and Path(args.out).resolve() in (
+                raw_path.resolve(),inventory_path.resolve(),calendar_path.resolve()
+            ):
+                raise ValueError('forensic output must not overwrite any input file')
+            raw_inventory=inventory_path.read_bytes()
+            inventory_hash=hashlib.sha256(raw_inventory).hexdigest()
+            inventory=json.loads(raw_inventory.decode('utf-8-sig'))
+            official=json.loads(calendar_path.read_text(encoding='utf-8-sig'))
+            result=audit_source_gap(
+                raw_path,inventory,official,
+                inventory_sha256=inventory_hash,month=args.month)
+            if args.out:
+                dest=Path(args.out)
+                dest.parent.mkdir(parents=True,exist_ok=True)
+                dest.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+            print(json.dumps({
+                'status':result['status'],
+                'mode':result['mode'],
+                'source_scope':result['source_scope'],
+                'source_file':result['source_file'],
+                'source_total_rows':result['source_total_rows'],
+                'source_provisional_accepted':result['source_provisional_accepted'],
+                'source_expected_accepted':result['source_expected_accepted'],
+                'month':result['month'],
+                'undated_rows_outside_month_attribution':result['undated_rows_outside_month_attribution'],
+                'official_event_count':result['official_event_count'],
+                'official_event_status_counts':result['official_event_status_counts'],
+                'warnings':result['warnings'],
+                'report_path':str(args.out) if args.out else None,
+                'tier_mapping_verified':False,'main_draw_verified':False,
+                't60_quote_verified':False,'eligible_for_model_training':0,
+                'allocation_enabled':False,'stake':0,
+            },ensure_ascii=False,indent=2))
+            return 0
+        except (ValueError,OSError,UnicodeError,TypeError,KeyError) as exc:
+            print(json.dumps({
+                'status':'ERROR','mode':'HISTORICAL_RESEARCH_ONLY',
+                'reason':str(exc),'tier_mapping_verified':False,
+                'main_draw_verified':False,'t60_quote_verified':False,
+                'eligible_for_model_training':0,
+                'allocation_enabled':False,'stake':0,
+            },ensure_ascii=False,indent=2))
+            return 2
 
     if args.cmd=='valuebetennis-calendar-audit':
         try:
