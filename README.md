@@ -72,3 +72,22 @@ Download names depend on the provider. Files are **not provided** in this ZIP; o
 - A single time split is an initial checkpoint, not multi-year rolling walk-forward nor statistically conclusive model validation; future versions must add season-by-season retraining, stable player IDs, actual quote snapshots, confidence intervals, and independent evidence approval.
 
 For design, test plan, and source-rights audit see `docs/superpowers/specs/2026-11-23-research-pipeline-design.md`, `docs/superpowers/plans/2026-11-23-research-pipeline.md`, and `docs/THIRD_PARTY_NOTICES.md`.
+
+
+## D. Replay a saved historical experiment
+
+New research reports record exact source checksums, actual observed target-tier
+counts, training sample thresholds, model-source fingerprint and ML dependency versions.
+The replay command refits the model under these inputs and requires identical output.
+Old V0.2.1 reports do not contain the required environment information, so generate
+a new report first:
+
+```powershell
+.\.venv\Scripts\python.exe -m atp_gate research-train data\ATP_2026.csv --out reports\ATP_2026_reproducible.json
+.\.venv\Scripts\python.exe scripts\replay_research.py reports\ATP_2026_reproducible.json data\ATP_2026.csv
+```
+
+Successful replay reports `status: REPRODUCED`. A mismatch returns
+`status: REJECT` and a nonzero exit code. Neither result grants permission
+for live wagers or capital allocation; there are still no verified T-60
+price snapshots. See `docs/RESEARCH_REPRODUCIBILITY.md`.
