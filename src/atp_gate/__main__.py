@@ -68,6 +68,11 @@ def main() -> int:
     tml_update.add_argument('--root',default='data/tml',help='Private locally ignored versioned snapshot directory')
     tml_update.add_argument('--force',action='store_true',help='Explicitly bypass daily freshness check')
 
+    elo_research=sub.add_parser('tml-elo-experiment',help='Local noncommercial pre-tournament Elo skill study; not betting forecasts')
+    elo_research.add_argument('paths',nargs='+',help='Local TML YYYY.csv or immutable YYYY-SHA256.csv snapshots')
+    elo_research.add_argument('--out',required=True,help='Aggregate-only local JSON report path')
+    elo_research.add_argument('--embargo-days',type=int,default=28,help='Fixed tournament-result availability embargo (default 28 days)')
+    elo_research.add_argument('--bootstrap-replicates',type=int,default=200,help='Event-cluster bootstrap repeats (default 200)')
     research_train=sub.add_parser('research-train',help='XGBoost research with chronological split; NO live allocation')
     research_train.add_argument('paths',nargs='+')
     research_train.add_argument('--out',required=True,help='JSON research report output path')
@@ -75,6 +80,31 @@ def main() -> int:
     research_train.add_argument('--minimum-target',type=int,default=30)
     research_train.add_argument('--seed',type=int,default=20261123)
     args=parser.parse_args()
+
+    if args.cmd=='tml-elo-experiment':
+        try:
+            from .tml_elo_experiment import run_tml_elo_experiment
+            sources=[Path(p) for p in args.paths]
+            dest=Path(args.out)
+            if dest.resolve() in {p.resolve() for p in sources}:
+                raise ValueError('research report cannot overwrite any TML source snapshot')
+            result=run_tml_elo_experiment(
+                sources,
+                embargo_days=args.embargo_days,
+                bootstrap_replicates=args.bootstrap_replicates,
+            )
+            dest.parent.mkdir(parents=True,exist_ok=True)
+            dest.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+            print(json.dumps(result,ensure_ascii=False,indent=2))
+            return 0
+        except (ValueError,OSError,UnicodeError,TypeError,KeyError) as exc:
+            print(json.dumps({
+                'status':'ERROR','mode':'PERSONAL_NONCOMMERCIAL_RESEARCH',
+                'reason':str(exc),'model_validation_trusted':False,
+                't60_quote_verified':False,'market_edge_verified':False,
+                'allocation_enabled':False,'stake':0,
+            },ensure_ascii=False,indent=2))
+            return 2
 
     if args.cmd=='tml-update':
         try:
