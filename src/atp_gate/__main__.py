@@ -27,6 +27,10 @@ def main() -> int:
     research_profile.add_argument('--start-year',type=int)
     research_profile.add_argument('--end-year',type=int)
     research_profile.add_argument('paths',nargs='+',help='Original historical CSV/XLSX source files')
+    valuebetennis_profile=sub.add_parser('valuebetennis-profile',help='Read-only ATP identity and coverage preflight for Valuebetennis CSVs')
+    valuebetennis_profile.add_argument('--start-year',type=int)
+    valuebetennis_profile.add_argument('--end-year',type=int)
+    valuebetennis_profile.add_argument('paths',nargs='+',help='Local semicolon-delimited Valuebetennis seasonal CSVs')
     research_train=sub.add_parser('research-train',help='XGBoost research with chronological split; NO live allocation')
     research_train.add_argument('paths',nargs='+')
     research_train.add_argument('--out',required=True,help='JSON research report output path')
@@ -34,6 +38,23 @@ def main() -> int:
     research_train.add_argument('--minimum-target',type=int,default=30)
     research_train.add_argument('--seed',type=int,default=20261123)
     args=parser.parse_args()
+
+    if args.cmd=='valuebetennis-profile':
+        try:
+            from .valuebetennis_source import inspect_valuebetennis_sources
+            result=inspect_valuebetennis_sources(
+                args.paths,expected_start_year=args.start_year,
+                expected_end_year=args.end_year)
+            print(json.dumps(result,ensure_ascii=False,indent=2))
+            return 0 if result['status']=='INSPECTED_UNMAPPED' else 2
+        except (ValueError,OSError,UnicodeError,RuntimeError) as exc:
+            print(json.dumps({
+                'status':'ERROR','mode':'HISTORICAL_RESEARCH_ONLY',
+                'reason':str(exc),'live_eligible':False,
+                'allocation_enabled':False,'validation_report_trusted':False,
+                'eligible_for_model_training':0,'stake':0,
+            },ensure_ascii=False,indent=2))
+            return 2
 
     if args.cmd=='research-verify':
         from .report_integrity import verify_research_report
