@@ -13,7 +13,7 @@ import math
 import random
 import re
 from collections import Counter, defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Sequence
@@ -60,7 +60,7 @@ def _source_date(raw: str, season: int) -> date:
     return d
 
 
-def _load(paths: Sequence[Path]) -> tuple[list[_Match], list[dict], Counter]:
+def _load(paths: Sequence[Path]) -> tuple[list[_Match], list[dict], Counter, int]:
     if not isinstance(paths, (list, tuple)) or len(paths) < 4:
         raise ValueError("four or more local source seasons required")
     inventory: list[dict] = []
@@ -68,7 +68,8 @@ def _load(paths: Sequence[Path]) -> tuple[list[_Match], list[dict], Counter]:
     excluded: Counter = Counter()
     seen_seasons: set[int] = set()
     seen_match_keys: set[tuple[str, str]] = set()
-    event_metadata: dict[str, tuple[date, str]] = {}
+    event_dates: dict[str, set[date]] = defaultdict(set)
+    event_surfaces: dict[str, str] = {}
 
     for raw_path in paths:
         path = Path(raw_path)
@@ -115,15 +116,16 @@ def _load(paths: Sequence[Path]) -> tuple[list[_Match], list[dict], Counter]:
                 seen_match_keys.add(key)
                 start = _source_date(row["tourney_date"], season)
                 surface = row["surface"]
-                prior_meta = event_metadata.setdefault(tid, (start, surface))
-                if prior_meta != (start, surface):
-                    raise ValueError("conflicting TML tournament start or surface")
                 if row["tourney_level"] not in _ALLOWED_LEVELS:
                     excluded["OUT_OF_SCOPE_LEVEL"] += 1
                     continue
                 if surface not in _ALLOWED_SURFACES:
                     excluded["UNKNOWN_SURFACE"] += 1
                     continue
+                if tid in event_surfaces and event_surfaces[tid] != surface:
+                    raise ValueError("conflicting TML tournament surface")
+                event_surfaces[tid] = surface
+                event_dates[tid].add(start)
                 score = row["score"]
                 if not score or not any(x.isdigit() for x in score) or _BAD_SCORES.search(score):
                     excluded["NON_COMPLETED"] += 1
@@ -146,7 +148,19 @@ def _load(paths: Sequence[Path]) -> tuple[list[_Match], list[dict], Counter]:
 
     if not events:
         raise ValueError("no eligible completed tour-level TML matches")
-    return events, sorted(inventory, key=lambda x: x["season"]), excluded
+    earliest: dict[str, date] = {}
+    event_date_variants = 0
+    for tid, dates in event_dates.items():
+        if max(dates) - min(dates) > timedelta(days=1):
+            raise ValueError("same TML tournament has unsafe start date spread")
+        if len(dates) > 1:
+            event_date_variants += 1
+        earliest[tid] = min(dates)
+    # The public 2024 archive contains three events with a one-day date
+    # variation. Freeze every match in that tournament at its EARLIEST
+    # observed date; never split it into sequential result-updating events.
+    normalized = [replace(m, start=earliest[m.event_id]) for m in events]
+    return normalized, sorted(inventory, key=lambda x: x["season"]), excluded, event_date_variants
 
 
 def _elo_p(rating_a: float, rating_b: float) -> float:
@@ -290,7 +304,7 @@ def run_tml_elo_experiment(
         raise ValueError("bootstrap repeats out of bounds")
     if type(seed) is not int:
         raise ValueError("bootstrap seed must be integer")
-    matches, inventory, excluded = _load(paths)
+    matches, inventory, excluded, date_variants = _load(paths)
     if not any(m.start.year < test_years[0] for m in matches):
         raise ValueError("insufficient pre-holdout warmup history")
     by_date: dict[date, list[_Match]] = defaultdict(list)
@@ -324,6 +338,7 @@ def run_tml_elo_experiment(
         "source_inventory": inventory,
         "source_match_rows_eligible": len(matches),
         "provider_rows_quarantined": (excluded["MALFORMED_ROWS"] + excluded["MISSING_MATCH_ID"]),
+        "event_date_variants_grouped": date_variants,
         "excluded_reasons": dict(sorted(excluded.items())),
         "holdout_years": list(test_years),
         "fold_count": len(test_years),
@@ -351,5 +366,6 @@ def run_tml_elo_experiment(
             "ELIGIBLE_RESULTS_REQUIRE_INDEPENDENT_OFFICIAL_DRAW_AUDIT",
             "NO_REAL_MONEY_ALLOCATION_OR_PROFIT_CLAIM",
             "BLANK_PROVIDER_MATCH_IDS_ARE_EXCLUDED_NOT_SYNTHESIZED",
+            "ONE_DAY_EVENT_START_VARIANTS_GROUPED_TO_EARLIEST_DATE",
         ],
     }
