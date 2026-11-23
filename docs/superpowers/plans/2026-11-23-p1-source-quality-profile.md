@@ -1,6 +1,6 @@
 # P1.1 Source Quality Profile Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans or superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans or superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax.
 
 **Goal:** Provide a reproducible, read-only, fail-closed quality and coverage profile for one or more historical ATP sources.
 
@@ -32,19 +32,19 @@
 
 **Interfaces:** `profile_historical_sources(paths, *, expected_start_year=None, expected_end_year=None) -> dict`; consumes `load_historical_matches`.
 
-- [ ] **Step 1:** Write tests for tier/year/source and surface totals, duplicate input files and accepted-only denominators.
-- [ ] **Step 2:** Run `pytest tests/test_source_profile.py -q` and verify missing module/function fails.
-- [ ] **Step 3:** Implement a narrow profile with invariant aggregate counting and safe status output.
-- [ ] **Step 4:** Rerun focused tests; compare totals to source audit.
-- [ ] **Step 5:** Commit.
+- [x] **Step 1:** Write tests for tier/year/source and surface totals, duplicate input files and accepted-only denominators.
+- [x] **Step 2:** Run `pytest tests/test_source_profile.py -q` and verify missing module/function fails.
+- [x] **Step 3:** Implement a narrow profile with invariant aggregate counting and safe status output.
+- [x] **Step 4:** Rerun focused tests; compare totals to source audit.
+- [x] **Step 5:** Commit.
 
 ### Task 2 — Explicit expected years and robust fail-closed behavior
 **Files:** Same module and tests.
-- [ ] **Step 1:** Add tests for missing expected season, no accepted matches, invalid ranges, and missed quotes/ranks.
-- [ ] **Step 2:** Verify red on new tests.
-- [ ] **Step 3:** Implement inclusive year-coverage validation and warnings.
-- [ ] **Step 4:** Verify focused and full suite.
-- [ ] **Step 5:** Commit.
+- [x] **Step 1:** Add tests for missing expected season, no accepted matches, invalid ranges, and missed quotes/ranks.
+- [x] **Step 2:** Verify red on new tests.
+- [x] **Step 3:** Implement inclusive year-coverage validation and warnings.
+- [x] **Step 4:** Verify focused and full suite.
+- [x] **Step 5:** Commit.
 
 ### Task 3 — Research profile CLI
 **Files:**
@@ -54,21 +54,23 @@
 
 **Interfaces:** `research-profile [--start-year YYYY --end-year YYYY] PATH...` return 0 for PROFILED, 2 for INCOMPLETE or input error.
 
-- [ ] **Step 1:** Add subprocess test for success and coverage failure exit codes.
-- [ ] **Step 2:** Verify expected failure when CLI command is missing.
-- [ ] **Step 3:** Add parser and error handling, without touching existing research commands.
-- [ ] **Step 4:** Run complete `pytest -q` and CI matrix (Windows + Ubuntu, Python 3.11 + 3.12).
-- [ ] **Step 5:** Commit documentation with a one-year and multi-year command, no source download.
+- [x] **Step 1:** Add subprocess test for success and coverage failure exit codes.
+- [x] **Step 2:** Verify expected failure when CLI command is missing.
+- [x] **Step 3:** Add parser and error handling, without touching existing research commands.
+- [x] **Step 4:** Run complete `pytest -q` and CI matrix (Windows + Ubuntu, Python 3.11 + 3.12).
+- [x] **Step 5:** Commit documentation with a one-year and multi-year command, no source download.
 
 ### Task 4 — Source rights and provenance record
 **Files:**
 - Create: `docs/DATA_SOURCE_DECISIONS.md`
 - Modify: `docs/THIRD_PARTY_NOTICES.md` only if necessary.
 
-- [ ] **Step 1:** Record Valuebetennis CC BY 4.0 / named source, explicit open/close != T−60, broader Main tour tiers; link to provider statement.
-- [ ] **Step 2:** Record Tennis-Data restriction and Sackmann NC/SA, label source license status unverified in code.
-- [ ] **Step 3:** Review PR diff and confirm only code/tests/docs are tracked, never raw files.
-- [ ] **Step 4:** Ensure all four GitHub Actions jobs pass before marking PR review-ready.
+- [x] **Step 1:** Record Valuebetennis CC BY 4.0 / named source, explicit open/close != T−60, broader Main tour tiers; link to provider statement.
+- [x] **Step 2:** Record Tennis-Data restriction and Sackmann NC/SA, label source license status unverified in code.
+- [x] **Step 3:** Review PR diff and confirm only code/tests/docs are tracked, never raw files.
+- [x] **Step 4:** Ensure all four GitHub Actions jobs pass before marking PR review-ready.
 
 ## Acceptance
 PR must not be merged until all four test matrix jobs pass, invariant counts and exclusion rules are validated, and unverified source identity/licensing flags remain visible. No model training evidence is introduced.
+
+**Verification record (before review):** GitHub Actions run 45112636397 completed all four jobs successfully; Ubuntu 3.12 and Windows 3.11 each reported 109 passed. The initial test-only branch failed with missing module and the second red stage failed only for the unregistered CLI. The user retains merge approval; nothing in this plan authorizes real-money decisions.
