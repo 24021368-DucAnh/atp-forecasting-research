@@ -83,11 +83,15 @@ def test_three_years_have_same_match_elo_and_coinflip_scores(tmp_path):
 
 def test_same_tournament_two_wins_cannot_update_each_other(tmp_path):
     files=season_files(tmp_path)
+    files[2]=make_file(tmp_path,2023,[
+        row(2023,"star","20230401",1,winner="A",loser="Z"),
+        row(2023,"star","20230401",2,winner="A",loser="Z"),
+    ])
     out=run_tml_elo_experiment(files,bootstrap_replicates=50)
     first=out["folds"][0]
-    # 2023 A vs Z is unseen, and both wins in one tournament are frozen
-    # at their event's start. Warmup players Q/R are unrelated.
-    assert first["n"]==4
+    # A/Z have no pre-2023 matches. Even the second result must see
+    # the same 0.5 Elo probability, not learn from the first row.
+    assert first["n"]==2
     assert first["global_elo_brier"]==pytest.approx(0.25)
 
 
