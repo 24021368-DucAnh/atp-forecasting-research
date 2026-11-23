@@ -31,6 +31,11 @@ def main() -> int:
     valuebetennis_profile.add_argument('--start-year',type=int)
     valuebetennis_profile.add_argument('--end-year',type=int)
     valuebetennis_profile.add_argument('paths',nargs='+',help='Local semicolon-delimited Valuebetennis seasonal CSVs')
+    tourney_inventory=sub.add_parser('valuebetennis-tournaments',help='Inventory provider tournament-season IDs and raw draw rounds; no tier inference')
+    tourney_inventory.add_argument('--start-year',type=int)
+    tourney_inventory.add_argument('--end-year',type=int)
+    tourney_inventory.add_argument('--out',required=True,help='Local ignored JSON report filename')
+    tourney_inventory.add_argument('paths',nargs='+',help='Valuebetennis seasonal CSV inputs')
     research_train=sub.add_parser('research-train',help='XGBoost research with chronological split; NO live allocation')
     research_train.add_argument('paths',nargs='+')
     research_train.add_argument('--out',required=True,help='JSON research report output path')
@@ -38,6 +43,40 @@ def main() -> int:
     research_train.add_argument('--minimum-target',type=int,default=30)
     research_train.add_argument('--seed',type=int,default=20261123)
     args=parser.parse_args()
+
+    if args.cmd=='valuebetennis-tournaments':
+        try:
+            from .valuebetennis_source import inspect_valuebetennis_sources
+            result=inspect_valuebetennis_sources(
+                args.paths, expected_start_year=args.start_year,
+                expected_end_year=args.end_year, include_tournaments=True)
+            inventory=result['tournament_inventory']
+            dest=Path(args.out)
+            dest.parent.mkdir(parents=True,exist_ok=True)
+            dest.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+            print(json.dumps({
+                'status':inventory['status'],
+                'mode':'HISTORICAL_RESEARCH_ONLY',
+                'tournament_season_count':inventory['summary']['tournament_seasons'],
+                'candidate_matches':inventory['summary']['candidate_matches'],
+                'inventoried_matches':inventory['summary']['inventoried_matches'],
+                'missing_tournament_metadata':inventory['summary']['missing_tournament_metadata'],
+                'metadata_conflicts':inventory['summary']['metadata_conflicts'],
+                'missing_expected_years':result['coverage']['missing_expected_years'],
+                'warnings':inventory['warnings'],
+                'report_path':str(dest),
+                'tier_mapping_verified':False,'main_draw_verified':False,
+                'eligible_for_model_training':0,'allocation_enabled':False,'stake':0,
+            },ensure_ascii=False,indent=2))
+            return 0 if inventory['status']=='INVENTORIED_UNMAPPED' else 2
+        except (ValueError,OSError,UnicodeError,RuntimeError) as exc:
+            print(json.dumps({
+                'status':'ERROR','mode':'HISTORICAL_RESEARCH_ONLY',
+                'reason':str(exc),'tier_mapping_verified':False,
+                'main_draw_verified':False,'eligible_for_model_training':0,
+                'allocation_enabled':False,'stake':0,
+            },ensure_ascii=False,indent=2))
+            return 2
 
     if args.cmd=='valuebetennis-profile':
         try:

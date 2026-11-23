@@ -75,6 +75,7 @@ def inspect_valuebetennis_sources(
     *,
     expected_start_year: int | None = None,
     expected_end_year: int | None = None,
+    include_tournaments: bool = False,
 ) -> dict:
     """Count only valid ATP *candidates*; never resolve tier or main draw."""
     if isinstance(paths, (str, Path)):
@@ -107,6 +108,8 @@ def inspect_valuebetennis_sources(
     latest: datetime | None = None
     missing_open = 0
     missing_close = 0
+    tournament_rows: dict[tuple[int, str], dict] = {}
+    missing_tournament_metadata = 0
 
     for source in sources:
         if source.suffix.lower() != ".csv":
@@ -169,6 +172,29 @@ def inspect_valuebetennis_sources(
                 by_category[category] += 1
                 by_surface[str(row["surface"] or "").strip() or "UNKNOWN"] += 1
                 by_source[source.name] += 1
+                if include_tournaments:
+                    tournament_id = _positive_id(row["tournoi_id"])
+                    tournament_name = str(row["tournoi"] or "").strip()
+                    if not tournament_id or not tournament_name:
+                        missing_tournament_metadata += 1
+                    else:
+                        key = (match_time.year, tournament_id)
+                        if key not in tournament_rows:
+                            tournament_rows[key] = {
+                                "names": set(), "categories": set(),
+                                "surfaces": set(), "round_counts": Counter(),
+                                "source_files": set(), "candidate_matches": 0,
+                                "first": match_time, "last": match_time,
+                            }
+                        grouped = tournament_rows[key]
+                        grouped["names"].add(tournament_name)
+                        grouped["categories"].add(category)
+                        grouped["surfaces"].add(str(row["surface"] or "").strip() or "UNKNOWN")
+                        grouped["round_counts"][str(round_index)] += 1
+                        grouped["source_files"].add(source.name)
+                        grouped["candidate_matches"] += 1
+                        grouped["first"] = min(grouped["first"], match_time)
+                        grouped["last"] = max(grouped["last"], match_time)
                 ids_to_names[id_a].add(name_a)
                 ids_to_names[id_b].add(name_b)
                 names_to_ids[name_a.casefold()].add(id_a)
@@ -205,7 +231,7 @@ def inspect_valuebetennis_sources(
     if missing_close:
         warnings.append("MISSING_CLOSING_PRICE_PAIR")
 
-    return {
+    result = {
         "status": "INCOMPLETE" if not has_rows or missing else "INSPECTED_UNMAPPED",
         "mode": "HISTORICAL_RESEARCH_ONLY",
         "profile_version": "P1_VALUEBETENNIS_1",
@@ -257,3 +283,64 @@ def inspect_valuebetennis_sources(
         "validation_report_trusted": False,
         "stake": 0,
     }
+
+    if include_tournaments:
+        records = []
+        conflicts = 0
+        by_tournament_year = Counter()
+        for (year, tournament_id), grouped in sorted(
+            tournament_rows.items(), key=lambda item: (item[0][0], int(item[0][1]))
+        ):
+            has_conflict = any(
+                len(grouped[key]) > 1 for key in ("names", "categories", "surfaces")
+            )
+            conflicts += int(has_conflict)
+            by_tournament_year[str(year)] += 1
+            records.append({
+                "year": year,
+                "tournament_id": tournament_id,
+                "names": sorted(grouped["names"]),
+                "categories": sorted(grouped["categories"]),
+                "surfaces": sorted(grouped["surfaces"]),
+                "round_counts": dict(sorted(grouped["round_counts"].items(),
+                                             key=lambda item: int(item[0]))),
+                "candidate_matches": grouped["candidate_matches"],
+                "source_files": sorted(grouped["source_files"]),
+                "first_observed_utc": grouped["first"].isoformat(),
+                "last_observed_utc": grouped["last"].isoformat(),
+                "metadata_conflict": has_conflict,
+                "official_tier": None,
+                "main_draw_verified": False,
+            })
+        inventoried = sum(group["candidate_matches"] for group in records)
+        warnings = ["OFFICIAL_TIER_UNMAPPED", "ROUND_CODES_ARE_NOT_MAIN_DRAW_PROOF"]
+        if missing_tournament_metadata:
+            warnings.append("TOURNAMENT_METADATA_MISSING")
+        if conflicts:
+            warnings.append("CONFLICTING_TOURNAMENT_METADATA")
+        if result["status"] != "INSPECTED_UNMAPPED":
+            warnings.append("INCOMPLETE_SOURCE_COVERAGE")
+        ready_to_inventory = (
+            result["status"] == "INSPECTED_UNMAPPED"
+            and bool(records)
+            and not missing_tournament_metadata
+            and not conflicts
+            and inventoried == counts["atp_candidate_matches"]
+        )
+        result["tournament_inventory"] = {
+            "status": "INVENTORIED_UNMAPPED" if ready_to_inventory else "INCOMPLETE",
+            "summary": {
+                "tournament_seasons": len(records),
+                "candidate_matches": int(counts["atp_candidate_matches"]),
+                "inventoried_matches": inventoried,
+                "missing_tournament_metadata": missing_tournament_metadata,
+                "metadata_conflicts": conflicts,
+                "tournament_seasons_by_year": dict(sorted(by_tournament_year.items())),
+            },
+            "tournament_seasons": records,
+            "warnings": warnings,
+            "tier_mapping_verified": False,
+            "main_draw_verified": False,
+            "eligible_for_model_training": 0,
+        }
+    return result

@@ -160,3 +160,21 @@ draw verification, provider-file origin authentication, official tier mapping
 or market edge verification. The report always keeps
 `eligible_for_model_training: 0`, `allocation_enabled: false`, `stake: 0`.
 See `docs/VALUEBETENNIS_SOURCE_INSPECTION.md`.
+
+
+## P1.3a — Inventory Valuebetennis tournament IDs and draw-round codes
+
+The provider's `Main tour` category does **not** certify ATP250 vs ATP500,
+and its `tour` 0–12 code does not automatically prove a main-draw round.
+Generate an inspectable per-season/per-tournament ID catalog, keeping raw
+categories, round distributions, source hashes and unresolved collisions:
+
+```powershell
+.\.venv\Scripts\python.exe -m atp_gate valuebetennis-tournaments --out reports\valuebetennis_tournaments_2022_2026.json --start-year 2022 --end-year 2026 data\valuebetennis-matchs-2022.csv data\valuebetennis-matchs-2023.csv data\valuebetennis-matchs-2024.csv data\valuebetennis-matchs-2025.csv data\valuebetennis-matchs-2026.csv
+```
+
+The command prints a compact status and saves its full JSON under the
+git-ignored `reports/` folder. `INVENTORIED_UNMAPPED` means a source
+inventory was generated, **not** that ATP tier, qualifiers/main draw or
+T−60 market odds were verified. For schema, limitations and next official
+mapping work, see `docs/TOURNAMENT_SEASON_INVENTORY.md`.
