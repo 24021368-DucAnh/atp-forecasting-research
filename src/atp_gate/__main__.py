@@ -43,6 +43,10 @@ def main() -> int:
     tier_audit.add_argument('inventory',help='P1.3a saved tournament inventory JSON')
     tier_audit.add_argument('registry',help='Source-backed per-event tier registry JSON')
     tier_audit.add_argument('--out',help='Optional separate local JSON audit report')
+    calendar_audit=sub.add_parser('valuebetennis-calendar-audit',help='Compare curated official ATP events against pinned provider inventory, no training authorization')
+    calendar_audit.add_argument('inventory',help='Original saved P1.3a Valuebetennis tournament JSON')
+    calendar_audit.add_argument('calendar',help='Curated official ATP calendar reference JSON')
+    calendar_audit.add_argument('--out',help='Optional separate local JSON report')
     research_train=sub.add_parser('research-train',help='XGBoost research with chronological split; NO live allocation')
     research_train.add_argument('paths',nargs='+')
     research_train.add_argument('--out',required=True,help='JSON research report output path')
@@ -50,6 +54,56 @@ def main() -> int:
     research_train.add_argument('--minimum-target',type=int,default=30)
     research_train.add_argument('--seed',type=int,default=20261123)
     args=parser.parse_args()
+
+    if args.cmd=='valuebetennis-calendar-audit':
+        try:
+            import hashlib
+            from .official_calendar_coverage import audit_official_calendar_coverage
+            source_path=Path(args.inventory)
+            official_path=Path(args.calendar)
+            if args.out and Path(args.out).resolve() in (
+                source_path.resolve(),official_path.resolve()
+            ):
+                raise ValueError('calendar report output cannot overwrite either input')
+            source_bytes=source_path.read_bytes()
+            official_bytes=official_path.read_bytes()
+            source_sha=hashlib.sha256(source_bytes).hexdigest()
+            source=json.loads(source_bytes.decode('utf-8-sig'))
+            official=json.loads(official_bytes.decode('utf-8-sig'))
+            result=audit_official_calendar_coverage(
+                source,official,inventory_sha256=source_sha)
+            result['official_calendar_file_sha256']=hashlib.sha256(official_bytes).hexdigest()
+            if args.out:
+                dest=Path(args.out)
+                dest.parent.mkdir(parents=True,exist_ok=True)
+                dest.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+            print(json.dumps({
+                'status':result['status'],
+                'mode':result['mode'],
+                'inventory_sha256':source_sha,
+                'source_tournament_groups':result['source_tournament_groups'],
+                'official_event_count':result['official_event_count'],
+                'official_events_by_tier':result['official_events_by_tier'],
+                'missing_official_events':result['missing_official_events'],
+                'missing_by_tier':result['missing_by_tier'],
+                'candidate_official_events':result['candidate_official_events'],
+                'ambiguous_official_events':result['ambiguous_official_events'],
+                'warnings':result['warnings'],
+                'report_path':str(args.out) if args.out else None,
+                'tier_mapping_verified':False,'main_draw_verified':False,
+                't60_quote_verified':False,'eligible_for_model_training':0,
+                'allocation_enabled':False,'stake':0,
+            },ensure_ascii=False,indent=2))
+            return 0
+        except (ValueError,OSError,UnicodeError,TypeError,KeyError) as exc:
+            print(json.dumps({
+                'status':'ERROR','mode':'HISTORICAL_RESEARCH_ONLY',
+                'reason':str(exc),'tier_mapping_verified':False,
+                'main_draw_verified':False,'t60_quote_verified':False,
+                'eligible_for_model_training':0,
+                'allocation_enabled':False,'stake':0,
+            },ensure_ascii=False,indent=2))
+            return 2
 
     if args.cmd=='valuebetennis-tier-audit':
         try:
