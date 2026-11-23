@@ -39,6 +39,10 @@ def main() -> int:
     inventory_review=sub.add_parser('valuebetennis-review',help='Read-only integrity and anomaly review of saved tournament JSON')
     inventory_review.add_argument('report',help='P1.3a saved source inventory JSON')
     inventory_review.add_argument('--out',help='Optional separate JSON report under ignored reports directory')
+    tier_audit=sub.add_parser('valuebetennis-tier-audit',help='Audit explicit official-tier claims against pinned tournament JSON; never authorise training')
+    tier_audit.add_argument('inventory',help='P1.3a saved tournament inventory JSON')
+    tier_audit.add_argument('registry',help='Source-backed per-event tier registry JSON')
+    tier_audit.add_argument('--out',help='Optional separate local JSON audit report')
     research_train=sub.add_parser('research-train',help='XGBoost research with chronological split; NO live allocation')
     research_train.add_argument('paths',nargs='+')
     research_train.add_argument('--out',required=True,help='JSON research report output path')
@@ -46,6 +50,55 @@ def main() -> int:
     research_train.add_argument('--minimum-target',type=int,default=30)
     research_train.add_argument('--seed',type=int,default=20261123)
     args=parser.parse_args()
+
+    if args.cmd=='valuebetennis-tier-audit':
+        try:
+            import hashlib
+            from .tier_registry import audit_tier_registry
+            inventory_path=Path(args.inventory)
+            registry_path=Path(args.registry)
+            if args.out and Path(args.out).resolve() in (
+                inventory_path.resolve(),registry_path.resolve()
+            ):
+                raise ValueError('tier audit output must not overwrite inventory or registry')
+            original=inventory_path.read_bytes()
+            source_sha=hashlib.sha256(original).hexdigest()
+            inventory=json.loads(original.decode('utf-8-sig'))
+            registry=json.loads(registry_path.read_text(encoding='utf-8-sig'))
+            result=audit_tier_registry(
+                inventory,registry,inventory_sha256=source_sha)
+            if args.out:
+                out_path=Path(args.out)
+                out_path.parent.mkdir(parents=True,exist_ok=True)
+                out_path.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+            print(json.dumps({
+                'status':result['status'],
+                'mode':result['mode'],
+                'inventory_sha256':source_sha,
+                'tournament_season_groups':result['tournament_season_groups'],
+                'candidate_matches':result['candidate_matches'],
+                'reviewed_event_groups':result['reviewed_event_groups'],
+                'unreviewed_event_groups':result['unreviewed_event_groups'],
+                'reviewed_candidate_matches':result['reviewed_candidate_matches'],
+                'history_only_matches':result['history_only_matches'],
+                'potential_target_tier_matches':result['potential_target_tier_matches'],
+                'known_incomplete_target_matches':result['known_incomplete_target_matches'],
+                'expected_absent_event_count':result['expected_absent_event_count'],
+                'warnings':result['warnings'],
+                'report_path':str(args.out) if args.out else None,
+                'tier_mapping_verified':False,'main_draw_verified':False,
+                't60_quote_verified':False,
+                'eligible_for_model_training':0,'allocation_enabled':False,'stake':0,
+            },ensure_ascii=False,indent=2))
+            return 0
+        except (ValueError,OSError,UnicodeError,TypeError,KeyError) as exc:
+            print(json.dumps({
+                'status':'ERROR','mode':'HISTORICAL_RESEARCH_ONLY',
+                'reason':str(exc),'tier_mapping_verified':False,
+                'main_draw_verified':False,'t60_quote_verified':False,
+                'eligible_for_model_training':0,'allocation_enabled':False,'stake':0
+            },ensure_ascii=False,indent=2))
+            return 2
 
     if args.cmd=='valuebetennis-review':
         try:

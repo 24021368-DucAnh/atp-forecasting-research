@@ -1,0 +1,141 @@
+{
+  "registry_version": "P1_EDITION_TIER_REGISTRY_1",
+  "inventory_sha256": "eccb403bb6c0874e30f4e304c7be23678d2d1e6db095fd9174ee1753a225665b",
+  "source_attribution": "Valuebetennis, Tennis results and odds since 2021, https://www.valuebetennis.com/en/donnees.htm (provider-declared CC BY 4.0)",
+  "review_scope": "CURATED_SOURCE_LINKED_ASSERTIONS_NOT_COMPLETE_OFFICIAL_MAPPING",
+  "entries": [
+    {
+      "utc_year": 2022,
+      "tournament_id": "9490",
+      "observed_name": "Dallas Open - Dallas",
+      "official_edition_year": 2022,
+      "official_tier": "ATP_250",
+      "dataset_coverage": "UNVERIFIED",
+      "evidence_url": "https://www.atptour.com/en/news/atp-500-upgrades-from-2025",
+      "evidence_note": "ATP upgrade press release: Dallas became ATP500 from 2025; before upgrade ATP250",
+      "reviewed_on": "2026-11-23"
+    },
+    {
+      "utc_year": 2023,
+      "tournament_id": "11015",
+      "observed_name": "Qatar ExxonMobil Open - Doha",
+      "official_edition_year": 2023,
+      "official_tier": "ATP_250",
+      "dataset_coverage": "UNVERIFIED",
+      "evidence_url": "https://www.atptour.com/en/news/atp-500-upgrades-from-2025",
+      "evidence_note": "ATP press release states Doha was ATP250 before 2025 upgrade",
+      "reviewed_on": "2026-11-23"
+    },
+    {
+      "utc_year": 2024,
+      "tournament_id": "12440",
+      "observed_name": "Australian Open - Melbourne",
+      "official_edition_year": 2024,
+      "official_tier": "GRAND_SLAM",
+      "dataset_coverage": "KNOWN_INCOMPLETE",
+      "evidence_url": "https://ausopen.com/articles/news/sinner-winner-italian-takes-first-major-ao-2024",
+      "evidence_note": "AO official 2024 men's final occurred 28 Jan, while this snapshot ends 23 Jan and lacks terminal raw round codes",
+      "reviewed_on": "2026-11-23"
+    },
+    {
+      "utc_year": 2024,
+      "tournament_id": "12589",
+      "observed_name": "BNP Paribas Open - Indian Wells",
+      "official_edition_year": 2024,
+      "official_tier": "MASTERS_1000",
+      "dataset_coverage": "KNOWN_INCOMPLETE",
+      "evidence_url": "https://www.atptour.com/en/tournaments/atp-masters-1000-indian-wells/404/overview",
+      "evidence_note": "ATP official Masters1000 Indian Wells; local 2024 inventory contains only 47 matches versus 131 in 2023",
+      "reviewed_on": "2026-11-23"
+    },
+    {
+      "utc_year": 2024,
+      "tournament_id": "12777",
+      "observed_name": "BMW Open - Munich",
+      "official_edition_year": 2024,
+      "official_tier": "ATP_250",
+      "dataset_coverage": "UNVERIFIED",
+      "evidence_url": "https://www.atptour.com/en/news/atp-500-upgrades-from-2025",
+      "evidence_note": "ATP press release: Munich ATP250 until upgraded to ATP500 from 2025",
+      "reviewed_on": "2026-11-23"
+    },
+    {
+      "utc_year": 2025,
+      "tournament_id": "14114",
+      "observed_name": "Dallas Open - Dallas",
+      "official_edition_year": 2025,
+      "official_tier": "ATP_500",
+      "dataset_coverage": "UNVERIFIED",
+      "evidence_url": "https://www.atptour.com/en/news/atp-500-upgrades-from-2025",
+      "evidence_note": "ATP explicitly upgraded Dallas from ATP250 to ATP500 from the 2025 season",
+      "reviewed_on": "2026-11-23"
+    },
+    {
+      "utc_year": 2025,
+      "tournament_id": "14168",
+      "observed_name": "Qatar ExxonMobil Open - Doha",
+      "official_edition_year": 2025,
+      "official_tier": "ATP_500",
+      "dataset_coverage": "UNVERIFIED",
+      "evidence_url": "https://www.atptour.com/en/news/atp-500-upgrades-from-2025",
+      "evidence_note": "ATP explicitly upgraded Doha from ATP250 to ATP500 from 2025",
+      "reviewed_on": "2026-11-23"
+    },
+    {
+      "utc_year": 2025,
+      "tournament_id": "14416",
+      "observed_name": "BMW Open - Munich",
+      "official_edition_year": 2025,
+      "official_tier": "ATP_500",
+      "dataset_coverage": "UNVERIFIED",
+      "evidence_url": "https://www.atptour.com/en/news/atp-500-upgrades-from-2025",
+      "evidence_note": "ATP explicitly upgraded Munich from ATP250 to ATP500 from 2025",
+      "reviewed_on": "2026-11-23"
+    },
+    {
+      "utc_year": 2026,
+      "tournament_id": "15853",
+      "observed_name": "Dallas Open - Dallas",
+      "official_edition_year": 2026,
+      "official_tier": "ATP_500",
+      "dataset_coverage": "UNVERIFIED",
+      "evidence_url": "https://www.atptour.com/en/news/what-is-the-2026-atp-tour-calendar",
+      "evidence_note": "ATP official 2026 calendar lists Dallas as ATP500",
+      "reviewed_on": "2026-11-23"
+    },
+    {
+      "utc_year": 2026,
+      "tournament_id": "15891",
+      "observed_name": "Qatar ExxonMobil Open - Doha",
+      "official_edition_year": 2026,
+      "official_tier": "ATP_500",
+      "dataset_coverage": "UNVERIFIED",
+      "evidence_url": "https://www.atptour.com/en/news/what-is-the-2026-atp-tour-calendar",
+      "evidence_note": "ATP official 2026 calendar lists Doha as ATP500",
+      "reviewed_on": "2026-11-23"
+    },
+    {
+      "utc_year": 2026,
+      "tournament_id": "16127",
+      "observed_name": "BMW Open - Munich",
+      "official_edition_year": 2026,
+      "official_tier": "ATP_500",
+      "dataset_coverage": "UNVERIFIED",
+      "evidence_url": "https://www.atptour.com/en/news/what-is-the-2026-atp-tour-calendar",
+      "evidence_note": "ATP official 2026 calendar lists Munich as ATP500",
+      "reviewed_on": "2026-11-23"
+    }
+  ],
+  "expected_absent_events": [
+    {
+      "official_edition_year": 2024,
+      "official_event_name": "ABN AMRO Open - Rotterdam",
+      "official_tier": "ATP_500",
+      "match_markers": [
+        "Rotterdam"
+      ],
+      "evidence_url": "https://www.atptour.com/en/news/rotterdam-2024-history-draw-schedule",
+      "reviewed_on": "2026-11-23"
+    }
+  ]
+}
