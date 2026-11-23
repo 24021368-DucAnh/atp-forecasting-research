@@ -23,6 +23,10 @@ def main() -> int:
     research_verify=sub.add_parser('research-verify',help='Check input hashes of a historical report; NO model certification')
     research_verify.add_argument('report',help='Path to research JSON report')
     research_verify.add_argument('sources',nargs='+',help='Original historical source CSV/XLSX files')
+    research_profile=sub.add_parser('research-profile',help='Read-only accepted-match coverage / missingness by ATP season')
+    research_profile.add_argument('--start-year',type=int)
+    research_profile.add_argument('--end-year',type=int)
+    research_profile.add_argument('paths',nargs='+',help='Original historical CSV/XLSX source files')
     research_train=sub.add_parser('research-train',help='XGBoost research with chronological split; NO live allocation')
     research_train.add_argument('paths',nargs='+')
     research_train.add_argument('--out',required=True,help='JSON research report output path')
@@ -37,11 +41,16 @@ def main() -> int:
         print(json.dumps(result,ensure_ascii=False,indent=2))
         return 0 if result['status']=='MATCH' else 2
 
-    if args.cmd in ('research-audit','research-train'):
+    if args.cmd in ('research-audit','research-train','research-profile'):
         try:
             from .research_data import load_historical_matches
             if args.cmd=='research-audit':
                 _matches,result=load_historical_matches(args.paths)
+            elif args.cmd=='research-profile':
+                from .source_profile import profile_historical_sources
+                result=profile_historical_sources(
+                    args.paths,expected_start_year=args.start_year,
+                    expected_end_year=args.end_year)
             else:
                 from .research_train import run_research
                 result=run_research(args.paths,minimum_total=args.minimum_total,
@@ -50,7 +59,7 @@ def main() -> int:
                 dest.parent.mkdir(parents=True,exist_ok=True)
                 dest.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
             print(json.dumps(result,ensure_ascii=False,indent=2))
-            return 0
+            return 2 if result.get('status')=='INCOMPLETE' else 0
         except (ValueError,OSError,RuntimeError) as exc:
             print(json.dumps({'status':'ERROR','mode':'HISTORICAL_RESEARCH_ONLY',
                               'reason':str(exc),'live_eligible':False,
