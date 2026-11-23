@@ -82,3 +82,11 @@ For each new 2024 hash, run `tml-february-audit` on the **hash-qualified snapsho
 The publisher states that corrections, additions and removals may occur, including historical seasons. A new hash therefore represents a new data version, not necessarily more matches. Compare the exact source SHA and source rows before discussing model improvements; preserve all previous experiment inputs. New match results become available after the event, not as future-known prematch features.
 
 The official source updates are for personal/educational/noncommercial research. No automated redistribution of CSVs and no public model service are permitted by the source's stated terms.
+
+### Important source anomaly handling
+
+A public CSV may have incomplete provider match identifiers. In the archived TML GitHub `2025.csv` examined on 2026-11-24, **489 of 2,944 rows had blank `match_num`**, and one trailing row was shorter than the 50-column schema. The `2025.csv` source also legitimately starts with tournaments dated **2024-12-29**. These observations are for the GitHub historical snapshot; the official website's current bytes may differ.
+
+`tml-update` **preserves all original bytes** at their content SHA even if the source contains such row defects, but records `source_anomalies` and `accepted_rows` in `index.json` and reports `SOURCE_ANOMALY_REVIEW_REQUIRED`. This is a *quarantine*, not source approval. The watcher explicitly flags anomalies for manual review. No synthetic match ID is created. Subsequent research code may exclude these rows with counted losses of coverage, but may not silently assert that all events were complete.
+
+A new source SHA or a successful CSV download does **not** mean the model training or money-allocation gate is unlocked. Official draw comparison, historical availability timing and market quotes remain independent evidence requirements.
