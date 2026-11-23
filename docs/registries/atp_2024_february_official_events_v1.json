@@ -1,0 +1,152 @@
+{
+  "calendar_version": "P1_OFFICIAL_EVENT_CALENDAR_1",
+  "inventory_sha256": "eccb403bb6c0874e30f4e304c7be23678d2d1e6db095fd9174ee1753a225665b",
+  "scope": "CURATED_OFFICIAL_EVENTS_ONLY",
+  "source_notes": "Events crosschecked against the ATP 2024 results archive (actual results) and the ATP published final 2024 calendar (tier). A calendar event is not a provider source identity; these references prove a scheduled/held event, not each main-draw match result.",
+  "events": [
+    {
+      "event_key": "ATP_2024_CORDOBA",
+      "official_year": 2024,
+      "official_event_name": "Córdoba Open",
+      "official_tier": "ATP_250",
+      "city": "Córdoba",
+      "start_date": "2024-02-05",
+      "end_date": "2024-02-11",
+      "results_archive_url": "https://www.atptour.com/en/scores/results-archive?year=2024",
+      "tier_source_url": "https://www.atptour.com/-/media/files/final-2024-atp-calendar.pdf",
+      "reviewed_on": "2026-11-23"
+    },
+    {
+      "event_key": "ATP_2024_DALLAS",
+      "official_year": 2024,
+      "official_event_name": "Dallas Open",
+      "official_tier": "ATP_250",
+      "city": "Dallas",
+      "start_date": "2024-02-05",
+      "end_date": "2024-02-11",
+      "results_archive_url": "https://www.atptour.com/en/scores/results-archive?year=2024",
+      "tier_source_url": "https://www.atptour.com/-/media/files/final-2024-atp-calendar.pdf",
+      "reviewed_on": "2026-11-23"
+    },
+    {
+      "event_key": "ATP_2024_MARSEILLE",
+      "official_year": 2024,
+      "official_event_name": "Open 13 Provence",
+      "official_tier": "ATP_250",
+      "city": "Marseille",
+      "start_date": "2024-02-05",
+      "end_date": "2024-02-11",
+      "results_archive_url": "https://www.atptour.com/en/scores/results-archive?year=2024",
+      "tier_source_url": "https://www.atptour.com/-/media/files/final-2024-atp-calendar.pdf",
+      "reviewed_on": "2026-11-23"
+    },
+    {
+      "event_key": "ATP_2024_ROTTERDAM",
+      "official_year": 2024,
+      "official_event_name": "ABN AMRO Open",
+      "official_tier": "ATP_500",
+      "city": "Rotterdam",
+      "start_date": "2024-02-12",
+      "end_date": "2024-02-18",
+      "results_archive_url": "https://www.atptour.com/en/scores/results-archive?year=2024",
+      "tier_source_url": "https://www.atptour.com/-/media/files/final-2024-atp-calendar.pdf",
+      "reviewed_on": "2026-11-23"
+    },
+    {
+      "event_key": "ATP_2024_BUENOS_AIRES",
+      "official_year": 2024,
+      "official_event_name": "Argentina Open",
+      "official_tier": "ATP_250",
+      "city": "Buenos Aires",
+      "start_date": "2024-02-12",
+      "end_date": "2024-02-18",
+      "results_archive_url": "https://www.atptour.com/en/scores/results-archive?year=2024",
+      "tier_source_url": "https://www.atptour.com/-/media/files/final-2024-atp-calendar.pdf",
+      "reviewed_on": "2026-11-23"
+    },
+    {
+      "event_key": "ATP_2024_DELRAY_BEACH",
+      "official_year": 2024,
+      "official_event_name": "Delray Beach Open",
+      "official_tier": "ATP_250",
+      "city": "Delray Beach",
+      "start_date": "2024-02-12",
+      "end_date": "2024-02-18",
+      "results_archive_url": "https://www.atptour.com/en/scores/results-archive?year=2024",
+      "tier_source_url": "https://www.atptour.com/-/media/files/final-2024-atp-calendar.pdf",
+      "reviewed_on": "2026-11-23"
+    },
+    {
+      "event_key": "ATP_2024_RIO_DE_JANEIRO",
+      "official_year": 2024,
+      "official_event_name": "Rio Open",
+      "official_tier": "ATP_500",
+      "city": "Rio de Janeiro",
+      "start_date": "2024-02-19",
+      "end_date": "2024-02-25",
+      "results_archive_url": "https://www.atptour.com/en/scores/results-archive?year=2024",
+      "tier_source_url": "https://www.atptour.com/-/media/files/final-2024-atp-calendar.pdf",
+      "reviewed_on": "2026-11-23"
+    },
+    {
+      "event_key": "ATP_2024_DOHA",
+      "official_year": 2024,
+      "official_event_name": "Qatar ExxonMobil Open",
+      "official_tier": "ATP_250",
+      "city": "Doha",
+      "start_date": "2024-02-19",
+      "end_date": "2024-02-24",
+      "results_archive_url": "https://www.atptour.com/en/scores/results-archive?year=2024",
+      "tier_source_url": "https://www.atptour.com/-/media/files/final-2024-atp-calendar.pdf",
+      "reviewed_on": "2026-11-23"
+    },
+    {
+      "event_key": "ATP_2024_LOS_CABOS",
+      "official_year": 2024,
+      "official_event_name": "Los Cabos Open",
+      "official_tier": "ATP_250",
+      "city": "Los Cabos",
+      "start_date": "2024-02-19",
+      "end_date": "2024-02-24",
+      "results_archive_url": "https://www.atptour.com/en/scores/results-archive?year=2024",
+      "tier_source_url": "https://www.atptour.com/-/media/files/final-2024-atp-calendar.pdf",
+      "reviewed_on": "2026-11-23"
+    },
+    {
+      "event_key": "ATP_2024_ACAPULCO",
+      "official_year": 2024,
+      "official_event_name": "Abierto Mexicano Telcel",
+      "official_tier": "ATP_500",
+      "city": "Acapulco",
+      "start_date": "2024-02-26",
+      "end_date": "2024-03-02",
+      "results_archive_url": "https://www.atptour.com/en/scores/results-archive?year=2024",
+      "tier_source_url": "https://www.atptour.com/-/media/files/final-2024-atp-calendar.pdf",
+      "reviewed_on": "2026-11-23"
+    },
+    {
+      "event_key": "ATP_2024_DUBAI",
+      "official_year": 2024,
+      "official_event_name": "Dubai Duty Free Tennis Championships",
+      "official_tier": "ATP_500",
+      "city": "Dubai",
+      "start_date": "2024-02-26",
+      "end_date": "2024-03-02",
+      "results_archive_url": "https://www.atptour.com/en/scores/results-archive?year=2024",
+      "tier_source_url": "https://www.atptour.com/-/media/files/final-2024-atp-calendar.pdf",
+      "reviewed_on": "2026-11-23"
+    },
+    {
+      "event_key": "ATP_2024_SANTIAGO",
+      "official_year": 2024,
+      "official_event_name": "Chile Open",
+      "official_tier": "ATP_250",
+      "city": "Santiago",
+      "start_date": "2024-02-26",
+      "end_date": "2024-03-03",
+      "results_archive_url": "https://www.atptour.com/en/scores/results-archive?year=2024",
+      "tier_source_url": "https://www.atptour.com/-/media/files/final-2024-atp-calendar.pdf",
+      "reviewed_on": "2026-11-23"
+    }
+  ]
+}
