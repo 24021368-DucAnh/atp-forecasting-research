@@ -136,3 +136,27 @@ T−60 odds, sample completeness, or any market edge. Do not supply a
 Valuebetennis CSV directly to the current Tennis-Data-style loader; its schema
 and ATP 250/500 taxonomy need a separately validated adapter. See
 `docs/DATA_SOURCE_DECISIONS.md`.
+
+
+## P1.2 — Inspect licensed Valuebetennis ATP identity/coverage (no model training)
+
+Provider: https://www.valuebetennis.com/en/donnees.htm (CC BY 4.0 with attribution).
+Its annual exports are semicolon-delimited ATP/WTA singles CSVs with
+`match_id` and player IDs. **Do not** feed these CSVs into `research-train`;
+the `Main tour` label does not identify ATP250 vs ATP500 and `tour` is
+a numeric draw round, not the ATP/WTA circuit. The provider's opening and
+closing odds are **not** timestamped T−60 snapshots.
+
+When this PR is merged and you have downloaded provider files to `data/`:
+
+```powershell
+git pull --ff-only
+.\.venv\Scripts\python.exe -m atp_gate valuebetennis-profile --start-year 2022 --end-year 2026 data\valuebetennis-matchs-2022.csv data\valuebetennis-matchs-2023.csv data\valuebetennis-matchs-2024.csv data\valuebetennis-matchs-2025.csv data\valuebetennis-matchs-2026.csv
+```
+
+`INSPECTED_UNMAPPED` means source rows and IDs were inventoried. It is
+**not** player-ID verification against an independent authority, match main
+draw verification, provider-file origin authentication, official tier mapping
+or market edge verification. The report always keeps
+`eligible_for_model_training: 0`, `allocation_enabled: false`, `stake: 0`.
+See `docs/VALUEBETENNIS_SOURCE_INSPECTION.md`.
