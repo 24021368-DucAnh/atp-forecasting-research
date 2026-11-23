@@ -101,10 +101,14 @@ def _load(paths: Sequence[Path]) -> tuple[list[_Match], list[dict], Counter]:
             for row in reader:
                 count += 1
                 if None in row or any(value is None for value in row.values()):
-                    raise ValueError("invalid TML source CSV row column count")
+                    excluded["MALFORMED_ROWS"] += 1
+                    continue
                 tid, mid = row["tourney_id"], row["match_num"]
                 if not tid or not mid:
-                    raise ValueError("source tournament/match ID missing")
+                    # TML's historical 2025 public snapshot includes many
+                    # matches with blank match_num. No guessed canonical ID.
+                    excluded["MISSING_MATCH_ID"] += 1
+                    continue
                 key = (tid, mid)
                 if key in seen_match_keys:
                     raise ValueError("duplicate TML tournament/match identity")
@@ -319,6 +323,7 @@ def run_tml_elo_experiment(
         "mode": "PERSONAL_NONCOMMERCIAL_RESEARCH",
         "source_inventory": inventory,
         "source_match_rows_eligible": len(matches),
+        "provider_rows_quarantined": (excluded["MALFORMED_ROWS"] + excluded["MISSING_MATCH_ID"]),
         "excluded_reasons": dict(sorted(excluded.items())),
         "holdout_years": list(test_years),
         "fold_count": len(test_years),
@@ -345,5 +350,6 @@ def run_tml_elo_experiment(
             "NO_HISTORIC_NO_VIG_MARKET_BASELINE_OR_EXECUTABLE_T60",
             "ELIGIBLE_RESULTS_REQUIRE_INDEPENDENT_OFFICIAL_DRAW_AUDIT",
             "NO_REAL_MONEY_ALLOCATION_OR_PROFIT_CLAIM",
+            "BLANK_PROVIDER_MATCH_IDS_ARE_EXCLUDED_NOT_SYNTHESIZED",
         ],
     }
