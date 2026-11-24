@@ -52,6 +52,13 @@ def _index(rows):
     return candidates, numbered
 
 
+def _core_report(groups):
+    return {event: {"changed_rows": counts["changed_rows"],
+                    "fields": dict(sorted((k, v) for k, v in counts.items()
+                                          if k != "changed_rows"))}
+            for event, counts in sorted(groups.items())}
+
+
 def compare_snapshots(old_bytes, current_bytes):
     old, old_bad = _parse(old_bytes)
     current, current_bad = _parse(current_bytes)
@@ -59,6 +66,7 @@ def compare_snapshots(old_bytes, current_bytes):
     new_index, new_numbers = _index(current)
     missing, numbered, changed_fields = Counter(), Counter(), Counter()
     event_repairs = Counter()
+    missing_core, numbered_core = defaultdict(Counter), defaultdict(Counter)
     for row in old:
         has_number = bool(row["match_num"].strip())
         disposition = numbered if has_number else missing
@@ -76,8 +84,12 @@ def compare_snapshots(old_bytes, current_bytes):
             for col in TML_COLUMNS:
                 if col != "match_num" and candidate[col] != row[col]:
                     changed_fields[col] += 1
-            if any(candidate[c] != row[c] for c in CORE):
+            core_changes = [c for c in CORE if candidate[c] != row[c]]
+            if core_changes:
                 result = "CHANGED_CORE"
+                event_fields = (numbered_core if has_number else missing_core)[row["tourney_id"]]
+                event_fields["changed_rows"] += 1
+                event_fields.update(core_changes)
             elif not candidate["match_num"].strip():
                 result = "NUMBER_REMOVED" if has_number else "STILL_MISSING"
             elif new_numbers[(candidate["tourney_id"], candidate["match_num"])] != 1:
@@ -103,6 +115,8 @@ def compare_snapshots(old_bytes, current_bytes):
         "numbered_disposition": dict(sorted(numbered.items())),
         "changed_non_number_columns": dict(sorted(changed_fields.items())),
         "repair_candidates_by_event": dict(sorted(event_repairs.items())),
+        "missing_core_changes_by_event": _core_report(missing_core),
+        "numbered_core_changes_by_event": _core_report(numbered_core),
         "old_ambiguous_candidate_groups": sum(len(v)>1 for v in old_index.values()),
         "current_ambiguous_candidate_groups": sum(len(v)>1 for v in new_index.values()),
         "current_duplicate_number_groups": sum(v>1 for v in new_numbers.values()),
@@ -120,6 +134,8 @@ def main():
     with tempfile.TemporaryDirectory(prefix="tml-revision-research-") as root:
         update = update_tml_season(2025, Path(root), at=datetime.now(timezone.utc))
         current = Path(update["local_snapshot"]).read_bytes()
+        if hashlib.sha256(current).hexdigest() != "5ccf52d912085d6a5ba3effdc5f2f216f170aabfd8850086b5f92c7ccedfd53e":
+            raise ValueError("publisher revision changed since first research run; preserve prior evidence")
         report = compare_snapshots(old, current)
         if report["old_missing_match_num"] != 489:
             raise ValueError("pinned missing-row count differs")
