@@ -34,6 +34,8 @@ class PeriodReplay:
     latest_at: datetime | None
     all_reserves: set[str]
     reserve_at: dict[str, datetime]
+    reserve_odds: dict[str, Decimal]
+    reserve_sides: dict[str, str]
 
 
 def replay_journal(events: Sequence[JournalEvent], at: datetime) -> PeriodReplay:
@@ -47,6 +49,8 @@ def replay_journal(events: Sequence[JournalEvent], at: datetime) -> PeriodReplay
     losses: dict[date, Decimal] = {}
     open_stakes: dict[str, Decimal] = {}
     reserve_at: dict[str, datetime] = {}
+    reserve_odds: dict[str, Decimal] = {}
+    reserve_sides: dict[str, str] = {}
     all_reserves: set[str] = set()
     settled: set[str] = set()
     latest: datetime | None = None
@@ -55,6 +59,19 @@ def replay_journal(events: Sequence[JournalEvent], at: datetime) -> PeriodReplay
 
     for entry in events:
         day, week = period_keys(entry.at)
+        # model_copy(update=...) bypasses Pydantic field validation, so replay
+        # must validate original and potentially mutated journal values too.
+        if not isinstance(entry.amount, Decimal) or not entry.amount.is_finite():
+            raise ValueError("nonfinite paper journal amount")
+        if entry.odds is not None and (
+            not isinstance(entry.odds, Decimal)
+            or not entry.odds.is_finite() or entry.odds <= Decimal("1")
+        ):
+            raise ValueError("invalid nonfinite accepted odds price")
+        if entry.event != "RESERVE" and (
+            entry.odds is not None or entry.side is not None
+        ):
+            raise ValueError("settlement or profit-lock cannot change accepted odds/side")
         if entry.at > at:
             raise ValueError("future paper journal event")
         if latest is not None and entry.at < latest:
@@ -67,6 +84,10 @@ def replay_journal(events: Sequence[JournalEvent], at: datetime) -> PeriodReplay
             all_reserves.add(entry.match_id)
             open_stakes[entry.match_id] = entry.amount
             reserve_at[entry.match_id] = entry.at
+            if entry.odds is not None:
+                reserve_odds[entry.match_id] = entry.odds
+            if entry.side is not None:
+                reserve_sides[entry.match_id] = entry.side
             counts[day] = counts.get(day, 0) + 1
             last_settlement = None
         elif entry.event in ("SETTLE_WIN", "SETTLE_LOSS", "SETTLE_VOID"):
@@ -80,8 +101,12 @@ def replay_journal(events: Sequence[JournalEvent], at: datetime) -> PeriodReplay
             elif entry.event == "SETTLE_VOID":
                 if entry.amount != reserved:
                     raise ValueError("void journal must refund original stake")
-            elif entry.amount <= reserved:
-                raise ValueError("win journal payout must exceed original stake")
+            else:
+                accepted_odds = reserve_odds.get(entry.match_id)
+                if accepted_odds is None:
+                    raise ValueError("win payout unverified: reserve has no accepted odds")
+                if entry.amount != reserved * accepted_odds:
+                    raise ValueError("win payout must equal original stake times accepted odds")
             settled.add(entry.match_id)
             last_settlement = (entry.match_id, entry.at)
         elif entry.event == "PROFIT_LOCK":
@@ -97,4 +122,5 @@ def replay_journal(events: Sequence[JournalEvent], at: datetime) -> PeriodReplay
 
     return PeriodReplay(daily_counts=counts, weekly_losses=losses,
                         open_stakes=open_stakes, latest_at=latest,
-                        all_reserves=all_reserves, reserve_at=reserve_at)
+                        all_reserves=all_reserves, reserve_at=reserve_at,
+                        reserve_odds=reserve_odds, reserve_sides=reserve_sides)
