@@ -246,7 +246,10 @@ def test_one_day_variant_tourney_dates_are_grouped_before_elo_predictions(tmp_pa
     ])
     result=run_tml_elo_experiment(paths,bootstrap_replicates=50)
     assert result["event_date_variants_grouped"]==1
-    assert result["folds"][1]["n"]==2
+    # The 2025 source also contains the Dec-2024 cross-year event.
+    # Calendar-year fold 2024 must include that third match; the two
+    # variable-date rows still belong to one event with frozen ratings.
+    assert result["folds"][1]["n"]==3
     assert result["folds"][1]["global_elo_brier"] < 0.25
 
 
