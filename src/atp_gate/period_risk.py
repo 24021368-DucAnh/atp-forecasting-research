@@ -79,6 +79,13 @@ def replay_journal(events: Sequence[JournalEvent], at: datetime) -> PeriodReplay
         latest = entry.at
 
         if entry.event == "RESERVE":
+            # A complete new accepted quote needs both price and selected
+            # side. Legacy reserve rows may contain neither, but can only
+            # replay LOSS/VOID period counts, never certify WIN payouts.
+            if entry.side not in (None, "A", "B"):
+                raise ValueError("invalid reserve accepted side")
+            if (entry.side is None) != (entry.odds is None):
+                raise ValueError("partial reserve quote: accepted side and odds required together")
             if entry.match_id in all_reserves or entry.amount <= 0:
                 raise ValueError("duplicate or invalid paper reserve")
             all_reserves.add(entry.match_id)
