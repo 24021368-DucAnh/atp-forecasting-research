@@ -123,3 +123,28 @@ def test_settlement_event_cannot_inject_a_second_accepted_price():
     forged[1] = forged[1].model_copy(update={"odds": Decimal("1.90")})
     with pytest.raises(ValueError, match="settlement|odds|price"):
         replay_journal(forged, T + timedelta(minutes=15))
+
+
+def test_replay_rejects_partial_reserve_quote_without_accepted_side():
+    rows = [
+        JournalEvent(match_id="missing-side", event="RESERVE",
+                     amount=Decimal("10"), odds=Decimal("1.90"), at=T),
+        JournalEvent(match_id="missing-side", event="SETTLE_WIN",
+                     amount=Decimal("19.00"), at=T + timedelta(minutes=1)),
+    ]
+    with pytest.raises(ValueError, match="side|reserve|quote"):
+        replay_journal(rows, T + timedelta(minutes=2))
+
+
+def test_replay_rejects_reserve_with_mutated_invalid_side():
+    rows = [
+        JournalEvent(match_id="invalid-side", event="RESERVE",
+                     amount=Decimal("10"), side="A",
+                     odds=Decimal("1.90"), at=T),
+        JournalEvent(match_id="invalid-side", event="SETTLE_WIN",
+                     amount=Decimal("19.00"), at=T + timedelta(minutes=1)),
+    ]
+    forged = list(rows)
+    forged[0] = forged[0].model_copy(update={"side": "C"})
+    with pytest.raises(ValueError, match="side|reserve|quote"):
+        replay_journal(forged, T + timedelta(minutes=2))
