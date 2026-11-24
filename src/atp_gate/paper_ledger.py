@@ -229,8 +229,12 @@ def close_month(book: PaperBook, next_month: str) -> tuple[PaperBook, MonthlyRep
         needed_topup=max(-net, Decimal("0")),
         carried_open_exposure=carry,
     )
-    year_losses = Decimal("0") if expected_year != year else book.risk.annual_negative_month_loss
-    year_losses += max(-net, Decimal("0"))
+    # December belongs to the closing year, not the new annual counter.
+    # Its deficit remains visible in the returned monthly report.
+    year_losses = (
+        book.risk.annual_negative_month_loss + max(-net, Decimal("0"))
+        if expected_year == year else Decimal("0")
+    )
     newrisk = RiskState(
         month=next_month, free_cash=X-carry, open_exposure=carry, protected_cash=0,
         phase="STOPPED" if year_losses >= ANNUAL_NEGATIVE_MONTH_MAX else "NORMAL",
