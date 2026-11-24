@@ -37,3 +37,15 @@ No method accesses a clock implicitly; all boundary times come from explicit tim
 - Tests: `python -m pytest -q`; particularly `tests/test_period_risk.py`, `tests/test_gate.py` and `tests/test_ledger.py`.
 - CI: `ATP Lab CI` on Ubuntu/Windows, Python 3.11/3.12; every job must pass before a code merge.
 - Process: [merged design PR #19](https://github.com/24021368-DucAnh/atp-forecasting-research/pull/19), [implementation issue #18](https://github.com/24021368-DucAnh/atp-forecasting-research/issues/18), [draft implementation PR #20](https://github.com/24021368-DucAnh/atp-forecasting-research/pull/20).
+
+## P0.25a — Exact paper WIN payout checks (2026-11-24)
+
+The accepted **paper** decimal odds and selected side are now recorded **at the original `RESERVE` journal event**, alongside stake and timezone-aware event time. They are not read back from a mutable `PaperPosition` after settlement.
+
+- `replay_journal` checks every `SETTLE_WIN.amount == original RESERVE.amount × original RESERVE.odds` with exact `Decimal` arithmetic. A payout merely greater than stake is **not** sufficient.
+- `reconcile_periods` checks that every currently open position's side and accepted odds match its original journal RESERVE evidence. LOSS remains zero payout, VOID exactly refunds original stake.
+- Legacy journals without accepted odds may still be used to reconstruct manual LOSS/VOID daily/weekly period counts, but **cannot certify WIN settlement amounts or active position prices**. Never invent historical prices to backfill such evidence.
+- Nonfinite odds (NaN / Infinity) and attempts to declare or change accepted odds on a settlement event are rejected during replay, even if a caller has used Pydantic `model_copy(update=...)` to bypass construction-time validation.
+- The settlement payout currently uses exact `stake × odds` with **no bookmaker rounding**. If a licensed external sportsbook ever becomes relevant, its real market rounding, commission, taxes, retirement and void rules would need their own provider-specific independent reconciliation. None has been certified here.
+
+**Important limit:** This internal journal replay is **not tamper-proof**: an adversary could rewrite both the original reserve and settlement amounts, or forge an entire consistent journal. In addition, `free_cash`, `protected_cash`, month-close external top-ups and year-to-date cash resets cannot be fully reconstructed from a uniquely authenticated opening balance and transfer ledger in the present schema. P0 Issue #25 remains **open** for its separate full cash and provenance stage, which will require explicit `OPENING_BALANCE`, `MONTH_CLOSE`, `TOPUP`, `TRANSFER` evidence and a migration policy. No real-money allocation or verified returns follow from these synthetic paper checks.
