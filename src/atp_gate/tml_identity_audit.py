@@ -76,6 +76,7 @@ def audit_tml_identity(paths, *, expected_sha256: dict[int, str]) -> dict:
     counts = Counter({k: 0 for k in _COUNT_KEYS})
     raw_keys, numeric_keys, pair_keys = Counter(), Counter(), Counter()
     pair_winners, names_by_id, ids_by_name = defaultdict(set), defaultdict(set), defaultdict(set)
+    pair_scopes = defaultdict(set)
     dates, surfaces = defaultdict(set), defaultdict(set)
     brackets = defaultdict(list)
     seen = set()
@@ -151,26 +152,35 @@ def audit_tml_identity(paths, *, expected_sha256: dict[int, str]) -> dict:
                 if not w.strip() or not l.strip() or w == l:
                     local["invalid_player_pair_rows"] += 1
                     continue
+                in_main_scope = (row["tourney_level"] in _LEVELS
+                                 or (year == 2024 and sha == _REVIEWED_2024_SHA
+                                     and event in _REVIEWED_2024))
                 if event.strip() and r.strip():
                     k = (event, *sorted((w, l)), r)
                     pair_keys[k] += 1
                     pair_winners[k].add(w)
-                if event.strip() and (row["tourney_level"] in _LEVELS
-                        or (year == 2024 and sha == _REVIEWED_2024_SHA
-                            and event in _REVIEWED_2024)):
+                    pair_scopes[k].add(in_main_scope)
+                if event.strip() and in_main_scope:
                     brackets[event].append((w, l, r))
         except (UnicodeError, csv.Error) as exc:
             raise ValueError("invalid source encoding or CSV") from exc
         counts.update(local)
         inventory.append({"season": year, "sha256": sha, "size_bytes": len(data),
-                          "counts": {k: local[k] for k in _COUNT_KEYS[:14]
-                                     if not k.startswith("duplicate")}})
+                          "counts": {k: local[k] for k in _COUNT_KEYS
+                                     if k.endswith("_rows") or k == "missing_player_name_fields"}})
     if seen != set(expected_sha256):
         raise ValueError("source season set differs from SHA256 pin manifest")
     counts["duplicate_raw_match_key_groups"] = sum(v > 1 for v in raw_keys.values())
     counts["duplicate_numeric_match_key_groups"] = sum(v > 1 for v in numeric_keys.values())
     counts["duplicate_candidate_pair_round_groups"] = sum(v > 1 for v in pair_keys.values())
     counts["conflicting_candidate_outcome_groups"] = sum(len(v) > 1 for v in pair_winners.values())
+    duplicate_scopes = Counter({"MAIN_TOUR": 0, "OUTSIDE_MAIN_TOUR": 0, "MIXED_SCOPE": 0})
+    for key, n in pair_keys.items():
+        if n > 1:
+            scope = pair_scopes[key]
+            bucket = ("MIXED_SCOPE" if len(scope) > 1 else
+                      "MAIN_TOUR" if True in scope else "OUTSIDE_MAIN_TOUR")
+            duplicate_scopes[bucket] += 1
     counts["player_ids_with_multiple_name_tokens"] = sum(len(v) > 1 for v in names_by_id.values())
     counts["name_tokens_with_multiple_player_ids"] = sum(len(v) > 1 for v in ids_by_name.values())
     counts["one_day_date_variant_events"] = sum((max(v) - min(v)).days == 1 for v in dates.values())
@@ -179,11 +189,12 @@ def audit_tml_identity(paths, *, expected_sha256: dict[int, str]) -> dict:
     for rows in brackets.values():
         _bracket(rows, counts)
     return {
-        "schema": "TML_PINNED_IDENTITY_AUDIT_V1",
+        "schema": "TML_PINNED_IDENTITY_AUDIT_V2",
         "status": "INTERNAL_SOURCE_DIAGNOSTICS_REVIEW_REQUIRED",
         "mode": "PERSONAL_NONCOMMERCIAL_RESEARCH",
         "source_inventory": sorted(inventory, key=lambda item: item["season"]),
         "counts": dict(counts),
+        "duplicate_candidate_groups_by_scope": dict(duplicate_scopes),
         "source_date_semantics": "TOURNAMENT_START_NOT_INDIVIDUAL_MATCH_START",
         "knockout_scope": "MAIN_TOUR_LEVELS_PLUS_PINNED_2024_REVIEWED_EVENTS",
         "warnings": [
