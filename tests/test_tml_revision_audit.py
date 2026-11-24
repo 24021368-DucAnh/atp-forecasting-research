@@ -59,3 +59,15 @@ def test_unmatched_still_missing_and_existing_renumbering_separate():
 def test_missing_core_key_cannot_be_repaired():
     report=compare_snapshots(payload([row(winner="")]),payload([row("7",winner="")]))
     assert report["missing_disposition"]=={"INVALID_CANDIDATE_IDENTITY":1}
+
+
+def test_core_conflicts_segmented_by_event_field_and_missing_status():
+    old=[row(),row("", "C","D"),row("5","E","F")]
+    new=[row("7",tourney_date="20250825"),
+         row("8","C","D",score="7-5 6-4",tourney_date="20250825"),
+         row("5","E","F",surface="Clay")]
+    result=compare_snapshots(payload(old),payload(new))
+    assert result["missing_core_changes_by_event"]=={
+        "2025-100":{"changed_rows":2,"fields":{"score":1,"tourney_date":2}}}
+    assert result["numbered_core_changes_by_event"]=={
+        "2025-100":{"changed_rows":1,"fields":{"surface":1}}}
