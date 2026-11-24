@@ -68,6 +68,12 @@ def main() -> int:
     tml_update.add_argument('--root',default='data/tml',help='Private locally ignored versioned snapshot directory')
     tml_update.add_argument('--force',action='store_true',help='Explicitly bypass daily freshness check')
 
+    tml_cross=sub.add_parser('tml-crosspublication-audit',help='Crosscheck TML and Sackmann 2024 ATP candidate matches; personal noncommercial only')
+    tml_cross.add_argument('tml_csv',help='Local TML 2024.csv')
+    tml_cross.add_argument('archive_csv',help='Local Sackmann-format atp_matches_2024.csv')
+    tml_cross.add_argument('crosswalk',help='Curated 2024 February event registry')
+    tml_cross.add_argument('aliases',help='Pinned explicit player display-name alias registry')
+    tml_cross.add_argument('--out',help='Optional aggregate-only JSON report, not an input file')
     research_train=sub.add_parser('research-train',help='XGBoost research with chronological split; NO live allocation')
     research_train.add_argument('paths',nargs='+')
     research_train.add_argument('--out',required=True,help='JSON research report output path')
@@ -91,6 +97,34 @@ def main() -> int:
                 'status':'ERROR','mode':'PERSONAL_NONCOMMERCIAL_RESEARCH',
                 'reason':str(exc),'eligible_for_model_training':0,
                 'allocation_enabled':False,'t60_quote_verified':False,
+                'stake':0,
+            },ensure_ascii=False,indent=2))
+            return 2
+
+    if args.cmd=='tml-crosspublication-audit':
+        try:
+            from .tml_sackmann_crosscheck import audit_tml_sackmann_crosspublication
+
+            files=[Path(args.tml_csv),Path(args.archive_csv),
+                   Path(args.crosswalk),Path(args.aliases)]
+            if args.out and Path(args.out).resolve() in {p.resolve() for p in files}:
+                raise ValueError('crosspublication report cannot overwrite an input')
+            reg=json.loads(files[2].read_text(encoding='utf-8-sig'))
+            names=json.loads(files[3].read_text(encoding='utf-8-sig'))
+            report=audit_tml_sackmann_crosspublication(files[0],files[1],reg,names)
+            if args.out:
+                dest=Path(args.out)
+                dest.parent.mkdir(parents=True,exist_ok=True)
+                dest.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',
+                                encoding='utf-8')
+            print(json.dumps(report,ensure_ascii=False,indent=2))
+            return 0
+        except (ValueError,OSError,UnicodeError,TypeError,KeyError) as exc:
+            print(json.dumps({
+                'status':'ERROR','mode':'PERSONAL_NONCOMMERCIAL_RESEARCH',
+                'reason':str(exc),'official_match_draw_verified':False,
+                'source_independence_verified':False,
+                'eligible_for_model_training':0,'allocation_enabled':False,
                 'stake':0,
             },ensure_ascii=False,indent=2))
             return 2
