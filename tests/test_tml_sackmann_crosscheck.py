@@ -69,7 +69,9 @@ def fixture_rows():
 
 def write_csv(path,columns,rows):
     with path.open("w",newline="",encoding="utf-8") as h:
-        writer=csv.DictWriter(h,fieldnames=columns)
+        # A schema-drift fixture deliberately omits one archive column;
+        # discard that value so the malformed *file* reaches the auditor.
+        writer=csv.DictWriter(h,fieldnames=columns,extrasaction="ignore")
         writer.writeheader()
         writer.writerows(rows)
 
