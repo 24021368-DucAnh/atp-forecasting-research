@@ -34,6 +34,19 @@ jobs:
           python -m atp_gate tml-update --year 2024 --root data/tml > reports/tml-2024-update.json
           season="$(date -u +%Y)"
           python -m atp_gate tml-update --year "$season" --root data/tml > reports/tml-current-update.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for name in ("tml-2024-update.json", "tml-current-update.json"):
+              record=json.loads((Path("reports") / name).read_text(encoding="utf-8"))
+              print("TML source version:", name, record["sha256"])
+              if record.get("source_anomalies"):
+                  print("SOURCE QUARANTINE:", record["source_anomalies"])
+                  print("UNIDENTIFIABLE_ROWS_REVIEW_REQUIRED")
+                  # Preserve source metadata and continue monitoring: raw rows
+                  # remain quarantined by tml_snapshot, never model-ready.
+                  # A full-source parse/hash failure already aborts tml-update.
+          PY
           source_file="$(python -c "import json;print(json.load(open('reports/tml-2024-update.json'))['local_snapshot'])")"
           python -m atp_gate tml-february-audit "$source_file" \
             docs/registries/tml_2024_feb_source_crosswalk_v1.json \

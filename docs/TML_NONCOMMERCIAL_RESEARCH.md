@@ -82,3 +82,36 @@ For each new 2024 hash, run `tml-february-audit` on the **hash-qualified snapsho
 The publisher states that corrections, additions and removals may occur, including historical seasons. A new hash therefore represents a new data version, not necessarily more matches. Compare the exact source SHA and source rows before discussing model improvements; preserve all previous experiment inputs. New match results become available after the event, not as future-known prematch features.
 
 The official source updates are for personal/educational/noncommercial research. No automated redistribution of CSVs and no public model service are permitted by the source's stated terms.
+
+### Important source anomaly handling
+
+A public CSV may have incomplete provider match identifiers. In the archived TML GitHub `2025.csv` examined on 2026-11-24, **489 of 2,944 rows had blank `match_num`**, and one trailing row was shorter than the 50-column schema. The `2025.csv` source also legitimately starts with tournaments dated **2024-12-29**. These observations are for the GitHub historical snapshot; the official website's current bytes may differ.
+
+`tml-update` **preserves all original bytes** at their content SHA even if the source contains such row defects, but records `source_anomalies` and `accepted_rows` in `index.json` and reports `SOURCE_ANOMALY_REVIEW_REQUIRED`. This is a *quarantine*, not source approval. The watcher explicitly flags anomalies for manual review. No synthetic match ID is created. Subsequent research code may exclude these rows with counted losses of coverage, but may not silently assert that all events were complete.
+
+A new source SHA or a successful CSV download does **not** mean the model training or money-allocation gate is unlocked. Official draw comparison, historical availability timing and market quotes remain independent evidence requirements.
+
+## February 2024 cross-publication comparison with Sackmann archive
+
+A separate historical file is publicly archived at [Aneeshers/tennis-sackmann-archive](https://github.com/Aneeshers/tennis-sackmann-archive/blob/main/atp/atp_matches_2024.csv), which attributes its source to Jeff Sackmann and uses CC BY-NC-SA 4.0. Use it only within the personal, noncommercial research scope and keep provider CSVs private.
+
+**Source lineage warning:** TML and this Sackmann archive may derive from overlapping historical inputs. Agreement between them is **not independent official ATP verification**. TML's 2024 snapshot uses 50 columns and alphanumeric player IDs, whereas the Sackmann archive uses 49 columns and numeric player IDs. Tournament IDs also differ in leading-zero formatting, and source-local `match_num` values are not globally portable. **Do not perform naive joins on either player ID or match_num across these providers.**
+
+On pinned public GitHub snapshots reviewed 2026-11-24 (TML Git blob SHA-1 `cf513429259b4a15e84e2021206895d9bd4ff772`, Sackmann archive blob `c401319bc1dec4633dd2c730aa5a7a7376e176f8`), the twelve mapped February 2024 ATP tournaments provided **340/340** matches agreeing on event/winner/loser/round after an explicitly reviewed name alias mapping. **339/340** score strings agreed byte-for-byte; the exception was a Buenos Aires quarterfinal retirement reported as `4-6 7-5 RET` vs `4-6 7-5 0-0 RET`. Neither representation proves a played third set.
+
+The repository pins those **two observed name variants only** in `docs/registries/tml_sackmann_2024_player_aliases_v1.json`. No automatic fuzzy matching or claimed ATP canonical player ID mapping is allowed. The local audit tool `tml_sackmann_crosscheck.py` checks the two raw files **without uploading them** and returns aggregate match/score consistency and SHA-256 hashes.
+
+After obtaining the private 2024 source files on the computer, run:
+
+```powershell
+.\.venv\Scripts\python.exe -m atp_gate tml-crosspublication-audit `
+  data\tml\2024\2024.csv `
+  data\sackmann\atp_matches_2024.csv `
+  docs\registries\tml_2024_feb_source_crosswalk_v1.json `
+  docs\registries\tml_sackmann_2024_player_aliases_v1.json `
+  --out reports\tml_sackmann_2024_feb_crosscheck.json
+```
+
+Replace the displayed TML path with its real SHA-named snapshot path if using the versioned updater. Never copy a third-party raw CSV into a GitHub PR or reports artifact.
+
+Even `CROSS_PUBLICATION_AGREEMENT_REVIEW_REQUIRED` means **only** that these publications agree, not that the ATP's official match draw or match timestamps have been verified. A trusted actual odds T−60 or profitable trade remains unsupported. Source audit flags always set `eligible_for_model_training=0`, `allocation_enabled=false`, `stake=0`. See [P1.4d Issue #17](https://github.com/24021368-DucAnh/atp-forecasting-research/issues/17).
