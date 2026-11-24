@@ -181,3 +181,40 @@ def test_evidence_hash_canonicalizes_decimal_scale_and_timezone():
     equivalent=o.model_copy(update={"amount":D("1000.000"),
         "at":o.at.astimezone(timezone.utc)})
     assert cash_history_sha256(b,o,c)==cash_history_sha256(b,equivalent,c)
+
+
+def test_complete_year_history_conserves_december_loss_after_rollover():
+    from atp_gate.paper_cash_history import (
+        OpeningEvidence, audit_cash_history, close_evidence_from_report,
+    )
+    b=opening_book()
+    opening=OpeningEvidence(at=START,amount=D("1000"))
+    closes=[]
+    for month in range(2,13):
+        boundary=datetime(2027,month,1,tzinfo=TZ)
+        b,report=close_month(b,boundary.strftime("%Y-%m"))
+        closes.append(close_evidence_from_report(report,boundary))
+    d=DecisionOutput(decision="SELECT",side="A",stake=D("10"),
+        ev_lower=.05,p_lower=.6,market_probability=.5,reasons=[])
+    at=datetime(2027,12,31,18,tzinfo=TZ)
+    b=record_selection(b,"synthetic-december",d,D("1.9"),at)
+    b=settle_selection(b,"synthetic-december","LOSS",at+timedelta(hours=1))
+    boundary=datetime(2028,1,1,tzinfo=TZ)
+    b,report=close_month(b,"2028-01")
+    closes.append(close_evidence_from_report(report,boundary))
+    r=audit_cash_history(b,opening,closes,boundary)
+    assert r["closed_months"]==12
+    assert D(r["annual_negative_month_loss"])==0
+    assert D(r["simulated_topups"])==10
+    assert D(r["net_paper_result"])==-10
+    assert D(r["free_cash"])==1000
+    assert b.risk.week_loss_realized==10
+
+
+def test_empty_january_opening_is_consistent_without_invented_transactions():
+    from atp_gate.paper_cash_history import OpeningEvidence, audit_cash_history
+    r=audit_cash_history(opening_book(),OpeningEvidence(at=START,amount=D("1000")),[],START)
+    assert r["cash_consistency_verified"] is True
+    assert D(r["net_paper_result"])==0
+    assert r["match_journal_events"]==0
+    assert r["anchor_matches"] is None
