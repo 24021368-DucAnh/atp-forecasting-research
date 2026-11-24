@@ -26,6 +26,10 @@ class JournalEvent(BaseModel):
     event: Literal["RESERVE", "SETTLE_WIN", "SETTLE_LOSS", "SETTLE_VOID", "PROFIT_LOCK"]
     amount: Decimal
     at: AwareDatetime
+    # The original accepted paper quote belongs to RESERVE only. Optional
+    # fields permit replay of legacy LOSS/VOID period counts, never legacy WIN.
+    side: Literal["A", "B"] | None = None
+    odds: Decimal | None = Field(default=None, gt=Decimal("1"), allow_inf_nan=False)
 
 
 class PaperBook(BaseModel):
@@ -70,7 +74,9 @@ def _verify_journal_state(book: PaperBook, replay: PeriodReplay) -> None:
         raise ValueError("risk open exposure disagrees with journal")
     for match_id, position in book.open_positions.items():
         if (position.match_id != match_id or position.stake != replay.open_stakes[match_id]
-                or position.placed_at != replay.reserve_at[match_id]):
+                or position.placed_at != replay.reserve_at[match_id]
+                or position.odds != replay.reserve_odds.get(match_id)
+                or position.side != replay.reserve_sides.get(match_id)):
             raise ValueError("risk open-position data disagrees with journal")
 
     this_month_ids = [
@@ -116,8 +122,10 @@ def record_selection(book: PaperBook, match_id: str, decision: DecisionOutput,
     if (match_id in book.risk.seen_match_ids or match_id in book.open_positions
             or any(e.event == "RESERVE" and e.match_id == match_id for e in book.journal)):
         raise ValueError("match already selected")
-    if decimal_odds <= 1:
-        raise ValueError("bad odds")
+    if (not isinstance(decimal_odds, Decimal)
+            or not decimal_odds.is_finite()
+            or decimal_odds <= Decimal("1")):
+        raise ValueError("invalid nonfinite decimal odds price")
     # Gate's risk checks should already have run; preserve basic ledger invariants.
     if book.risk.free_cash < decision.stake:
         raise ValueError("insufficient available balance")
@@ -153,7 +161,8 @@ def record_selection(book: PaperBook, match_id: str, decision: DecisionOutput,
         "risk": new_risk,
         "open_positions": {**book.open_positions, match_id: pos},
         "journal": [*book.journal, JournalEvent(match_id=match_id, event="RESERVE",
-                                               amount=stake, at=at)],
+                                               amount=stake, at=at,
+                                               side=decision.side, odds=decimal_odds)],
     })
 
 
