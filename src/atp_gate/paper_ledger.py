@@ -1,12 +1,14 @@
 """Pure paper-only ledger transitions; never connects to any payment or betting API."""
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from decimal import Decimal
 from typing import Literal
+from zoneinfo import ZoneInfo
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 from .contracts import RiskState, DecisionOutput
 from .policy import X, apply_profit_lock, MAX_STAKE, MAX_OPEN, MONTHLY_FLOOR, WEEKLY_LOSS_MAX, ANNUAL_NEGATIVE_MONTH_MAX, MIN_STAKE
+from .period_risk import BANGKOK, period_keys, replay_journal, PeriodReplay
 
 
 class PaperPosition(BaseModel):
@@ -40,8 +42,69 @@ class MonthlyReport(BaseModel):
     protected: Decimal
     ending_unlocked: Decimal
     needed_topup: Decimal
+    carried_open_exposure: Decimal = Decimal("0")
     # 'needed_topup' is the deficit needed to begin next month at X;
     # NOT a return, and it must be counted in cash-flow accounting.
+
+
+def _verify_journal_state(book: PaperBook, replay: PeriodReplay) -> None:
+    """Refuse stale/forged counters and records; never silently reset evidence."""
+    r = book.risk
+    if (r.selection_day is None) != (r.loss_week_start is None):
+        raise ValueError("risk period identity is incomplete")
+    if r.selection_day is None:
+        if (book.journal or book.open_positions or r.open_exposure != 0
+                or r.selections_today != 0 or r.week_loss_realized != 0
+                or r.seen_match_ids):
+            raise ValueError("risk period has unverified legacy activity")
+    else:
+        if r.loss_week_start != r.selection_day - timedelta(days=r.selection_day.weekday()):
+            raise ValueError("risk period day/week identity conflicts")
+        if (r.selections_today != replay.daily_counts.get(r.selection_day, 0)
+                or r.week_loss_realized != replay.weekly_losses.get(r.loss_week_start, Decimal("0"))):
+            raise ValueError("risk period counters disagree with journal")
+
+    if set(book.open_positions) != set(replay.open_stakes):
+        raise ValueError("risk journal/open-position identities disagree")
+    if r.open_exposure != sum(replay.open_stakes.values(), Decimal("0")):
+        raise ValueError("risk open exposure disagrees with journal")
+    for match_id, position in book.open_positions.items():
+        if (position.match_id != match_id or position.stake != replay.open_stakes[match_id]
+                or position.placed_at != replay.reserve_at[match_id]):
+            raise ValueError("risk open-position data disagrees with journal")
+
+    this_month_ids = [
+        entry.match_id for entry in book.journal
+        if entry.event == "RESERVE"
+        and entry.at.astimezone(BANGKOK).strftime("%Y-%m") == r.month
+    ]
+    if len(set(r.seen_match_ids)) != len(r.seen_match_ids) or set(r.seen_match_ids) != set(this_month_ids):
+        raise ValueError("risk seen-match IDs disagree with journal")
+
+
+def reconcile_periods(book: PaperBook, at: datetime) -> PaperBook:
+    """Rebuild certified day/week counters from the complete paper journal.
+
+    A caller must pass this derived risk state to `policy.evaluate`. Period
+    stamps alone are not an authentication or integrity signature.
+    """
+    day, week = period_keys(at)
+    if book.risk.month != day.strftime("%Y-%m"):
+        raise ValueError("risk month mismatch; unsettled cross-month accounting unsupported")
+    replay = replay_journal(book.journal, at)
+    _verify_journal_state(book, replay)
+    if (book.risk.selection_day is not None
+            and (book.risk.selection_day > day or book.risk.loss_week_start > week)):
+        raise ValueError("risk period is newer than decision timestamp")
+    r = book.risk.model_copy(update={
+        "selection_day": day, "loss_week_start": week,
+        "selections_today": replay.daily_counts.get(day, 0),
+        "week_loss_realized": replay.weekly_losses.get(week, Decimal("0")),
+    })
+    return book.model_copy(update={
+        "risk": r, "journal": list(book.journal),
+        "open_positions": dict(book.open_positions),
+    })
 
 
 def record_selection(book: PaperBook, match_id: str, decision: DecisionOutput,
@@ -49,7 +112,9 @@ def record_selection(book: PaperBook, match_id: str, decision: DecisionOutput,
     """Reserve stake once; caller must pass an evaluated, trusted pre-match decision."""
     if decision.decision != "SELECT" or decision.side is None or decision.stake <= 0:
         raise ValueError("only SELECT decisions may be reserved")
-    if match_id in book.risk.seen_match_ids or match_id in book.open_positions:
+    book = reconcile_periods(book, at)
+    if (match_id in book.risk.seen_match_ids or match_id in book.open_positions
+            or any(e.event == "RESERVE" and e.match_id == match_id for e in book.journal)):
         raise ValueError("match already selected")
     if decimal_odds <= 1:
         raise ValueError("bad odds")
@@ -100,6 +165,7 @@ def settle_selection(book: PaperBook, match_id: str,
     """
     if match_id not in book.open_positions:
         raise ValueError("match is not open")
+    book = reconcile_periods(book, at)
     pos = book.open_positions[match_id]
     if at < pos.placed_at:
         raise ValueError("settlement precedes placement")
@@ -124,26 +190,49 @@ def settle_selection(book: PaperBook, match_id: str,
 
 
 def close_month(book: PaperBook, next_month: str) -> tuple[PaperBook, MonthlyReport]:
-    """Close a settled paper month, record real net and reset to X independently.
+    """Close paper month at stake cost basis, carrying unsettled positions intact.
 
-    A caller should use an auditable month-close event and prohibit editing it later.
+    No unrealized profit/loss is inferred from future match outcomes or odds.
+    Externally funded topups restore the research-equity reference at rollover.
     """
-    if book.open_positions or book.risk.open_exposure != 0:
-        raise ValueError("open positions must settle before month rollover")
     year,mon=map(int,book.risk.month.split("-"))
     expected_year=year+1 if mon==12 else year
     expected_mon=1 if mon==12 else mon+1
     if next_month != f"{expected_year:04d}-{expected_mon:02d}":
         raise ValueError("next_month must be the next calendar month")
-    net = book.risk.free_cash + book.risk.protected_cash - X
-    report=MonthlyReport(month=book.risk.month, net=net,
-                         protected=book.risk.protected_cash,
-                         ending_unlocked=book.risk.free_cash,
-                         needed_topup=max(-net,Decimal("0")))
-    year_losses=(Decimal("0") if expected_year!=year else book.risk.annual_negative_month_loss)
-    year_losses+=max(-net,Decimal("0"))
-    newrisk=RiskState(month=next_month,free_cash=X,open_exposure=0,protected_cash=0,
-                      phase="STOPPED" if year_losses>=Decimal("200") else "NORMAL",
-                      selections_today=0,month_loss_realized=0,week_loss_realized=0,
-                      annual_negative_month_loss=year_losses,seen_match_ids=[])
-    return PaperBook(risk=newrisk),report
+    # The next month begins at local midnight, even when UTC is still
+    # the previous day. Preserve journal evidence across the month border.
+    boundary = datetime(expected_year, expected_mon, 1, tzinfo=BANGKOK)
+    replay = replay_journal(book.journal, boundary - timedelta(microseconds=1))
+    _verify_journal_state(book, replay)
+    next_day, next_week = period_keys(boundary)
+    if replay.daily_counts.get(next_day, 0):
+        raise ValueError("new-month reservation found before the month rollover")
+
+    carry = book.risk.open_exposure
+    if carry > X:
+        raise ValueError("carried open exposure exceeds reference capital")
+    net = book.risk.free_cash + book.risk.protected_cash + carry - X
+    report = MonthlyReport(
+        month=book.risk.month, net=net,
+        protected=book.risk.protected_cash,
+        ending_unlocked=book.risk.free_cash,
+        needed_topup=max(-net, Decimal("0")),
+        carried_open_exposure=carry,
+    )
+    year_losses = Decimal("0") if expected_year != year else book.risk.annual_negative_month_loss
+    year_losses += max(-net, Decimal("0"))
+    newrisk = RiskState(
+        month=next_month, free_cash=X-carry, open_exposure=carry, protected_cash=0,
+        phase="STOPPED" if year_losses >= ANNUAL_NEGATIVE_MONTH_MAX else "NORMAL",
+        selection_day=next_day, loss_week_start=next_week,
+        selections_today=0,
+        month_loss_realized=0,
+        week_loss_realized=replay.weekly_losses.get(next_week, Decimal("0")),
+        annual_negative_month_loss=year_losses,
+        seen_match_ids=[],
+    )
+    return PaperBook(
+        risk=newrisk, open_positions=dict(book.open_positions),
+        journal=list(book.journal),
+    ), report

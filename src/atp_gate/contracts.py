@@ -5,7 +5,7 @@ A valid contract does NOT itself establish source authenticity or model profitab
 """
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 from decimal import Decimal
 from typing import Literal
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, model_validator
@@ -119,6 +119,8 @@ class RiskState(StrictModel):
     protected_cash: Decimal = Field(default=Decimal("0"), ge=Decimal("0"))
     phase: Literal["NORMAL", "PROFIT_ONLY", "STOPPED"]
     selections_today: int = Field(ge=0)
+    selection_day: date | None = None
+    loss_week_start: date | None = None
     month_loss_realized: Decimal = Field(ge=Decimal("0"))
     week_loss_realized: Decimal = Field(ge=Decimal("0"))
     annual_negative_month_loss: Decimal = Field(ge=Decimal("0"))
