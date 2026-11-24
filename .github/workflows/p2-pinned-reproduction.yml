@@ -1,0 +1,20 @@
+name: P2 pinned Python reproduction (one-off research)
+on:
+  push:
+    branches: [research/p2-pinned-python-reproduction]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  reproduce:
+    if: github.ref == 'refs/heads/research/p2-pinned-python-reproduction'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install -e .
+      - name: Reproduce fixed historical skill study on verified public blobs
+        run: python scripts/reproduce_pinned_tml_elo.py
