@@ -1,0 +1,97 @@
+{
+  "schema": "P1_8A_ORIGINAL_DUPLICATE_FORENSICS_1",
+  "status": "ADJUDICATION_AND_SENSITIVITY_REQUIRED",
+  "method": "Separate JavaScript CSV parsing on original pinned Git blobs; grouped by event, unordered source player IDs, and round; compared exact fields across each group. Manual external result cross-check, not source-row ID mapping. No raw player fields or scores persisted.",
+  "events": [
+    {
+      "event": "2021-416",
+      "name": "Rome Masters",
+      "round": "R64",
+      "raw_event_rows": 56,
+      "unique_player_ids": 56,
+      "unique_pair_round_candidates": 55,
+      "duplicate_group_rows": 2,
+      "changed_fields": [
+        "match_num"
+      ],
+      "completed_score_condition": true,
+      "reference": "https://www.atptour.com/en/scores/archive/rome/416/2021/results",
+      "reference_kind": "ATP_OFFICIAL_RESULTS",
+      "reference_observation": "One corresponding R64 match listing with matching result; not full official draw reconciliation."
+    },
+    {
+      "event": "2021-321",
+      "name": "Stuttgart",
+      "round": "R32",
+      "raw_event_rows": 28,
+      "unique_player_ids": 28,
+      "unique_pair_round_candidates": 27,
+      "duplicate_group_rows": 2,
+      "changed_fields": [
+        "match_num"
+      ],
+      "completed_score_condition": true,
+      "reference": "https://www.sportschau.de/live-und-ergebnisse/tennis/atp-deutschland-mercedes-cup/se37096/2021/spiele-und-ergebnisse",
+      "reference_kind": "INDEPENDENT_SPORTS_RESULTS_NOT_ATP_OFFICIAL",
+      "reference_observation": "Matching first-round result in public broadcast results. ATP archive was not accessible via research browser."
+    },
+    {
+      "event": "2022-2807",
+      "name": "Gijon",
+      "round": "R32",
+      "raw_event_rows": 28,
+      "unique_player_ids": 28,
+      "unique_pair_round_candidates": 27,
+      "duplicate_group_rows": 2,
+      "changed_fields": [
+        "match_num"
+      ],
+      "completed_score_condition": true,
+      "reference": "https://www.atptour.com/es/news/gijon-2022-lunes-landaluce-primer-partido-atp",
+      "reference_kind": "ATP_OFFICIAL_MATCH_REPORT",
+      "reference_observation": "Matching first-round result in ATP's match report; not an official complete draw reconciliation."
+    },
+    {
+      "event": "2025-495",
+      "name": "Dubai",
+      "round": "R32",
+      "raw_event_rows": 32,
+      "unique_player_ids": 32,
+      "unique_pair_round_candidates": 31,
+      "duplicate_group_rows": 2,
+      "changed_fields": [
+        "match_num",
+        "minutes",
+        "w_ace",
+        "w_df",
+        "w_svpt",
+        "w_1stIn",
+        "w_1stWon",
+        "w_2ndWon",
+        "w_SvGms",
+        "w_bpSaved",
+        "w_bpFaced",
+        "l_ace",
+        "l_df",
+        "l_svpt",
+        "l_1stIn",
+        "l_1stWon",
+        "l_2ndWon",
+        "l_SvGms",
+        "l_bpSaved",
+        "l_bpFaced"
+      ],
+      "completed_score_condition": true,
+      "reference": "https://www.atptour.com/en/scores/archive/dubai/495/2025/results",
+      "reference_kind": "ATP_OFFICIAL_RESULTS",
+      "reference_observation": "Matching R32 result and a distinct reverse-winner qualifying match. Source candidate statistics differ; do not select a row by assuming either number or stats are correct."
+    }
+  ],
+  "outside_scope_groups": 1,
+  "source_raw_redistribution": false,
+  "official_match_draw_verified": false,
+  "individual_match_start_verified": false,
+  "eligible_for_model_training": 0,
+  "allocation_enabled": false,
+  "stake": 0
+}
