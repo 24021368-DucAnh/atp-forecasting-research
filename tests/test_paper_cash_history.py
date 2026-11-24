@@ -156,3 +156,28 @@ def test_early_profit_lock_is_rejected():
     forged=b.model_copy(update={"journal":rows})
     with pytest.raises(ValueError):
         audit_cash_history(forged,o,[],at)
+
+
+def test_december_loss_does_not_enter_next_year_budget():
+    """Closing December allocates its result to December, not January."""
+    b=opening_book()
+    b=b.model_copy(update={"risk":b.risk.model_copy(update={"month":"2027-12"})})
+    d=DecisionOutput(decision="SELECT",side="A",stake=D("10"),
+        ev_lower=.05,p_lower=.6,market_probability=.5,reasons=[])
+    at=datetime(2027,12,31,18,tzinfo=TZ)
+    b=record_selection(b,"december-loss",d,D("1.9"),at)
+    b=settle_selection(b,"december-loss","LOSS",at+timedelta(hours=1))
+    jan,report=close_month(b,"2028-01")
+    assert report.month=="2027-12"
+    assert report.net==D("-10")
+    assert report.needed_topup==D("10")
+    assert jan.risk.annual_negative_month_loss==D("0")
+    assert jan.risk.free_cash==D("1000")
+
+
+def test_evidence_hash_canonicalizes_decimal_scale_and_timezone():
+    from atp_gate.paper_cash_history import cash_history_sha256
+    b,o,c=fixture()
+    equivalent=o.model_copy(update={"amount":D("1000.000"),
+        "at":o.at.astimezone(timezone.utc)})
+    assert cash_history_sha256(b,o,c)==cash_history_sha256(b,equivalent,c)
