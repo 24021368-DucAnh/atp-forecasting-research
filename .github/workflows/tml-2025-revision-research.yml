@@ -2,6 +2,9 @@ name: TML 2025 revision research (one-off)
 on:
   push:
     branches: [research/p1-tml-2025-revision-audit]
+    paths:
+      - 'scripts/tml_2025_revision_audit.py'
+      - 'tests/test_tml_revision_audit.py'
 permissions:
   contents: read
 jobs:
