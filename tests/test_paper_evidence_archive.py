@@ -104,3 +104,47 @@ def test_symlink_archive_rejected_if_supported(tmp_path):
         pytest.skip("local filesystem does not permit symlinks")
     with pytest.raises(ValueError,match="symlink"):
         verify_cash_evidence(tmp_path,a["archive_sha256"])
+
+
+def test_nonempty_history_roundtrip_preserves_original_evidence(tmp_path):
+    from datetime import timedelta
+    from atp_gate.contracts import DecisionOutput
+    from atp_gate.paper_ledger import record_selection, settle_selection, close_month
+    from atp_gate.paper_cash_history import close_evidence_from_report, audit_cash_history
+    book,opening,_,at=evidence()
+    decision=DecisionOutput(decision="SELECT",side="A",stake=Decimal("10"),
+        ev_lower=.05,p_lower=.6,market_probability=.5,reasons=[])
+    book=record_selection(book,"synthetic-archive",decision,Decimal("1.90"),
+        at+timedelta(days=1))
+    book=settle_selection(book,"synthetic-archive","VOID",at+timedelta(days=1,hours=1))
+    boundary=datetime(2027,1,31,17,tzinfo=timezone.utc)
+    book,monthly=close_month(book,"2027-02")
+    closes=[close_evidence_from_report(monthly,boundary)]
+    before=audit_cash_history(book,opening,closes,boundary)
+    saved=store_cash_evidence(tmp_path,book,opening,closes,boundary)
+    after=verify_cash_evidence(tmp_path,saved["archive_sha256"])
+    assert after["evidence_sha256"]==before["evidence_sha256"]
+    assert after["match_journal_events"]==2
+    assert after["closed_months"]==1
+    assert Decimal(after["net_paper_result"])==0
+
+
+def test_missing_nested_snapshot_field_cannot_be_inferred(tmp_path):
+    report=store_cash_evidence(tmp_path,*evidence())
+    raw=json.loads((tmp_path/(report["archive_sha256"]+".json")).read_bytes())
+    del raw["book"]["journal"]
+    changed=json.dumps(raw,sort_keys=True,separators=(",",":"),ensure_ascii=False).encode()
+    sha=hashlib.sha256(changed).hexdigest()
+    (tmp_path/(sha+".json")).write_bytes(changed)
+    with pytest.raises(ValueError,match="complete|canonical"):
+        verify_cash_evidence(tmp_path,sha)
+
+
+def test_failed_atomic_publication_leaves_no_partial_archive(tmp_path,monkeypatch):
+    import os
+    def fail(*args,**kwargs):
+        raise OSError("synthetic filesystem failure")
+    monkeypatch.setattr(os,"link",fail)
+    with pytest.raises(OSError):
+        store_cash_evidence(tmp_path,*evidence())
+    assert not list(tmp_path.iterdir())
