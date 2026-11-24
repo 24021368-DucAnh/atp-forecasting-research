@@ -49,3 +49,52 @@ The accepted **paper** decimal odds and selected side are now recorded **at the 
 - The settlement payout currently uses exact `stake × odds` with **no bookmaker rounding**. If a licensed external sportsbook ever becomes relevant, its real market rounding, commission, taxes, retirement and void rules would need their own provider-specific independent reconciliation. None has been certified here.
 
 **Important limit:** This internal journal replay is **not tamper-proof**: an adversary could rewrite both the original reserve and settlement amounts, or forge an entire consistent journal. In addition, `free_cash`, `protected_cash`, month-close external top-ups and year-to-date cash resets cannot be fully reconstructed from a uniquely authenticated opening balance and transfer ledger in the present schema. P0 Issue #25 remains **open** for its separate full cash and provenance stage, which will require explicit `OPENING_BALANCE`, `MONTH_CLOSE`, `TOPUP`, `TRANSFER` evidence and a migration policy. No real-money allocation or verified returns follow from these synthetic paper checks.
+
+## P0.25b.1 — Complete synthetic cash history verification
+
+The separate read-only module `atp_gate.paper_cash_history` verifies a complete
+paper cash history without trusting the balance fields in the supplied
+`PaperBook`. It does not modify legacy snapshots or the selection policy.
+
+**Evidence contract**
+
+- `OpeningEvidence(at, amount)`: 1 January at Bangkok local midnight,
+  exactly 1000 synthetic units, zero existing positions. A midyear legacy
+  snapshot is not a substitute for the missing preceding history.
+- The original match journal: RESERVE must contain its accepted side and
+  price; WIN/LOSS/VOID amounts must reconcile against that reserve.
+- `MonthCloseEvidence` for each elapsed local calendar month: boundary,
+  closed month, net result, cost-basis carry, ending unlocked and protected
+  balance, explicitly simulated top-up and withdrawal. Preserve the returned
+  `MonthlyReport` using `close_evidence_from_report(report, boundary)`.
+  This helper records assertions, not proof that an actual transfer occurred.
+
+Call `audit_cash_history(book, opening, closes, as_of, expected_sha256=anchor)`
+with complete evidence, an aware explicit clock, and optionally a digest from
+a separate trusted archive. It verifies every month boundary, internal cash
+transfers, accepted payouts, open position identities, current risk-state
+balances and period counters. At the exact month boundary the close precedes
+new-month match events. December's closed deficit remains in December's
+report and in cumulative simulated funding; the new calendar year's annual
+negative-month counter starts at zero. A week straddling New Year retains its
+own loss counter.
+
+The cumulative paper result is:
+`free_cash + protected_cash + open_exposure + simulated_withdrawals -
+simulated_topups - opening.amount`. Open exposure is carried at original
+cost, not a forecast of its value. Internal protection transfers cannot count
+as external deposits or withdrawals.
+
+**Digest semantics:** `cash_history_sha256` uses the versioned canonical
+evidence (not the supplied end-state balance) with normalized UTC timestamps
+and exact decimal value tokens. `anchor_matches=true` means only that the
+supplied digest equals the evidence digest; the verifier always reports
+`external_authenticity_verified=false`. A hash derived from an edited journal
+is not proof of original provenance. Keep independently retained evidence and
+never fabricate missing opening, monthly, price or funding records.
+
+**Scope still open:** evidence capture and persistent append-only storage,
+trusted external anchoring, and independent review/integration remain separate.
+This verifier is not an API for payments or betting. All values are synthetic;
+no actual profit, model edge, financial transaction, live allocation or
+bookmaker settlement is certified.
