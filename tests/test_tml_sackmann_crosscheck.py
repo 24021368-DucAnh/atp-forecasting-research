@@ -4,6 +4,9 @@ All fixtures generated from made-up identifiers; no provider CSV redistributed.
 """
 import csv
 import json
+import os
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -149,3 +152,51 @@ def test_unexpected_archive_header_fails_closed(tmp_path):
     write_csv(q,SACKMANN_COLUMNS[:-1],archive)
     with pytest.raises(ValueError,match="schema"):
         audit_tml_sackmann_crosspublication(p,q,REGISTRY,ALIASES)
+
+
+def test_crosspublication_cli_writes_only_aggregate_report(tmp_path):
+    x,y=fixture_rows()
+    p=tmp_path/"2024.csv"
+    q=tmp_path/"atp_matches_2024.csv"
+    write_csv(p,TML_COLUMNS,x)
+    write_csv(q,SACKMANN_COLUMNS,y)
+    registry=tmp_path/"registry.json"
+    aliases=tmp_path/"aliases.json"
+    registry.write_text(json.dumps(REGISTRY),encoding="utf-8")
+    aliases.write_text(json.dumps(ALIASES),encoding="utf-8")
+    out=tmp_path/"reports"/"crosscheck.json"
+    env={**os.environ,"PYTHONPATH":str(ROOT/"src")}
+    process=subprocess.run(
+        [sys.executable,"-m","atp_gate","tml-crosspublication-audit",
+         str(p),str(q),str(registry),str(aliases),"--out",str(out)],
+        cwd=ROOT,env=env,text=True,capture_output=True,timeout=30,
+    )
+    assert process.returncode==0,process.stderr+process.stdout
+    report=json.loads(process.stdout)
+    assert report["matched_player_names_and_round"]==340
+    assert report["score_text_differences"]==1
+    assert json.loads(out.read_text())==report
+    assert "Winner1" not in process.stdout
+    assert report["allocation_enabled"] is False
+
+
+def test_crosspublication_cli_rejects_report_overwrite_of_archive(tmp_path):
+    x,y=fixture_rows()
+    p=tmp_path/"2024.csv"
+    q=tmp_path/"atp_matches_2024.csv"
+    write_csv(p,TML_COLUMNS,x)
+    write_csv(q,SACKMANN_COLUMNS,y)
+    aliases=tmp_path/"aliases.json"
+    registry=tmp_path/"registry.json"
+    registry.write_text(json.dumps(REGISTRY))
+    aliases.write_text(json.dumps(ALIASES))
+    before=q.read_bytes()
+    env={**os.environ,"PYTHONPATH":str(ROOT/"src")}
+    process=subprocess.run([
+        sys.executable,"-m","atp_gate","tml-crosspublication-audit",
+        str(p),str(q),str(registry),str(aliases),"--out",str(q)],
+        cwd=ROOT,env=env,text=True,capture_output=True,timeout=30,
+    )
+    assert process.returncode==2
+    assert json.loads(process.stdout)["status"]=="ERROR"
+    assert q.read_bytes()==before
