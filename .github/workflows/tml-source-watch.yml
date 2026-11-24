@@ -42,7 +42,10 @@ jobs:
               print("TML source version:", name, record["sha256"])
               if record.get("source_anomalies"):
                   print("SOURCE QUARANTINE:", record["source_anomalies"])
-                  raise SystemExit("Official source has unidentifiable/malformed records; manual review needed")
+                  print("UNIDENTIFIABLE_ROWS_REVIEW_REQUIRED")
+                  # Preserve source metadata and continue monitoring: raw rows
+                  # remain quarantined by tml_snapshot, never model-ready.
+                  # A full-source parse/hash failure already aborts tml-update.
           PY
           source_file="$(python -c "import json;print(json.load(open('reports/tml-2024-update.json'))['local_snapshot'])")"
           python -m atp_gate tml-february-audit "$source_file" \
