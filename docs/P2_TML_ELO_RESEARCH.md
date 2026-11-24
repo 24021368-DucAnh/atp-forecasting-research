@@ -54,3 +54,20 @@ All outputs explicitly declare: `status=HISTORICAL_SKILL_RESEARCH_ONLY`, `partic
 **Source and rights:** [TennisMyLife ATP database](https://stats.tennismylife.org/tennis-match-database), [TML GitHub terms](https://github.com/Tennismylife/TML-Database). Attribution and personal/noncommercial restriction apply. No raw CSV redistribution.
 
 **Source readiness:** TML-2024 Feb candidate audit [#27](https://github.com/24021368-DucAnh/atp-forecasting-research/pull/27); versioned updater [#28](https://github.com/24021368-DucAnh/atp-forecasting-research/pull/28); research issue [#29](https://github.com/24021368-DucAnh/atp-forecasting-research/issues/29).
+
+## Preliminary real-source sanity check (2026-11-24 — independent calculation)
+
+The project's GitHub-linked public TML `master` CSV snapshots for **2021–2025** were inspected through the GitHub connector and scored in a **separate JavaScript port of the fixed PR #30 method**. This is independent cross-implementation evidence, **not** a successful execution of the official Python `tml-elo-experiment` CLI, and must not be cited as trusted production validation without exact Python replication.
+
+- 14,668 raw source rows across five seasonal files, 12,123 eligible under the currently documented filters.
+- Excluded/flagged: `OUT_OF_SCOPE_LEVEL=1612`, `NON_COMPLETED=443`, `MISSING_MATCH_ID=489`, `MALFORMED_ROWS=1`.
+- Yearly conditional-matchup samples: 2023 **n=2600**; 2024 **n=2594**; 2025 **n=2000** (total **7194**).
+- Overall comparison on exactly that set: 50/50 Brier **0.250000**, logloss **0.693147**; Global Elo Brier **0.220362**, logloss **0.629734**; surface-shrunk Elo Brier **0.220550**, logloss **0.630918**. Surface Elo did not improve overall log loss versus the simpler Elo in this preliminary test.
+- Annual Global Elo logloss: **0.636870** (2023), **0.625203** (2024), **0.626334** (2025).
+- Source archive Git blob SHA-1 (not raw file SHA-256): 2021 `2bd4eaf4eb28a09b42ab4ecd5830a8f3ad068faa`; 2022 `2b6726106fefb22b40c2816e4c703a48e9d312be`; 2023 `5ceb7397e3a217e51f197c9e83ea435faf690eeb`; 2024 `cf513429259b4a15e84e2021206895d9bd4ff772`; 2025 `1aff9b077cf4de7806b665ec0c6d8b4032a040f3`.
+
+See [Issue #29 scientific audit record](https://github.com/24021368-DucAnh/atp-forecasting-research/issues/29#issuecomment-7121222576) for details. **Do not interpret outperforming 50/50 as outperforming bookmaker odds or generating profit.** Player matchups and event dates remain retrospective; T−60/actual first-serve records are not present.
+
+## Integration order and status
+
+PR #30 must be integrated **on top of** TML audit #27 and the latest versioned updater #28, not directly into `main`. This stacked PR's base branch is now `feat/p1-tml-versioned-updates`; its GitHub checks must be re-run against the updated dependency branch before review/merge. All outputs remain research-only.
