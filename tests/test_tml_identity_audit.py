@@ -137,3 +137,31 @@ def test_truncated_row_is_counted_not_fabricated(tmp_path):
     assert c["source_rows"] == 2
     assert c["malformed_rows"] == 1
     assert c["well_formed_rows"] == 1
+
+
+def test_duplicate_candidates_are_segmented_by_main_tour_scope(tmp_path):
+    path = snapshot(tmp_path, [
+        row(event="2024-main", num="1"),
+        row(event="2024-main", num="2"),
+        row(event="2024-team", num="1", tourney_level="D"),
+        row(event="2024-team", num="2", tourney_level="D"),
+        row(event="2024-mixed", num="1"),
+        row(event="2024-mixed", num="2", tourney_level="D"),
+    ])
+    out = audit([path])
+    assert out["counts"]["duplicate_candidate_pair_round_groups"] == 3
+    assert out["duplicate_candidate_groups_by_scope"] == {
+        "MAIN_TOUR": 1, "OUTSIDE_MAIN_TOUR": 1, "MIXED_SCOPE": 1}
+
+
+def test_season_inventory_does_not_invent_global_group_counts(tmp_path):
+    path = snapshot(tmp_path, [
+        row(num="1", start="20231225"),
+        row(num="2", winner="P02", loser="P01"),
+    ])
+    out = audit([path])
+    assert out["counts"]["conflicting_candidate_outcome_groups"] == 1
+    local = out["source_inventory"][0]["counts"]
+    assert "conflicting_candidate_outcome_groups" not in local
+    assert local["cross_year_start_rows"] == 1
+    assert local["invalid_source_date_rows"] == 0
