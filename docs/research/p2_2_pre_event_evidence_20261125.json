@@ -1,0 +1,1204 @@
+{
+  "schema": "P2_2_EXECUTION_EVIDENCE_V1",
+  "run_id": 45566960798,
+  "job_id": 139043992839,
+  "run_commit": "810ace91127274914e8daeb56294ae8c730ec5bc",
+  "red": {
+    "run_id": 45566762577,
+    "commit": "be49603d994012bdc2e2ec1f480010a6e8a6a81c",
+    "failure": "ModuleNotFoundError atp_gate.tml_development_data"
+  },
+  "green": {
+    "targeted_passed": 16,
+    "seconds": 0.09
+  },
+  "integration": {
+    "main": "be219d8b1e01780e5d9f5b9fd2eb84a12cc92b1d",
+    "merged_pr": 47,
+    "tree_blobs_identical": 232,
+    "failed_ci": 45566967068,
+    "failure_step": "Verify canonical tracked-file SHA256 manifest",
+    "reason": "manifest SHA256 or tracked coverage mismatch"
+  },
+  "result": {
+    "allocation_enabled": false,
+    "cold_start_evaluation_rows": 250,
+    "derived_sha256": {
+      "2021": "2a2c4a331b1cbae87adace77f4ff5f80e5c60207efd89dd958e6998735c90e92",
+      "2022": "125a1c0ece4b29ead7ce878b2e1bf844b1737b311fad2bfa873b3503e1cc39f1",
+      "2023": "9faaf53186ef908b3322d521a8dd2a717401167c0e400a99e1efddb23e13600f",
+      "2024": "db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8",
+      "2025": "5ccf52d912085d6a5ba3effdc5f2f216f170aabfd8850086b5f92c7ccedfd53e"
+    },
+    "deterministic_shuffled_input": true,
+    "eligible": 12620,
+    "eligible_for_model_training": 0,
+    "evaluation": {
+      "allocation_enabled": false,
+      "evaluation_status": "PREVIOUSLY_INSPECTED_DEVELOPMENT_YEARS",
+      "model_validation_trusted": false,
+      "models": {
+        "coinflip": {
+          "brier": 0.25,
+          "brier_decomposition": {
+            "binning_residual": 0,
+            "method": "BINNED_APPROXIMATION",
+            "reliability": 0.00008757106449318296,
+            "resolution": 0,
+            "uncertainty": 0.24991242893550683
+          },
+          "calibration_slope_intercept": {
+            "status": "DEFERRED_TO_P2_3_DIAGNOSTIC_FIT"
+          },
+          "coverage": 1,
+          "ece": 0.009357941252924329,
+          "folds": [
+            {
+              "brier": 0.25,
+              "brier_decomposition": {
+                "binning_residual": 0,
+                "method": "BINNED_APPROXIMATION",
+                "reliability": 0.00010000000000000018,
+                "resolution": 0,
+                "uncertainty": 0.2499
+              },
+              "calibration_slope_intercept": {
+                "status": "DEFERRED_TO_P2_3_DIAGNOSTIC_FIT"
+              },
+              "coverage": 1,
+              "ece": 0.010000000000000009,
+              "log_loss": 0.6931471805599453,
+              "n": 2600,
+              "reliability": [
+                {
+                  "bin": 0,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                },
+                {
+                  "bin": 1,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                },
+                {
+                  "bin": 2,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                },
+                {
+                  "bin": 3,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                },
+                {
+                  "bin": 4,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                },
+                {
+                  "bin": 5,
+                  "mean_probability": 0.5,
+                  "n": 2600,
+                  "observed_rate": 0.51
+                },
+                {
+                  "bin": 6,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                },
+                {
+                  "bin": 7,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                },
+                {
+                  "bin": 8,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                },
+                {
+                  "bin": 9,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                }
+              ],
+              "year": 2023
+            },
+            {
+              "brier": 0.25,
+              "brier_decomposition": {
+                "binning_residual": 2.7755575615628914e-17,
+                "method": "BINNED_APPROXIMATION",
+                "reliability": 0.000015735143776397517,
+                "resolution": 0,
+                "uncertainty": 0.24998426485622358
+              },
+              "calibration_slope_intercept": {
+                "status": "DEFERRED_TO_P2_3_DIAGNOSTIC_FIT"
+              },
+              "coverage": 1,
+              "ece": 0.003966754816773721,
+              "log_loss": 0.6931471805599453,
+              "n": 2647,
+              "reliability": [
+                {
+                  "bin": 0,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                },
+                {
+                  "bin": 1,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                },
+                {
+                  "bin": 2,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                },
+                {
+                  "bin": 3,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                },
+                {
+                  "bin": 4,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                },
+                {
+                  "bin": 5,
+                  "mean_probability": 0.5,
+                  "n": 2647,
+                  "observed_rate": 0.4960332451832263
+                },
+                {
+                  "bin": 6,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                },
+                {
+                  "bin": 7,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                },
+                {
+                  "bin": 8,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                },
+                {
+                  "bin": 9,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                }
+              ],
+              "year": 2024
+            },
+            {
+              "brier": 0.25,
+              "brier_decomposition": {
+                "binning_residual": 0,
+                "method": "BINNED_APPROXIMATION",
+                "reliability": 0.0005331248875840897,
+                "resolution": 0,
+                "uncertainty": 0.24946687511241591
+              },
+              "calibration_slope_intercept": {
+                "status": "DEFERRED_TO_P2_3_DIAGNOSTIC_FIT"
+              },
+              "coverage": 1,
+              "ece": 0.02308949734368615,
+              "log_loss": 0.6931471805599453,
+              "n": 2447,
+              "reliability": [
+                {
+                  "bin": 0,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                },
+                {
+                  "bin": 1,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                },
+                {
+                  "bin": 2,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                },
+                {
+                  "bin": 3,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                },
+                {
+                  "bin": 4,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                },
+                {
+                  "bin": 5,
+                  "mean_probability": 0.5,
+                  "n": 2447,
+                  "observed_rate": 0.5230894973436861
+                },
+                {
+                  "bin": 6,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                },
+                {
+                  "bin": 7,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                },
+                {
+                  "bin": 8,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                },
+                {
+                  "bin": 9,
+                  "mean_probability": null,
+                  "n": 0,
+                  "observed_rate": null
+                }
+              ],
+              "year": 2025
+            }
+          ],
+          "log_loss": 0.6931471805599453,
+          "minus_global_elo": {
+            "bootstrap": {
+              "assumptions": "EVENT_CLUSTER_RESAMPLING_NOT_PROOF_OF_INDEPENDENCE",
+              "cluster_unit": "EVENT_ID",
+              "estimand": "MATCH_WEIGHTED_MEAN_LOSS_DIFFERENCE",
+              "event_clusters": 187,
+              "event_clusters_by_year": {
+                "2023": 64,
+                "2024": 66,
+                "2025": 57
+              },
+              "interval_method": "PAIRED_PERCENTILE_95",
+              "replicates": 2000,
+              "sampling_scope": "FIXED_HISTORICAL_PREDICTIONS_NO_REFIT",
+              "seed": 29,
+              "status": "EVENT_BOOTSTRAP_DESCRIPTIVE_ONLY",
+              "stratification": "EVENT_START_CALENDAR_YEAR"
+            },
+            "brier": 0.029369890278182847,
+            "brier_95ci": [
+              0.024242328774491978,
+              0.03416281669333024
+            ],
+            "brier_ci_probability_semantics": "CLIPPED_AT_1E_12_FOR_BOOTSTRAP_NUMERICS",
+            "log_loss": 0.06308016249728254,
+            "log_loss_95ci": [
+              0.051240925623917646,
+              0.07419196551405662
+            ]
+          },
+          "n": 7694,
+          "reliability": [
+            {
+              "bin": 0,
+              "mean_probability": null,
+              "n": 0,
+              "observed_rate": null
+            },
+            {
+              "bin": 1,
+              "mean_probability": null,
+              "n": 0,
+              "observed_rate": null
+            },
+            {
+              "bin": 2,
+              "mean_probability": null,
+              "n": 0,
+              "observed_rate": null
+            },
+            {
+              "bin": 3,
+              "mean_probability": null,
+              "n": 0,
+              "observed_rate": null
+            },
+            {
+              "bin": 4,
+              "mean_probability": null,
+              "n": 0,
+              "observed_rate": null
+            },
+            {
+              "bin": 5,
+              "mean_probability": 0.5,
+              "n": 7694,
+              "observed_rate": 0.5093579412529243
+            },
+            {
+              "bin": 6,
+              "mean_probability": null,
+              "n": 0,
+              "observed_rate": null
+            },
+            {
+              "bin": 7,
+              "mean_probability": null,
+              "n": 0,
+              "observed_rate": null
+            },
+            {
+              "bin": 8,
+              "mean_probability": null,
+              "n": 0,
+              "observed_rate": null
+            },
+            {
+              "bin": 9,
+              "mean_probability": null,
+              "n": 0,
+              "observed_rate": null
+            }
+          ]
+        },
+        "global_elo": {
+          "brier": 0.22063010972181715,
+          "brier_decomposition": {
+            "binning_residual": -0.00009520474537044743,
+            "method": "BINNED_APPROXIMATION",
+            "reliability": 0.000543802026647942,
+            "resolution": 0.02973091649496717,
+            "uncertainty": 0.24991242893550683
+          },
+          "calibration_slope_intercept": {
+            "status": "DEFERRED_TO_P2_3_DIAGNOSTIC_FIT"
+          },
+          "coverage": 1,
+          "ece": 0.017689984319008752,
+          "folds": [
+            {
+              "brier": 0.22345964890729428,
+              "brier_decomposition": {
+                "binning_residual": 0.0005478475764635338,
+                "method": "BINNED_APPROXIMATION",
+                "reliability": 0.0010541995903117528,
+                "resolution": 0.02804239825948102,
+                "uncertainty": 0.2499
+              },
+              "calibration_slope_intercept": {
+                "status": "DEFERRED_TO_P2_3_DIAGNOSTIC_FIT"
+              },
+              "coverage": 1,
+              "ece": 0.026111734368328764,
+              "log_loss": 0.6369131615570202,
+              "n": 2600,
+              "reliability": [
+                {
+                  "bin": 0,
+                  "mean_probability": 0.08628481689004348,
+                  "n": 10,
+                  "observed_rate": 0.2
+                },
+                {
+                  "bin": 1,
+                  "mean_probability": 0.16633639486165636,
+                  "n": 128,
+                  "observed_rate": 0.1796875
+                },
+                {
+                  "bin": 2,
+                  "mean_probability": 0.2568323317025289,
+                  "n": 261,
+                  "observed_rate": 0.22988505747126436
+                },
+                {
+                  "bin": 3,
+                  "mean_probability": 0.35289807502951925,
+                  "n": 367,
+                  "observed_rate": 0.41689373297002724
+                },
+                {
+                  "bin": 4,
+                  "mean_probability": 0.4534539493428413,
+                  "n": 571,
+                  "observed_rate": 0.4868651488616462
+                },
+                {
+                  "bin": 5,
+                  "mean_probability": 0.5501852020872047,
+                  "n": 542,
+                  "observed_rate": 0.5571955719557196
+                },
+                {
+                  "bin": 6,
+                  "mean_probability": 0.646995334761747,
+                  "n": 373,
+                  "observed_rate": 0.6380697050938338
+                },
+                {
+                  "bin": 7,
+                  "mean_probability": 0.7476110213283382,
+                  "n": 216,
+                  "observed_rate": 0.7222222222222222
+                },
+                {
+                  "bin": 8,
+                  "mean_probability": 0.8427900141629524,
+                  "n": 91,
+                  "observed_rate": 0.8241758241758241
+                },
+                {
+                  "bin": 9,
+                  "mean_probability": 0.9234091737934949,
+                  "n": 41,
+                  "observed_rate": 0.9512195121951219
+                }
+              ],
+              "year": 2023
+            },
+            {
+              "brier": 0.21885088529753582,
+              "brier_decomposition": {
+                "binning_residual": -0.00024948149819484233,
+                "method": "BINNED_APPROXIMATION",
+                "reliability": 0.0005977487046905131,
+                "resolution": 0.03148164676518343,
+                "uncertainty": 0.24998426485622358
+              },
+              "calibration_slope_intercept": {
+                "status": "DEFERRED_TO_P2_3_DIAGNOSTIC_FIT"
+              },
+              "coverage": 1,
+              "ece": 0.01698747746832308,
+              "log_loss": 0.625540076437557,
+              "n": 2647,
+              "reliability": [
+                {
+                  "bin": 0,
+                  "mean_probability": 0.07522268248664511,
+                  "n": 31,
+                  "observed_rate": 0
+                },
+                {
+                  "bin": 1,
+                  "mean_probability": 0.1579003678777974,
+                  "n": 140,
+                  "observed_rate": 0.15714285714285714
+                },
+                {
+                  "bin": 2,
+                  "mean_probability": 0.2540186776558061,
+                  "n": 239,
+                  "observed_rate": 0.2510460251046025
+                },
+                {
+                  "bin": 3,
+                  "mean_probability": 0.35381015466200605,
+                  "n": 384,
+                  "observed_rate": 0.3932291666666667
+                },
+                {
+                  "bin": 4,
+                  "mean_probability": 0.4513842650521117,
+                  "n": 572,
+                  "observed_rate": 0.45104895104895104
+                },
+                {
+                  "bin": 5,
+                  "mean_probability": 0.5480716495351625,
+                  "n": 508,
+                  "observed_rate": 0.5590551181102362
+                },
+                {
+                  "bin": 6,
+                  "mean_probability": 0.6443104855761601,
+                  "n": 382,
+                  "observed_rate": 0.6047120418848168
+                },
+                {
+                  "bin": 7,
+                  "mean_probability": 0.7433769818327991,
+                  "n": 231,
+                  "observed_rate": 0.7489177489177489
+                },
+                {
+                  "bin": 8,
+                  "mean_probability": 0.8446312987022423,
+                  "n": 118,
+                  "observed_rate": 0.8220338983050848
+                },
+                {
+                  "bin": 9,
+                  "mean_probability": 0.9246694297528503,
+                  "n": 42,
+                  "observed_rate": 0.8809523809523809
+                }
+              ],
+              "year": 2024
+            },
+            {
+              "brier": 0.21954829736743714,
+              "brier_decomposition": {
+                "binning_residual": -0.0006412968966267862,
+                "method": "BINNED_APPROXIMATION",
+                "reliability": 0.001536618061817593,
+                "resolution": 0.030813898910169574,
+                "uncertainty": 0.24946687511241591
+              },
+              "calibration_slope_intercept": {
+                "status": "DEFERRED_TO_P2_3_DIAGNOSTIC_FIT"
+              },
+              "coverage": 1,
+              "ece": 0.03065104214105201,
+              "log_loss": 0.6276897566798778,
+              "n": 2447,
+              "reliability": [
+                {
+                  "bin": 0,
+                  "mean_probability": 0.0625403522095381,
+                  "n": 36,
+                  "observed_rate": 0.08333333333333333
+                },
+                {
+                  "bin": 1,
+                  "mean_probability": 0.16128813340728423,
+                  "n": 119,
+                  "observed_rate": 0.2857142857142857
+                },
+                {
+                  "bin": 2,
+                  "mean_probability": 0.2509286709227487,
+                  "n": 246,
+                  "observed_rate": 0.2886178861788618
+                },
+                {
+                  "bin": 3,
+                  "mean_probability": 0.35305053534848435,
+                  "n": 303,
+                  "observed_rate": 0.37293729372937295
+                },
+                {
+                  "bin": 4,
+                  "mean_probability": 0.45231355619077424,
+                  "n": 475,
+                  "observed_rate": 0.4905263157894737
+                },
+                {
+                  "bin": 5,
+                  "mean_probability": 0.5504912326722725,
+                  "n": 477,
+                  "observed_rate": 0.5324947589098532
+                },
+                {
+                  "bin": 6,
+                  "mean_probability": 0.6476546809241751,
+                  "n": 368,
+                  "observed_rate": 0.6222826086956522
+                },
+                {
+                  "bin": 7,
+                  "mean_probability": 0.7486575698687042,
+                  "n": 249,
+                  "observed_rate": 0.751004016064257
+                },
+                {
+                  "bin": 8,
+                  "mean_probability": 0.8424331334687369,
+                  "n": 130,
+                  "observed_rate": 0.8923076923076924
+                },
+                {
+                  "bin": 9,
+                  "mean_probability": 0.9320533364964061,
+                  "n": 44,
+                  "observed_rate": 0.9090909090909091
+                }
+              ],
+              "year": 2025
+            }
+          ],
+          "log_loss": 0.6300670180626627,
+          "n": 7694,
+          "reliability": [
+            {
+              "bin": 0,
+              "mean_probability": 0.07072992214973772,
+              "n": 77,
+              "observed_rate": 0.06493506493506493
+            },
+            {
+              "bin": 1,
+              "mean_probability": 0.16173229436860587,
+              "n": 387,
+              "observed_rate": 0.2041343669250646
+            },
+            {
+              "bin": 2,
+              "mean_probability": 0.2539841227628604,
+              "n": 746,
+              "observed_rate": 0.25603217158176944
+            },
+            {
+              "bin": 3,
+              "mean_probability": 0.3532741984218545,
+              "n": 1054,
+              "observed_rate": 0.3956356736242884
+            },
+            {
+              "bin": 4,
+              "mean_probability": 0.4523874807634042,
+              "n": 1618,
+              "observed_rate": 0.4752781211372064
+            },
+            {
+              "bin": 5,
+              "mean_probability": 0.5495776656711209,
+              "n": 1527,
+              "observed_rate": 0.550098231827112
+            },
+            {
+              "bin": 6,
+              "mean_probability": 0.6462981192665371,
+              "n": 1123,
+              "observed_rate": 0.6215494211932324
+            },
+            {
+              "bin": 7,
+              "mean_probability": 0.7465801699821911,
+              "n": 696,
+              "observed_rate": 0.7413793103448276
+            },
+            {
+              "bin": 8,
+              "mean_probability": 0.8432940763617376,
+              "n": 339,
+              "observed_rate": 0.8495575221238938
+            },
+            {
+              "bin": 9,
+              "mean_probability": 0.9268207793779123,
+              "n": 127,
+              "observed_rate": 0.9133858267716536
+            }
+          ]
+        },
+        "surface_elo": {
+          "brier": 0.22114242367968637,
+          "brier_decomposition": {
+            "binning_residual": -0.0002883871486430989,
+            "method": "BINNED_APPROXIMATION",
+            "reliability": 0.0017024411965372256,
+            "resolution": 0.03018405930371458,
+            "uncertainty": 0.24991242893550683
+          },
+          "calibration_slope_intercept": {
+            "status": "DEFERRED_TO_P2_3_DIAGNOSTIC_FIT"
+          },
+          "coverage": 1,
+          "ece": 0.03390648139384289,
+          "folds": [
+            {
+              "brier": 0.22355858694878486,
+              "brier_decomposition": {
+                "binning_residual": 0.0006263799320929408,
+                "method": "BINNED_APPROXIMATION",
+                "reliability": 0.001570034417940425,
+                "resolution": 0.02853782740124851,
+                "uncertainty": 0.2499
+              },
+              "calibration_slope_intercept": {
+                "status": "DEFERRED_TO_P2_3_DIAGNOSTIC_FIT"
+              },
+              "coverage": 1,
+              "ece": 0.034554790975294326,
+              "log_loss": 0.6374713208425636,
+              "n": 2600,
+              "reliability": [
+                {
+                  "bin": 0,
+                  "mean_probability": 0.07619739028441398,
+                  "n": 26,
+                  "observed_rate": 0.15384615384615385
+                },
+                {
+                  "bin": 1,
+                  "mean_probability": 0.15720682110165507,
+                  "n": 187,
+                  "observed_rate": 0.18716577540106952
+                },
+                {
+                  "bin": 2,
+                  "mean_probability": 0.252766079790093,
+                  "n": 264,
+                  "observed_rate": 0.2765151515151515
+                },
+                {
+                  "bin": 3,
+                  "mean_probability": 0.3533231455260975,
+                  "n": 344,
+                  "observed_rate": 0.42441860465116277
+                },
+                {
+                  "bin": 4,
+                  "mean_probability": 0.45278273313732603,
+                  "n": 514,
+                  "observed_rate": 0.49416342412451364
+                },
+                {
+                  "bin": 5,
+                  "mean_probability": 0.550171398740784,
+                  "n": 497,
+                  "observed_rate": 0.5573440643863179
+                },
+                {
+                  "bin": 6,
+                  "mean_probability": 0.6457232253542352,
+                  "n": 338,
+                  "observed_rate": 0.6183431952662722
+                },
+                {
+                  "bin": 7,
+                  "mean_probability": 0.7453160187941389,
+                  "n": 229,
+                  "observed_rate": 0.7074235807860262
+                },
+                {
+                  "bin": 8,
+                  "mean_probability": 0.8409291921109043,
+                  "n": 140,
+                  "observed_rate": 0.8
+                },
+                {
+                  "bin": 9,
+                  "mean_probability": 0.9343979670880486,
+                  "n": 61,
+                  "observed_rate": 0.8852459016393442
+                }
+              ],
+              "year": 2023
+            },
+            {
+              "brier": 0.2193392184724957,
+              "brier_decomposition": {
+                "binning_residual": -0.0009574554870095675,
+                "method": "BINNED_APPROXIMATION",
+                "reliability": 0.0018138419930008596,
+                "resolution": 0.031501432889719155,
+                "uncertainty": 0.24998426485622358
+              },
+              "calibration_slope_intercept": {
+                "status": "DEFERRED_TO_P2_3_DIAGNOSTIC_FIT"
+              },
+              "coverage": 1,
+              "ece": 0.03515928092655255,
+              "log_loss": 0.6274489777464475,
+              "n": 2647,
+              "reliability": [
+                {
+                  "bin": 0,
+                  "mean_probability": 0.06914242823247259,
+                  "n": 71,
+                  "observed_rate": 0.056338028169014086
+                },
+                {
+                  "bin": 1,
+                  "mean_probability": 0.15329850783259907,
+                  "n": 182,
+                  "observed_rate": 0.19230769230769232
+                },
+                {
+                  "bin": 2,
+                  "mean_probability": 0.25319343161040325,
+                  "n": 257,
+                  "observed_rate": 0.311284046692607
+                },
+                {
+                  "bin": 3,
+                  "mean_probability": 0.35727288700043147,
+                  "n": 354,
+                  "observed_rate": 0.4209039548022599
+                },
+                {
+                  "bin": 4,
+                  "mean_probability": 0.45058000738309756,
+                  "n": 500,
+                  "observed_rate": 0.446
+                },
+                {
+                  "bin": 5,
+                  "mean_probability": 0.5472865926567322,
+                  "n": 459,
+                  "observed_rate": 0.5555555555555556
+                },
+                {
+                  "bin": 6,
+                  "mean_probability": 0.6471593881062568,
+                  "n": 361,
+                  "observed_rate": 0.590027700831025
+                },
+                {
+                  "bin": 7,
+                  "mean_probability": 0.7467499058766138,
+                  "n": 243,
+                  "observed_rate": 0.6954732510288066
+                },
+                {
+                  "bin": 8,
+                  "mean_probability": 0.846801826494248,
+                  "n": 137,
+                  "observed_rate": 0.8175182481751825
+                },
+                {
+                  "bin": 9,
+                  "mean_probability": 0.9327840051739987,
+                  "n": 83,
+                  "observed_rate": 0.8795180722891566
+                }
+              ],
+              "year": 2024
+            },
+            {
+              "brier": 0.22052577459255007,
+              "brier_decomposition": {
+                "binning_residual": -0.0005432600104263718,
+                "method": "BINNED_APPROXIMATION",
+                "reliability": 0.0031251367753123704,
+                "resolution": 0.031522977284751834,
+                "uncertainty": 0.24946687511241591
+              },
+              "calibration_slope_intercept": {
+                "status": "DEFERRED_TO_P2_3_DIAGNOSTIC_FIT"
+              },
+              "coverage": 1,
+              "ece": 0.040615278357848734,
+              "log_loss": 0.631289562533653,
+              "n": 2447,
+              "reliability": [
+                {
+                  "bin": 0,
+                  "mean_probability": 0.056790356518936214,
+                  "n": 64,
+                  "observed_rate": 0.125
+                },
+                {
+                  "bin": 1,
+                  "mean_probability": 0.15468295336929216,
+                  "n": 184,
+                  "observed_rate": 0.30978260869565216
+                },
+                {
+                  "bin": 2,
+                  "mean_probability": 0.2503265201358739,
+                  "n": 226,
+                  "observed_rate": 0.27876106194690264
+                },
+                {
+                  "bin": 3,
+                  "mean_probability": 0.35086978114065304,
+                  "n": 295,
+                  "observed_rate": 0.423728813559322
+                },
+                {
+                  "bin": 4,
+                  "mean_probability": 0.453029374905576,
+                  "n": 397,
+                  "observed_rate": 0.47103274559193953
+                },
+                {
+                  "bin": 5,
+                  "mean_probability": 0.5494206440580556,
+                  "n": 428,
+                  "observed_rate": 0.530373831775701
+                },
+                {
+                  "bin": 6,
+                  "mean_probability": 0.647045926393861,
+                  "n": 348,
+                  "observed_rate": 0.6235632183908046
+                },
+                {
+                  "bin": 7,
+                  "mean_probability": 0.7474104161293652,
+                  "n": 238,
+                  "observed_rate": 0.7016806722689075
+                },
+                {
+                  "bin": 8,
+                  "mean_probability": 0.8424339955111096,
+                  "n": 185,
+                  "observed_rate": 0.8432432432432433
+                },
+                {
+                  "bin": 9,
+                  "mean_probability": 0.9397251864925161,
+                  "n": 82,
+                  "observed_rate": 0.8902439024390244
+                }
+              ],
+              "year": 2025
+            }
+          ],
+          "log_loss": 0.6320572443209462,
+          "minus_global_elo": {
+            "bootstrap": {
+              "assumptions": "EVENT_CLUSTER_RESAMPLING_NOT_PROOF_OF_INDEPENDENCE",
+              "cluster_unit": "EVENT_ID",
+              "estimand": "MATCH_WEIGHTED_MEAN_LOSS_DIFFERENCE",
+              "event_clusters": 187,
+              "event_clusters_by_year": {
+                "2023": 64,
+                "2024": 66,
+                "2025": 57
+              },
+              "interval_method": "PAIRED_PERCENTILE_95",
+              "replicates": 2000,
+              "sampling_scope": "FIXED_HISTORICAL_PREDICTIONS_NO_REFIT",
+              "seed": 29,
+              "status": "EVENT_BOOTSTRAP_DESCRIPTIVE_ONLY",
+              "stratification": "EVENT_START_CALENDAR_YEAR"
+            },
+            "brier": 0.0005123139578692149,
+            "brier_95ci": [
+              -0.00012664394502016522,
+              0.0012037230055195968
+            ],
+            "brier_ci_probability_semantics": "CLIPPED_AT_1E_12_FOR_BOOTSTRAP_NUMERICS",
+            "log_loss": 0.0019902262582834895,
+            "log_loss_95ci": [
+              0.00019999139203213075,
+              0.004006145101254747
+            ]
+          },
+          "n": 7694,
+          "reliability": [
+            {
+              "bin": 0,
+              "mean_probability": 0.0653715985659145,
+              "n": 161,
+              "observed_rate": 0.09937888198757763
+            },
+            {
+              "bin": 1,
+              "mean_probability": 0.1550807728598414,
+              "n": 553,
+              "observed_rate": 0.22965641952983726
+            },
+            {
+              "bin": 2,
+              "mean_probability": 0.2521750341889768,
+              "n": 747,
+              "observed_rate": 0.2891566265060241
+            },
+            {
+              "bin": 3,
+              "mean_probability": 0.35400236605802915,
+              "n": 993,
+              "observed_rate": 0.4229607250755287
+            },
+            {
+              "bin": 4,
+              "mean_probability": 0.4520715736085386,
+              "n": 1411,
+              "observed_rate": 0.47058823529411764
+            },
+            {
+              "bin": 5,
+              "mean_probability": 0.5489824905061109,
+              "n": 1384,
+              "observed_rate": 0.5484104046242775
+            },
+            {
+              "bin": 6,
+              "mean_probability": 0.6466580436114173,
+              "n": 1047,
+              "observed_rate": 0.6103151862464183
+            },
+            {
+              "bin": 7,
+              "mean_probability": 0.7465088372826252,
+              "n": 710,
+              "observed_rate": 0.7014084507042253
+            },
+            {
+              "bin": 8,
+              "mean_probability": 0.8432732170882984,
+              "n": 462,
+              "observed_rate": 0.8225108225108225
+            },
+            {
+              "bin": 9,
+              "mean_probability": 0.9357381137796424,
+              "n": 226,
+              "observed_rate": 0.8849557522123894
+            }
+          ]
+        }
+      },
+      "n": 7694,
+      "official_match_draw_verified": false,
+      "schema": "TML_MATCHED_SKILL_SCORING_V1",
+      "stake": 0,
+      "status": "HISTORICAL_SKILL_RESEARCH_ONLY",
+      "tier_counts": {
+        "250": 2837,
+        "500": 1317,
+        "G": 1463,
+        "M": 2077
+      }
+    },
+    "feature_rows": 12620,
+    "features": [
+      "overall_elo_diff",
+      "surface_elo_diff",
+      "surface_shrinkage_elo_diff",
+      "log1p_total_history_diff",
+      "log1p_surface_history_diff",
+      "win_rate_90d_diff",
+      "win_rate_365d_diff",
+      "log1p_90d_count_diff",
+      "log1p_365d_count_diff",
+      "smoothed_h2h_diff",
+      "log1p_h2h_count",
+      "min_history",
+      "min_surface_history",
+      "both_have_history",
+      "both_have_surface_history",
+      "surface_hard",
+      "surface_clay",
+      "surface_grass"
+    ],
+    "folds": [
+      {
+        "partitions": {
+          "calibration": {
+            "event_clusters": 28,
+            "n": 964
+          },
+          "evaluation": {
+            "event_clusters": 64,
+            "n": 2600
+          },
+          "fit": {
+            "event_clusters": 32,
+            "n": 1284
+          },
+          "future": {
+            "event_clusters": 123,
+            "n": 5094
+          },
+          "gap": {
+            "event_clusters": 7,
+            "n": 284
+          },
+          "warmup": {
+            "event_clusters": 60,
+            "n": 2394
+          }
+        },
+        "year": 2023
+      },
+      {
+        "partitions": {
+          "calibration": {
+            "event_clusters": 27,
+            "n": 1109
+          },
+          "evaluation": {
+            "event_clusters": 66,
+            "n": 2647
+          },
+          "fit": {
+            "event_clusters": 98,
+            "n": 3854
+          },
+          "future": {
+            "event_clusters": 57,
+            "n": 2447
+          },
+          "gap": {
+            "event_clusters": 6,
+            "n": 169
+          },
+          "warmup": {
+            "event_clusters": 60,
+            "n": 2394
+          }
+        },
+        "year": 2024
+      },
+      {
+        "partitions": {
+          "calibration": {
+            "event_clusters": 26,
+            "n": 1071
+          },
+          "evaluation": {
+            "event_clusters": 57,
+            "n": 2447
+          },
+          "fit": {
+            "event_clusters": 163,
+            "n": 6490
+          },
+          "future": {
+            "event_clusters": 0,
+            "n": 0
+          },
+          "gap": {
+            "event_clusters": 8,
+            "n": 218
+          },
+          "warmup": {
+            "event_clusters": 60,
+            "n": 2394
+          }
+        },
+        "year": 2025
+      }
+    ],
+    "manifest_sha256": "b9b55b6c75f1f43394b3e69d19c6b791faedc8539908608ecf1d74dfaabcb8fb",
+    "model_fitting_performed": false,
+    "model_validation_trusted": false,
+    "official_match_draw_verified": false,
+    "orientation_roundtrip": true,
+    "protocol_sha256": "93776dc9949c6c49c16e8172630b606cd61fe328b25ce08a796a06b8ced3bca6",
+    "raw_sha256": {
+      "2021": "80d570be31d778b143eb58380258243785bf3fcb18db144b42704bc6c56d941b",
+      "2022": "d70036c6ee6c27dd3deda6e6c9ccd500b66e6e78106fb00794cb277e37353357",
+      "2023": "9faaf53186ef908b3322d521a8dd2a717401167c0e400a99e1efddb23e13600f",
+      "2024": "db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8",
+      "2025": "5ccf52d912085d6a5ba3effdc5f2f216f170aabfd8850086b5f92c7ccedfd53e"
+    },
+    "schema": "P2_2_PRE_EVENT_EVIDENCE_V1",
+    "stake": 0,
+    "unique_match_keys": 12620
+  }
+}
