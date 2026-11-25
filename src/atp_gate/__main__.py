@@ -6,11 +6,7 @@ import json
 import sys
 from pathlib import Path
 from zoneinfo import ZoneInfoNotFoundError
-from pydantic import ValidationError
-
-from .contracts import DecisionInput
 from .historical_audit import audit_tennis_data_csv
-from .policy import evaluate
 
 
 def main() -> int:
@@ -568,10 +564,25 @@ def main() -> int:
                               'allocation_enabled':False},ensure_ascii=False,indent=2))
             return 2
 
-    try:
-        if args.cmd=='audit':
+    if args.cmd=='audit':
+        try:
             print(json.dumps(audit_tennis_data_csv(args.path),ensure_ascii=False,indent=2))
             return 0
+        except (ValueError,KeyError,FileNotFoundError):
+            print(json.dumps({'decision':'ABSTAIN','stake':'0',
+                              'reasons':['INVALID_CONTRACT'],'error_count':1},
+                             ensure_ascii=False,indent=2))
+            return 2
+
+    try:
+        from pydantic import ValidationError
+        from .contracts import DecisionInput
+        from .policy import evaluate
+    except ImportError:
+        print(json.dumps({'decision':'ABSTAIN','stake':'0',
+                          'reasons':['GATE_DEPENDENCY_UNAVAILABLE']},indent=2))
+        return 2
+    try:
         data=DecisionInput.model_validate_json(Path(args.path).read_text(encoding='utf-8'))
         decision=evaluate(data)
         print(decision.model_dump_json(indent=2))

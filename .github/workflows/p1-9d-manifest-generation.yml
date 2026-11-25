@@ -1,0 +1,17 @@
+name: P1.9d canonical manifest generation
+on:
+  push:
+    branches: [repair/p1-9d-environment-integrity]
+    paths-ignore:
+      - MANIFEST_SHA256.txt
+permissions:
+  contents: read
+jobs:
+  manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m scripts.repository_manifest emit-json
