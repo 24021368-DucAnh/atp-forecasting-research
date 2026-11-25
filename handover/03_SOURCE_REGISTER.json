@@ -1,0 +1,173 @@
+{
+  "schema": "ATP_HANDOVER_SOURCE_REGISTER_V1",
+  "checkpoint": "2e084eedfc44c8ffaabd1fc5cbfb00769b703574",
+  "source_scope": "Personal noncommercial historical skill research only; verify provider terms independently before access and reuse; do not redistribute raw data.",
+  "publisher": {
+    "name": "TennisMyLife",
+    "database_page": "https://stats.tennismylife.org/tennis-match-database",
+    "repository": "https://github.com/Tennismylife/TML-Database",
+    "data_files": "https://stats.tennismylife.org/api/data-files"
+  },
+  "original_archive": [
+    {
+      "season": 2021,
+      "git_blob": "2bd4eaf4eb28a09b42ab4ecd5830a8f3ad068faa",
+      "sha256": "80d570be31d778b143eb58380258243785bf3fcb18db144b42704bc6c56d941b",
+      "raw_rows": 2735,
+      "api_url": "https://api.github.com/repos/Tennismylife/TML-Database/git/blobs/2bd4eaf4eb28a09b42ab4ecd5830a8f3ad068faa"
+    },
+    {
+      "season": 2022,
+      "git_blob": "2b6726106fefb22b40c2816e4c703a48e9d312be",
+      "sha256": "d70036c6ee6c27dd3deda6e6c9ccd500b66e6e78106fb00794cb277e37353357",
+      "raw_rows": 2918,
+      "api_url": "https://api.github.com/repos/Tennismylife/TML-Database/git/blobs/2b6726106fefb22b40c2816e4c703a48e9d312be"
+    },
+    {
+      "season": 2023,
+      "git_blob": "5ceb7397e3a217e51f197c9e83ea435faf690eeb",
+      "sha256": "9faaf53186ef908b3322d521a8dd2a717401167c0e400a99e1efddb23e13600f",
+      "raw_rows": 2995,
+      "api_url": "https://api.github.com/repos/Tennismylife/TML-Database/git/blobs/5ceb7397e3a217e51f197c9e83ea435faf690eeb"
+    },
+    {
+      "season": 2024,
+      "git_blob": "cf513429259b4a15e84e2021206895d9bd4ff772",
+      "sha256": "db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8",
+      "raw_rows": 3076,
+      "api_url": "https://api.github.com/repos/Tennismylife/TML-Database/git/blobs/cf513429259b4a15e84e2021206895d9bd4ff772"
+    },
+    {
+      "season": 2025,
+      "git_blob": "1aff9b077cf4de7806b665ec0c6d8b4032a040f3",
+      "sha256": "a00f5f991b4949c2c6867637ac02a8c44b9058780da67aba8600e9140002f8d3",
+      "raw_rows": 2944,
+      "api_url": "https://api.github.com/repos/Tennismylife/TML-Database/git/blobs/1aff9b077cf4de7806b665ec0c6d8b4032a040f3"
+    }
+  ],
+  "revised_2025": {
+    "url": "https://stats.tennismylife.org/data/2025.csv",
+    "sha256": "5ccf52d912085d6a5ba3effdc5f2f216f170aabfd8850086b5f92c7ccedfd53e",
+    "raw_rows": 2943,
+    "note": "Mutable URL; if hash differs, STOP. Obtain the exact locally archived authorized version from its owner, do not substitute latest bytes or redistribute publicly."
+  },
+  "locked_manifest": {
+    "allocation_enabled": false,
+    "conflicting_groups_by_season": {
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    },
+    "derived_sha256": {
+      "2021": "2a2c4a331b1cbae87adace77f4ff5f80e5c60207efd89dd958e6998735c90e92",
+      "2022": "125a1c0ece4b29ead7ce878b2e1bf844b1737b311fad2bfa873b3503e1cc39f1",
+      "2023": "9faaf53186ef908b3322d521a8dd2a717401167c0e400a99e1efddb23e13600f",
+      "2024": "db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8",
+      "2025": "5ccf52d912085d6a5ba3effdc5f2f216f170aabfd8850086b5f92c7ccedfd53e"
+    },
+    "duplicate_mode": "COLLAPSE_EXACT_AND_QUARANTINE_CONFLICT",
+    "eligible_for_model_training": 0,
+    "elo_k": 24,
+    "embargo_days": 28,
+    "evaluation_by_year": {
+      "2023": 2600,
+      "2024": 2647,
+      "2025": 2447
+    },
+    "evaluation_status": "PREVIOUSLY_INSPECTED_DEVELOPMENT_YEARS",
+    "exact_groups_by_season": {
+      "2021": 2,
+      "2022": 1,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    },
+    "expected_eligible": 12620,
+    "expected_evaluated": 7694,
+    "expected_global_log_loss": 0.6300670180626626,
+    "expected_surface_log_loss": 0.6320572443209497,
+    "identity_rule": "EXACT_SOURCE_PLAYER_ID_NO_NAME_BASED_MERGE",
+    "individual_match_start_verified": false,
+    "level_a_registry_sha256": "46a6fd05e2224ad0453480db37a900a495a0a67609ea6a24830fe318f47a3f3b",
+    "market_edge_verified": false,
+    "model_validation_trusted": false,
+    "normalize_level_a_2024": true,
+    "official_match_draw_verified": false,
+    "original_git_blobs": {
+      "2021": "2bd4eaf4eb28a09b42ab4ecd5830a8f3ad068faa",
+      "2022": "2b6726106fefb22b40c2816e4c703a48e9d312be",
+      "2023": "5ceb7397e3a217e51f197c9e83ea435faf690eeb",
+      "2024": "cf513429259b4a15e84e2021206895d9bd4ff772"
+    },
+    "original_sha256": {
+      "2021": "80d570be31d778b143eb58380258243785bf3fcb18db144b42704bc6c56d941b",
+      "2022": "d70036c6ee6c27dd3deda6e6c9ccd500b66e6e78106fb00794cb277e37353357",
+      "2023": "9faaf53186ef908b3322d521a8dd2a717401167c0e400a99e1efddb23e13600f",
+      "2024": "db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8",
+      "2025": "5ccf52d912085d6a5ba3effdc5f2f216f170aabfd8850086b5f92c7ccedfd53e"
+    },
+    "participant_known_at_event_start": false,
+    "revised_2025_url": "https://stats.tennismylife.org/data/2025.csv",
+    "schema": "TML_RESEARCH_COHORT_MANIFEST_V1",
+    "source_date_semantics": "TOURNAMENT_START_NOT_MATCH_TIME",
+    "source_result_availability_exact": false,
+    "source_rights_scope": "PERSONAL_NONCOMMERCIAL_RESEARCH",
+    "stake": 0,
+    "status": "HISTORICAL_SKILL_RESEARCH_ONLY",
+    "surface_weight": 0.35
+  },
+  "manifest_sha256": "b9b55b6c75f1f43394b3e69d19c6b791faedc8539908608ecf1d74dfaabcb8fb",
+  "identity_review": [
+    {
+      "official_player_id": "V0DP",
+      "official_profile": "https://www.atptour.com/en/players/daniel-vallejo/v0dp/bio",
+      "alternate_profile": "https://www.atptour.com/en/players/adolfo-daniel%20vallejo/V0DP/bio",
+      "finding": "DISPLAY_NAME_VARIANT_SAME_OFFICIAL_PROFILE_ID",
+      "eligible_rows": 0,
+      "evaluated_rows": 0
+    },
+    {
+      "official_player_id": "S0H2",
+      "official_profile": "https://www.atptour.com/en/players/alexander-shevchenko/s0h2/bio",
+      "alternate_profile": "https://www.atptour.com/es/players/alexander-shevchenko/s0h2/overview",
+      "finding": "DISPLAY_NAME_VARIANT_SAME_OFFICIAL_PROFILE_ID",
+      "eligible_rows": 106,
+      "evaluated_rows": 103
+    }
+  ],
+  "other_source_references": [
+    {
+      "source": "Valuebetennis",
+      "url": "https://www.valuebetennis.com/en/donnees.htm",
+      "scope": "Candidate season CSV; separate provenance and rights review; not merged into locked TML cohort."
+    },
+    {
+      "source": "Valuebetennis 2024-02 legacy index",
+      "url": "https://www.valuebetennis.com/tournaments/2024/02/archive.htm",
+      "scope": "Index metadata only; not permission for bulk match detail extraction."
+    },
+    {
+      "source": "Tennis-Data",
+      "url": "https://www.tennis-data.co.uk/data.php",
+      "scope": "Prior historical odds format; rights and timing not verified for this use."
+    },
+    {
+      "source": "Sackmann ATP archive",
+      "url": "https://github.com/sportData/tennis_atp",
+      "scope": "Cross-publication reference only; independently verify original provenance/license."
+    },
+    {
+      "source": "Surface Elo reference software",
+      "url": "https://github.com/coenensam/tennis-match-predictor/tree/f548d978e09b3ef1a0783a1d315ec1fce1b6f70f",
+      "scope": "MIT software attribution; not a data license."
+    }
+  ],
+  "original_documents": [
+    "docs/TML_NONCOMMERCIAL_RESEARCH.md",
+    "docs/DATA_SOURCE_DECISIONS.md",
+    "docs/THIRD_PARTY_NOTICES.md",
+    "docs/licenses/coenensam_tennis_match_predictor_MIT.txt"
+  ]
+}

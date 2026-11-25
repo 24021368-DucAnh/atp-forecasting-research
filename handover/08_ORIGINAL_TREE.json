@@ -1,0 +1,1144 @@
+{
+  "schema": "ATP_ORIGINAL_TREE_V1",
+  "checkpoint": "2e084eedfc44c8ffaabd1fc5cbfb00769b703574",
+  "tree_sha": "d10399f911dd9b083cd7ab4eea2b4f4ec9573aa5",
+  "file_count": 189,
+  "total_bytes": 1082675,
+  "hash_semantics": "Git blob SHA1 over object header plus exact bytes; not raw file SHA256",
+  "files": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "mode": "100644",
+      "size": 1228,
+      "git_blob_sha1": "a1bd0c4a1a750a88ffe19f8ce2581f9c864ceaab"
+    },
+    {
+      "path": ".github/workflows/p1-7c-level-a-research.yml",
+      "mode": "100644",
+      "size": 604,
+      "git_blob_sha1": "a0d2d7dc847d8a1207fafcf94a8107105c2db486"
+    },
+    {
+      "path": ".github/workflows/p1-8a-identity-research.yml",
+      "mode": "100644",
+      "size": 596,
+      "git_blob_sha1": "05bc172fb0fd876b742631dd07bddabf95d081ee"
+    },
+    {
+      "path": ".github/workflows/p1-8b-duplicate-research.yml",
+      "mode": "100644",
+      "size": 608,
+      "git_blob_sha1": "0c70eba41c8ca3b68bc18bb2152a01646c11c654"
+    },
+    {
+      "path": ".github/workflows/p1-8c-cohort-research.yml",
+      "mode": "100644",
+      "size": 579,
+      "git_blob_sha1": "6f38b58ebdfda8ab9ec5aacc1a826949feacb724"
+    },
+    {
+      "path": ".github/workflows/p2-pinned-reproduction.yml",
+      "mode": "100644",
+      "size": 621,
+      "git_blob_sha1": "b5a4b91ac524e72e46e917dd90cae7609bbca227"
+    },
+    {
+      "path": ".github/workflows/revised-source-sensitivity.yml",
+      "mode": "100644",
+      "size": 603,
+      "git_blob_sha1": "db7afcc4d46cb175f85e71f1872172a51a5d316a"
+    },
+    {
+      "path": ".github/workflows/tml-2025-revision-research.yml",
+      "mode": "100644",
+      "size": 610,
+      "git_blob_sha1": "5b2b4f61111494a95674e50ec6d5f3242ded3102"
+    },
+    {
+      "path": ".github/workflows/tml-source-watch.yml",
+      "mode": "100644",
+      "size": 3161,
+      "git_blob_sha1": "da3e8c81711019196d2fcbb1dfb37f6a1ef5f1ee"
+    },
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "size": 228,
+      "git_blob_sha1": "923673739671eea83c7c0f320d635f5093d8e3de"
+    },
+    {
+      "path": "MANIFEST_SHA256.txt",
+      "mode": "100644",
+      "size": 3263,
+      "git_blob_sha1": "cbfe610752d9cedc32b24ae8341ad6b30de32349"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "size": 17141,
+      "git_blob_sha1": "58f30afd38fb58a699a8fc8edb5d138d4c1191df"
+    },
+    {
+      "path": "docs/BUGFIX_V0.2.1.md",
+      "mode": "100644",
+      "size": 3300,
+      "git_blob_sha1": "e51cc7ac2380deaf959746f31a275ebb6d001447"
+    },
+    {
+      "path": "docs/DATA_SOURCE_DECISIONS.md",
+      "mode": "100644",
+      "size": 5978,
+      "git_blob_sha1": "e53e585d1678514b91519df1ef17cb17b1cb5500"
+    },
+    {
+      "path": "docs/EXPERIMENT_INTEGRITY.md",
+      "mode": "100644",
+      "size": 2419,
+      "git_blob_sha1": "00702a97ded902d07fe82d0f7e0b56fe052f30ca"
+    },
+    {
+      "path": "docs/HISTORICAL_SOURCE_INTAKE.md",
+      "mode": "100644",
+      "size": 5338,
+      "git_blob_sha1": "223fc0360061832abc276d23e39b86e9c82f050a"
+    },
+    {
+      "path": "docs/INPUT_AUDIT.md",
+      "mode": "100644",
+      "size": 8053,
+      "git_blob_sha1": "5e1f845584980e9df1ff0e85d31b1917bcac9b8a"
+    },
+    {
+      "path": "docs/INVENTORY_ANOMALY_REVIEW.md",
+      "mode": "100644",
+      "size": 4926,
+      "git_blob_sha1": "285912478c6694b0dfb4bdad0578b3827148fa48"
+    },
+    {
+      "path": "docs/LEGACY_ARCHIVE_CROSSWALK.md",
+      "mode": "100644",
+      "size": 6312,
+      "git_blob_sha1": "dd404b94750a8bb0f105ffe381c8288ea8523561"
+    },
+    {
+      "path": "docs/OFFICIAL_CALENDAR_COVERAGE.md",
+      "mode": "100644",
+      "size": 5324,
+      "git_blob_sha1": "bc8c3165f3f875bf688774cc16d5b0178b0dc691"
+    },
+    {
+      "path": "docs/P2_MATCHED_FOLD_SCORING.md",
+      "mode": "100644",
+      "size": 4499,
+      "git_blob_sha1": "fce1857a7b9c8d5be7529be29067f045ba08b02a"
+    },
+    {
+      "path": "docs/P2_TML_ELO_RESEARCH.md",
+      "mode": "100644",
+      "size": 8099,
+      "git_blob_sha1": "a7e62524db2c278ff438805c20ec9238afb43d3d"
+    },
+    {
+      "path": "docs/P3_T60_RECEIPT_AUDIT.md",
+      "mode": "100644",
+      "size": 3722,
+      "git_blob_sha1": "cb006f4257b007ca0828b7abb691ae5f42f17319"
+    },
+    {
+      "path": "docs/PAPER_LEDGER_PERIODS.md",
+      "mode": "100644",
+      "size": 12396,
+      "git_blob_sha1": "6df1f02d4774acce77bd0bf8aab025479b50a519"
+    },
+    {
+      "path": "docs/RAW_SOURCE_GAP_FORENSICS.md",
+      "mode": "100644",
+      "size": 4389,
+      "git_blob_sha1": "28a15d780f24a0def5f7e93ff687e8c7a375449f"
+    },
+    {
+      "path": "docs/RESEARCH_REPRODUCIBILITY.md",
+      "mode": "100644",
+      "size": 3687,
+      "git_blob_sha1": "5f5d780a8a5292bfa2a4ebd2ac30e6f54cf121b9"
+    },
+    {
+      "path": "docs/THIRD_PARTY_NOTICES.md",
+      "mode": "100644",
+      "size": 1140,
+      "git_blob_sha1": "b50c11555dc2cc759d2e88b3f5dac49574df1a16"
+    },
+    {
+      "path": "docs/TIER_REGISTRY_AUDIT.md",
+      "mode": "100644",
+      "size": 5309,
+      "git_blob_sha1": "e662dd6680acf8a65fcbad854e190ce2d976a3d1"
+    },
+    {
+      "path": "docs/TML_NONCOMMERCIAL_RESEARCH.md",
+      "mode": "100644",
+      "size": 11729,
+      "git_blob_sha1": "546639cdf8f1063a8a59cf7efe2d8a192b0df137"
+    },
+    {
+      "path": "docs/TOURNAMENT_SEASON_INVENTORY.md",
+      "mode": "100644",
+      "size": 4125,
+      "git_blob_sha1": "b007f4cdf6adc9d3b4b69a967e1a63573a645e04"
+    },
+    {
+      "path": "docs/VALUEBETENNIS_SOURCE_INSPECTION.md",
+      "mode": "100644",
+      "size": 3774,
+      "git_blob_sha1": "8ef54a8b190caa02fb2870ba2f6c90aeb48f2128"
+    },
+    {
+      "path": "docs/licenses/coenensam_tennis_match_predictor_MIT.txt",
+      "mode": "100644",
+      "size": 1067,
+      "git_blob_sha1": "3869d27c4d24c74b47ebb6d4e94b7dc4309cae38"
+    },
+    {
+      "path": "docs/registries/atp_2024_february_official_events_v1.json",
+      "mode": "100644",
+      "size": 6228,
+      "git_blob_sha1": "ebbf782f711f97b966dbd8005a3e8040a443780d"
+    },
+    {
+      "path": "docs/registries/tml_2024_feb_source_crosswalk_v1.json",
+      "mode": "100644",
+      "size": 5623,
+      "git_blob_sha1": "0610603acd6086156ae8dee609eb63450533f0c2"
+    },
+    {
+      "path": "docs/registries/tml_level_a_event_inventory_2021_2025_v1.json",
+      "mode": "100644",
+      "size": 7348,
+      "git_blob_sha1": "7ecc6ca6b69950e954050dff5199bd487425a2ed"
+    },
+    {
+      "path": "docs/registries/tml_sackmann_2024_player_aliases_v1.json",
+      "mode": "100644",
+      "size": 422,
+      "git_blob_sha1": "b4b4e5aada50a400f4b86d709f4a782eb871e330"
+    },
+    {
+      "path": "docs/registries/valuebetennis_2022_2026_tiers_v1.json",
+      "mode": "100644",
+      "size": 5735,
+      "git_blob_sha1": "c78783e6db0f397f440a0a6dbee6f75c89e8f577"
+    },
+    {
+      "path": "docs/registries/valuebetennis_legacy_2024_02_crosswalk_v1.json",
+      "mode": "100644",
+      "size": 5085,
+      "git_blob_sha1": "0b47db0c58d01ddcb837e16a9de8dc91e06179c2"
+    },
+    {
+      "path": "docs/research/p1_7c_level_a_normalization_20261125.json",
+      "mode": "100644",
+      "size": 19830,
+      "git_blob_sha1": "ef0472ace2258f3eb2caaecfe741ce87efcd69a9"
+    },
+    {
+      "path": "docs/research/p1_8a_duplicate_forensics_20261125.json",
+      "mode": "100644",
+      "size": 3513,
+      "git_blob_sha1": "bf4bb25ecd7985b2f5aa17d024cdfdd3f9645a76"
+    },
+    {
+      "path": "docs/research/p1_8a_identity_audit_20261125.json",
+      "mode": "100644",
+      "size": 12308,
+      "git_blob_sha1": "9c870e459ef9f08b9b90ba1dd89289b22f9f0e89"
+    },
+    {
+      "path": "docs/research/p1_8a_identity_audit_v2_20261125.json",
+      "mode": "100644",
+      "size": 12744,
+      "git_blob_sha1": "2f3311a829dd4ffba215efc4c4f785261620b424"
+    },
+    {
+      "path": "docs/research/p1_8b_duplicate_sensitivity_20261125.json",
+      "mode": "100644",
+      "size": 38472,
+      "git_blob_sha1": "5495ec2f5016b109922674b45130dfcd38c35090"
+    },
+    {
+      "path": "docs/research/p1_8c_cohort_manifest_20261125.json",
+      "mode": "100644",
+      "size": 8851,
+      "git_blob_sha1": "338083578454e6e61ff024c5fa49a0ea15e9e584"
+    },
+    {
+      "path": "docs/research/p1_tml_2025_revision_audit_20261124.json",
+      "mode": "100644",
+      "size": 2628,
+      "git_blob_sha1": "51d6ce57781c4e7c3bb970a0c01d62d8ceb2806b"
+    },
+    {
+      "path": "docs/research/p1_tml_2025_revision_audit_v2_20261124.json",
+      "mode": "100644",
+      "size": 5577,
+      "git_blob_sha1": "37bf478658bb559f591b8a5716d7e67305981be2"
+    },
+    {
+      "path": "docs/research/p2_pinned_elo_reproduction_20261124.json",
+      "mode": "100644",
+      "size": 8039,
+      "git_blob_sha1": "bfff8e94e668647cc37a69c16e20faa6cb9d125d"
+    },
+    {
+      "path": "docs/research/p2_revised_source_sensitivity_20261124.json",
+      "mode": "100644",
+      "size": 5920,
+      "git_blob_sha1": "26c0078d492857a1c54254662a73355ed8d0a6d7"
+    },
+    {
+      "path": "docs/research/p2_tml_selection_quality_20261124.json",
+      "mode": "100644",
+      "size": 2594,
+      "git_blob_sha1": "d40d0e05aa43cacb4105f409efaf7bb485699bb8"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-23-atp-input-gate.md",
+      "mode": "100644",
+      "size": 5357,
+      "git_blob_sha1": "1bb71ca24441981c40f32afcc772f91cd0aa0c88"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-23-p0-engineering-foundation.md",
+      "mode": "100644",
+      "size": 3548,
+      "git_blob_sha1": "eb7d6d9940c3e2e3418b24745e708a91d41f4685"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-23-p0-research-replay.md",
+      "mode": "100644",
+      "size": 3243,
+      "git_blob_sha1": "ea2c474be280a070ab18477b9cf603b1fc026844"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-23-p1-inventory-anomaly-review.md",
+      "mode": "100644",
+      "size": 3494,
+      "git_blob_sha1": "51007535196d877771217873f07499384400c819"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-23-p1-legacy-crosswalk.md",
+      "mode": "100644",
+      "size": 4018,
+      "git_blob_sha1": "b2498bda423878d49220e7fd1b5ed048e7436eb7"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-23-p1-official-calendar-coverage.md",
+      "mode": "100644",
+      "size": 4163,
+      "git_blob_sha1": "390db99005e03a469d22d6209217da77f3cf8562"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-23-p1-raw-gap-forensics.md",
+      "mode": "100644",
+      "size": 4304,
+      "git_blob_sha1": "f6ada0ced1e5ae5b5e325c96d6f0ca795fd8df9c"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-23-p1-source-quality-profile.md",
+      "mode": "100644",
+      "size": 4746,
+      "git_blob_sha1": "a9cfeca98c75e7c7a71ba838fdb44abcd8cd607a"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-23-p1-tier-registry.md",
+      "mode": "100644",
+      "size": 4328,
+      "git_blob_sha1": "42ea8a51febfa3ae77a34413e34e573a6b9655c4"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-23-p1-tournament-inventory.md",
+      "mode": "100644",
+      "size": 3622,
+      "git_blob_sha1": "882f769c25332d77a7ed4567958e84bb8fc12b1f"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-23-p1-valuebetennis-inspection.md",
+      "mode": "100644",
+      "size": 3745,
+      "git_blob_sha1": "c87172dfb44baa28ce33707b4a1523dc2b32ce7a"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-23-research-pipeline.md",
+      "mode": "100644",
+      "size": 3905,
+      "git_blob_sha1": "8dad1d75f95d7a8863286cca9fa348039a78076c"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-p0-cross-month-paper-carry.md",
+      "mode": "100644",
+      "size": 3459,
+      "git_blob_sha1": "dff61dc867fdc3c478aa609d4bd3025911d9f381"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-p0-exact-win-journal.md",
+      "mode": "100644",
+      "size": 2823,
+      "git_blob_sha1": "b1ff82788fba7ddb85e39b91799f350a079915c0"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-p0-paper-ledger-period-integrity.md",
+      "mode": "100644",
+      "size": 6921,
+      "git_blob_sha1": "a8d48806e644738bb6fc0e797160fa96f4eb8c32"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-p1-authorized-source-intake.md",
+      "mode": "100644",
+      "size": 2945,
+      "git_blob_sha1": "8cd773ad8c467078f5bb9ae1ac777754af00ea78"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-p1-tml-feb-audit.md",
+      "mode": "100644",
+      "size": 2834,
+      "git_blob_sha1": "4d157aa67367490d93fe22af1b9150209c4b3223"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-p2-matched-fold-scoring.md",
+      "mode": "100644",
+      "size": 2767,
+      "git_blob_sha1": "2a79ee32e3d9b22eed34ac8cf2e52121b4b1fdaf"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-p2-pinned-python-reproduction.md",
+      "mode": "100644",
+      "size": 1929,
+      "git_blob_sha1": "5a4be0e34b7eaec2f203e9a09064536eb5410003"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-p2b-tml-elo-baseline.md",
+      "mode": "100644",
+      "size": 3560,
+      "git_blob_sha1": "db3cf0724a53d2b0f2514fbc4682a01c693d8856"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-p3-quote-receipt-preflight.md",
+      "mode": "100644",
+      "size": 2487,
+      "git_blob_sha1": "7ca905ed564c41c8fcc266519cf245dc4cfc7c91"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-paper-cash-history.md",
+      "mode": "100644",
+      "size": 1038,
+      "git_blob_sha1": "e649f236ba088f9a87b1113475939543d05f59da"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-paper-evidence-archive.md",
+      "mode": "100644",
+      "size": 1137,
+      "git_blob_sha1": "b619a82af2360f5331d2d177b2ac7e64122ba5d8"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-revised-source-sensitivity.md",
+      "mode": "100644",
+      "size": 1211,
+      "git_blob_sha1": "029e56e39c67f9756483b79bbad1652c0325c31c"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-tml-2025-revision-audit.md",
+      "mode": "100644",
+      "size": 2123,
+      "git_blob_sha1": "4afed1d5b4e50b3db42c669dee6fab94f08c159c"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-tml-sackmann-crosspublication.md",
+      "mode": "100644",
+      "size": 2280,
+      "git_blob_sha1": "6442d9bcbbecdc75c52e58b48ed6c75156c673df"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-tml-versioned-updater.md",
+      "mode": "100644",
+      "size": 2501,
+      "git_blob_sha1": "43b0f09556f5a8af31a4583e2347d62b13e40110"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-25-p1-7c-level-a-normalization.md",
+      "mode": "100644",
+      "size": 1575,
+      "git_blob_sha1": "ad6d015c7f8ac00ef53f98916ddb332cc0e754b6"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-25-p1-8a-identity-audit-ledger.md",
+      "mode": "100644",
+      "size": 2573,
+      "git_blob_sha1": "c3e80a81f6e4b1f8fcca289820c8779bb248cd1b"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-25-p1-8b-duplicate-sensitivity-ledger.md",
+      "mode": "100644",
+      "size": 2231,
+      "git_blob_sha1": "4a155b4ae349e80a4cd51b9dd65b8f1e1b0dca34"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-25-p1-8c-cohort-ledger.md",
+      "mode": "100644",
+      "size": 1875,
+      "git_blob_sha1": "cd130f74488227c57c6d362b15f9a079accad81d"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-23-atp-input-gate-design.md",
+      "mode": "100644",
+      "size": 4886,
+      "git_blob_sha1": "ae6a01be2a6e6f991d8f2cecad3f3a89a32d1175"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-23-p1-inventory-anomaly-review.md",
+      "mode": "100644",
+      "size": 4679,
+      "git_blob_sha1": "032704a68aba34d64bfedffccf3daeaffa1302ca"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-23-p1-legacy-crosswalk.md",
+      "mode": "100644",
+      "size": 5512,
+      "git_blob_sha1": "81ce0eade8f198116256c283b30b877976f5fec4"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-23-p1-official-calendar-coverage.md",
+      "mode": "100644",
+      "size": 5707,
+      "git_blob_sha1": "54bdc63f7caeaa924f734565ac47a78063696bcc"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-23-p1-raw-gap-forensics.md",
+      "mode": "100644",
+      "size": 4571,
+      "git_blob_sha1": "f7f148e0f1daac04a2748f22e17c00d091373bb3"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-23-p1-source-quality-design.md",
+      "mode": "100644",
+      "size": 4712,
+      "git_blob_sha1": "9bcc41a5f0792e9d0b1dd33fd67b2880635924bd"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-23-p1-tier-registry.md",
+      "mode": "100644",
+      "size": 5919,
+      "git_blob_sha1": "0be6c540c8b86a576ce413e5eddf4e9797763d0b"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-23-p1-tournament-inventory.md",
+      "mode": "100644",
+      "size": 4483,
+      "git_blob_sha1": "735572f80655bd55bd0211b29b2f6390d7759111"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-23-p1-valuebetennis-inspection.md",
+      "mode": "100644",
+      "size": 4490,
+      "git_blob_sha1": "d9e5426830b8ed855af8dac6082ee066bcbaac87"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-23-research-pipeline-design.md",
+      "mode": "100644",
+      "size": 2804,
+      "git_blob_sha1": "3d1687758d0a124118b3b69c28a10738fe6b20e3"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-p0-cross-month-paper-carry-design.md",
+      "mode": "100644",
+      "size": 3961,
+      "git_blob_sha1": "3006c752cd543135fc7c8d59efebcfd33e07c6fa"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-p0-exact-win-journal.md",
+      "mode": "100644",
+      "size": 2840,
+      "git_blob_sha1": "98affdb0e23ceb2676abfd7277e86fb0235f0438"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-p0-paper-ledger-period-integrity-design.md",
+      "mode": "100644",
+      "size": 10875,
+      "git_blob_sha1": "fcf85213465644ef6f46ab49a8bece6658630c77"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-p1-authorized-source-intake-design.md",
+      "mode": "100644",
+      "size": 3574,
+      "git_blob_sha1": "a547862480c0e4cfa69bfe71f2ecf7c7ce5f3ab9"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-p1-tml-feb-audit.md",
+      "mode": "100644",
+      "size": 4541,
+      "git_blob_sha1": "66e1e6c2bef6022bf9c40b7c56fcd6b49d6fc119"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-p2-matched-fold-score-design.md",
+      "mode": "100644",
+      "size": 3383,
+      "git_blob_sha1": "ca4a3363a61773b73e8a2f30a52fbd424758172e"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-p2-pinned-python-reproduction.md",
+      "mode": "100644",
+      "size": 1776,
+      "git_blob_sha1": "73628afa6a73252523561188bed1913a4cb98037"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-p2b-tml-elo-baseline.md",
+      "mode": "100644",
+      "size": 6162,
+      "git_blob_sha1": "a9068bf1e93012ed10885fe4a56a1b949fb4da45"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-p3-quote-receipt-preflight-design.md",
+      "mode": "100644",
+      "size": 3333,
+      "git_blob_sha1": "8028e75184f5c3c3e222404f52987b79cb237548"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-paper-cash-history.md",
+      "mode": "100644",
+      "size": 2995,
+      "git_blob_sha1": "8525b8840c5c9d24b274aeb6241c0c530ffac23c"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-paper-evidence-archive.md",
+      "mode": "100644",
+      "size": 2426,
+      "git_blob_sha1": "41d340b668af4a7b0d4ab31d79462011da251ede"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-tml-2025-revision-audit.md",
+      "mode": "100644",
+      "size": 1673,
+      "git_blob_sha1": "a6332b98f013561eb3c6939c78e426e3fe240230"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-tml-sackmann-crosspublication.md",
+      "mode": "100644",
+      "size": 3674,
+      "git_blob_sha1": "befa4c6d6a426b93fe18f04a57fa73ff1cc2830b"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-tml-versioned-updater.md",
+      "mode": "100644",
+      "size": 4453,
+      "git_blob_sha1": "ccf5f4726ef2c40c82b923e039a52ea937f34d38"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-25-p1-8a-identity-audit.md",
+      "mode": "100644",
+      "size": 2354,
+      "git_blob_sha1": "4c8a7faa9c3b1f440216f5a3ee5dfa2733ed022f"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-25-p1-8b-duplicate-sensitivity.md",
+      "mode": "100644",
+      "size": 1742,
+      "git_blob_sha1": "a99d0fdaf03347aa2fa753255d19e74d531f8445"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-25-p1-8c-cohort-manifest.md",
+      "mode": "100644",
+      "size": 1547,
+      "git_blob_sha1": "f44a1cc931627c381c6c2ac829ff3d4f482087a3"
+    },
+    {
+      "path": "examples/historical_toy.csv",
+      "mode": "100644",
+      "size": 309,
+      "git_blob_sha1": "f0099b0d2823c8fad0f4cee258afb4d597efc629"
+    },
+    {
+      "path": "examples/research_synthetic.csv",
+      "mode": "100644",
+      "size": 36094,
+      "git_blob_sha1": "22d5efe9f7b3f388000ec34945adb55ed34c7e31"
+    },
+    {
+      "path": "examples/synthetic_unvalidated.json",
+      "mode": "100644",
+      "size": 3083,
+      "git_blob_sha1": "492639592c865c986a2069605299c0cd34b8bc3e"
+    },
+    {
+      "path": "pyproject.toml",
+      "mode": "100644",
+      "size": 626,
+      "git_blob_sha1": "07a28fcdcbb8648256c6a06888a1b72a8c5ecd6c"
+    },
+    {
+      "path": "scripts/download_atp_2026.ps1",
+      "mode": "100644",
+      "size": 732,
+      "git_blob_sha1": "a13f20cc82f8496ea3e103f9d2a021dbed7b07e9"
+    },
+    {
+      "path": "scripts/p1_7c_level_a_research.py",
+      "mode": "100644",
+      "size": 5732,
+      "git_blob_sha1": "e0e18725e6119136764730c731da8e6015b8014c"
+    },
+    {
+      "path": "scripts/p1_8a_identity_research.py",
+      "mode": "100644",
+      "size": 1543,
+      "git_blob_sha1": "4cab5d5d7f65035625a3b0b7a6d86c620f27479c"
+    },
+    {
+      "path": "scripts/p1_8b_duplicate_research.py",
+      "mode": "100644",
+      "size": 5885,
+      "git_blob_sha1": "65cf3f37903c3f06c064514c0a5d3c50c965045c"
+    },
+    {
+      "path": "scripts/p1_8c_cohort_research.py",
+      "mode": "100644",
+      "size": 5619,
+      "git_blob_sha1": "6eb35550d1675b09318a1b98c02f99744d766773"
+    },
+    {
+      "path": "scripts/replay_research.py",
+      "mode": "100644",
+      "size": 987,
+      "git_blob_sha1": "f7efbf13c4f5788bc9264f2c73731aaa0f2f7894"
+    },
+    {
+      "path": "scripts/reproduce_pinned_tml_elo.py",
+      "mode": "100644",
+      "size": 4145,
+      "git_blob_sha1": "b46ccc20b2fa44202ba402dfc5ab38e0faf2ff55"
+    },
+    {
+      "path": "scripts/revised_source_sensitivity.py",
+      "mode": "100644",
+      "size": 3379,
+      "git_blob_sha1": "dec90f5c870d29b20141372afd99e611574f88da"
+    },
+    {
+      "path": "scripts/run_tml_elo_research.ps1",
+      "mode": "100644",
+      "size": 1548,
+      "git_blob_sha1": "4f389557007f30589de6fc0b699e99a36fc71316"
+    },
+    {
+      "path": "scripts/tml_2025_revision_audit.py",
+      "mode": "100644",
+      "size": 6634,
+      "git_blob_sha1": "463e8526de8026f230494b783452ebf26c8c0562"
+    },
+    {
+      "path": "scripts/tml_daily_update.ps1",
+      "mode": "100644",
+      "size": 1192,
+      "git_blob_sha1": "0cc312bfe33f3618f7bddc797d013af41a225372"
+    },
+    {
+      "path": "src/atp_gate/__init__.py",
+      "mode": "100644",
+      "size": 262,
+      "git_blob_sha1": "0b1eac5e8530bd8cefd23de693dacf2907765d77"
+    },
+    {
+      "path": "src/atp_gate/__main__.py",
+      "mode": "100644",
+      "size": 35065,
+      "git_blob_sha1": "6b3ad6fb9884af2ad1f6b60cd3ffbc8db30a7c0f"
+    },
+    {
+      "path": "src/atp_gate/contracts.py",
+      "mode": "100644",
+      "size": 5520,
+      "git_blob_sha1": "65304265bb7317908255064c33784daf1e70123f"
+    },
+    {
+      "path": "src/atp_gate/feature_schema.py",
+      "mode": "100644",
+      "size": 1493,
+      "git_blob_sha1": "af0a0c0e550656b402529da55892c265f80d135b"
+    },
+    {
+      "path": "src/atp_gate/fold_scoring.py",
+      "mode": "100644",
+      "size": 9236,
+      "git_blob_sha1": "eb8169e737ffba00ad17221eb533a016e4fe140c"
+    },
+    {
+      "path": "src/atp_gate/historical_audit.py",
+      "mode": "100644",
+      "size": 3011,
+      "git_blob_sha1": "5acbd231dc2136f112a38c183c052a4b1a9e44fa"
+    },
+    {
+      "path": "src/atp_gate/inventory_review.py",
+      "mode": "100644",
+      "size": 11099,
+      "git_blob_sha1": "2d347bc977e6034fba593c1974c00261be33bbb7"
+    },
+    {
+      "path": "src/atp_gate/legacy_archive_crosswalk.py",
+      "mode": "100644",
+      "size": 7120,
+      "git_blob_sha1": "4318eea14ec3176dd53b070f80327e0f001bf35c"
+    },
+    {
+      "path": "src/atp_gate/official_calendar_coverage.py",
+      "mode": "100644",
+      "size": 8730,
+      "git_blob_sha1": "fa36ea27cff6f3a331d06dffd3a8f9bad2936691"
+    },
+    {
+      "path": "src/atp_gate/paper_cash_history.py",
+      "mode": "100644",
+      "size": 12914,
+      "git_blob_sha1": "3f0e7752fb2451f70c43ac1f86ac69df25363120"
+    },
+    {
+      "path": "src/atp_gate/paper_evidence_archive.py",
+      "mode": "100644",
+      "size": 5698,
+      "git_blob_sha1": "507d75696cc3f60cd6a81f386035f746621f39ee"
+    },
+    {
+      "path": "src/atp_gate/paper_ledger.py",
+      "mode": "100644",
+      "size": 11991,
+      "git_blob_sha1": "30bbc44cd7ef4eed796156fef3f839df02bbcad3"
+    },
+    {
+      "path": "src/atp_gate/period_risk.py",
+      "mode": "100644",
+      "size": 6158,
+      "git_blob_sha1": "7bd9cbe98802e9d6a571c80b1abb50a48d50d063"
+    },
+    {
+      "path": "src/atp_gate/policy.py",
+      "mode": "100644",
+      "size": 8465,
+      "git_blob_sha1": "a3657a1d420e916459450a57bd9d1089114abcfa"
+    },
+    {
+      "path": "src/atp_gate/quote_receipt.py",
+      "mode": "100644",
+      "size": 7009,
+      "git_blob_sha1": "5fcae7248a3f57e26e56eca34cca719a7d1af80b"
+    },
+    {
+      "path": "src/atp_gate/report_integrity.py",
+      "mode": "100644",
+      "size": 4592,
+      "git_blob_sha1": "54865a1c12d23c3b34785ef11d7df226c5fbd81f"
+    },
+    {
+      "path": "src/atp_gate/research_data.py",
+      "mode": "100644",
+      "size": 8300,
+      "git_blob_sha1": "b63a441b8b98e2f031595f6201034240b6b2bfd6"
+    },
+    {
+      "path": "src/atp_gate/research_features.py",
+      "mode": "100644",
+      "size": 5259,
+      "git_blob_sha1": "366a4a52cff2602eb576911cf4eb4fff5ab51816"
+    },
+    {
+      "path": "src/atp_gate/research_replay.py",
+      "mode": "100644",
+      "size": 4873,
+      "git_blob_sha1": "57b303f240ad8fdb759ec58766dda7024e43a4da"
+    },
+    {
+      "path": "src/atp_gate/research_train.py",
+      "mode": "100644",
+      "size": 9275,
+      "git_blob_sha1": "cb2e7c89a37a2f22b554a4ce157fd00be067ca22"
+    },
+    {
+      "path": "src/atp_gate/source_gap_forensics.py",
+      "mode": "100644",
+      "size": 10416,
+      "git_blob_sha1": "1febc75b6e53539af90e7f5815f330ffd4865b29"
+    },
+    {
+      "path": "src/atp_gate/source_intake.py",
+      "mode": "100644",
+      "size": 8627,
+      "git_blob_sha1": "d577a283e119e3195f856f23ad5d3c65ae2fbae0"
+    },
+    {
+      "path": "src/atp_gate/source_profile.py",
+      "mode": "100644",
+      "size": 5778,
+      "git_blob_sha1": "7affc3d62055d2af550c62106a359b1db39d757b"
+    },
+    {
+      "path": "src/atp_gate/tier_registry.py",
+      "mode": "100644",
+      "size": 12152,
+      "git_blob_sha1": "2b65a76346140ff1f955516a130503e72020cba6"
+    },
+    {
+      "path": "src/atp_gate/tml_cohort_manifest.py",
+      "mode": "100644",
+      "size": 5310,
+      "git_blob_sha1": "396f6f516ed1d964f7c57b1a5475088b8cf0892a"
+    },
+    {
+      "path": "src/atp_gate/tml_duplicate_sensitivity.py",
+      "mode": "100644",
+      "size": 4902,
+      "git_blob_sha1": "0ac29b4e06d2855550dabeaacfe6fb09f96a640b"
+    },
+    {
+      "path": "src/atp_gate/tml_elo_experiment.py",
+      "mode": "100644",
+      "size": 19685,
+      "git_blob_sha1": "0a259b21cbf287f292015a4aa1878303c02ea6e9"
+    },
+    {
+      "path": "src/atp_gate/tml_historical_audit.py",
+      "mode": "100644",
+      "size": 9730,
+      "git_blob_sha1": "2b5cd69bb47ff88f277ec0717e481e9a16462b32"
+    },
+    {
+      "path": "src/atp_gate/tml_identity_audit.py",
+      "mode": "100644",
+      "size": 10737,
+      "git_blob_sha1": "4a0cf855ba116b841997e2bd08333c35a5ec6223"
+    },
+    {
+      "path": "src/atp_gate/tml_sackmann_crosscheck.py",
+      "mode": "100644",
+      "size": 9197,
+      "git_blob_sha1": "ca8982b61e8fe40b4fa5a8b9dcb4122f368e8281"
+    },
+    {
+      "path": "src/atp_gate/tml_snapshot.py",
+      "mode": "100644",
+      "size": 9612,
+      "git_blob_sha1": "db30b9531a2272617b99d46059b61288d3000fa8"
+    },
+    {
+      "path": "src/atp_gate/valuebetennis_source.py",
+      "mode": "100644",
+      "size": 15213,
+      "git_blob_sha1": "2c25c1fa2ad000b67de4ee8c0e6c9323bbc0efb2"
+    },
+    {
+      "path": "tests/test_cli.py",
+      "mode": "100644",
+      "size": 1932,
+      "git_blob_sha1": "8444513b64d01e71a333f7bbf267296bf253d53e"
+    },
+    {
+      "path": "tests/test_cross_month_carry.py",
+      "mode": "100644",
+      "size": 5927,
+      "git_blob_sha1": "250f4856e350356f4badbb8a883989f2c8c97192"
+    },
+    {
+      "path": "tests/test_exact_win_payout_replay.py",
+      "mode": "100644",
+      "size": 6045,
+      "git_blob_sha1": "151f3361e6cb48d39363795b83051c6ea7983241"
+    },
+    {
+      "path": "tests/test_fold_scoring.py",
+      "mode": "100644",
+      "size": 4445,
+      "git_blob_sha1": "80d1711cbf24156500a8e9733283d7dce05fd444"
+    },
+    {
+      "path": "tests/test_gate.py",
+      "mode": "100644",
+      "size": 13992,
+      "git_blob_sha1": "685525d2bf6809ae1812a2d6ba99ceb0b6600605"
+    },
+    {
+      "path": "tests/test_history_audit.py",
+      "mode": "100644",
+      "size": 1713,
+      "git_blob_sha1": "d4de54cc7c4933c00dc60317a7f34ec8b899157c"
+    },
+    {
+      "path": "tests/test_inventory_review.py",
+      "mode": "100644",
+      "size": 8199,
+      "git_blob_sha1": "96fb47bb97eeb656a5e83a6c2346e15ee1287000"
+    },
+    {
+      "path": "tests/test_ledger.py",
+      "mode": "100644",
+      "size": 5964,
+      "git_blob_sha1": "4435a992647da6b7433feb1cbd40c667c968988e"
+    },
+    {
+      "path": "tests/test_legacy_crosswalk.py",
+      "mode": "100644",
+      "size": 9123,
+      "git_blob_sha1": "9f0e2af98481fbadb1a5cdcd55b762cd85173d9e"
+    },
+    {
+      "path": "tests/test_official_calendar_coverage.py",
+      "mode": "100644",
+      "size": 9491,
+      "git_blob_sha1": "0fad217cadd3e74e049e0053fa1446ec675ad935"
+    },
+    {
+      "path": "tests/test_paper_cash_history.py",
+      "mode": "100644",
+      "size": 9344,
+      "git_blob_sha1": "27afb01960c7cad80d09b8b9598b2f43f189b7f7"
+    },
+    {
+      "path": "tests/test_paper_evidence_archive.py",
+      "mode": "100644",
+      "size": 6277,
+      "git_blob_sha1": "570dc234b193c37fe3760eb0360fa61ee59483bc"
+    },
+    {
+      "path": "tests/test_period_risk.py",
+      "mode": "100644",
+      "size": 6168,
+      "git_blob_sha1": "ed0df5a91400e15c65d9380f8d0b5558e1b80380"
+    },
+    {
+      "path": "tests/test_quote_receipt.py",
+      "mode": "100644",
+      "size": 4703,
+      "git_blob_sha1": "ec5fb12a9f3cadd2ca76fa9f80c31d38d302a14b"
+    },
+    {
+      "path": "tests/test_report_integrity.py",
+      "mode": "100644",
+      "size": 4162,
+      "git_blob_sha1": "5bc92caf421b51eee069215d88b3fc38517424dc"
+    },
+    {
+      "path": "tests/test_research_cli.py",
+      "mode": "100644",
+      "size": 2916,
+      "git_blob_sha1": "e9aee62e32dcf7730837179691cd054ac6a4260a"
+    },
+    {
+      "path": "tests/test_research_data.py",
+      "mode": "100644",
+      "size": 4723,
+      "git_blob_sha1": "50443e8dc20d62d8b6661bb071e5b06a78a6efbb"
+    },
+    {
+      "path": "tests/test_research_features.py",
+      "mode": "100644",
+      "size": 1855,
+      "git_blob_sha1": "9ef5fb22659553bd86a9db697c2b338310ee1122"
+    },
+    {
+      "path": "tests/test_research_replay.py",
+      "mode": "100644",
+      "size": 4640,
+      "git_blob_sha1": "6285038b02d8d6fa605b21b03cbfbe7053d8ae9c"
+    },
+    {
+      "path": "tests/test_research_train.py",
+      "mode": "100644",
+      "size": 3294,
+      "git_blob_sha1": "a0eac0400eb2d237b64271e029976268a4166043"
+    },
+    {
+      "path": "tests/test_source_gap_forensics.py",
+      "mode": "100644",
+      "size": 10978,
+      "git_blob_sha1": "aae7496a2d20c56b19127ed39a1d9b81807e1829"
+    },
+    {
+      "path": "tests/test_source_intake.py",
+      "mode": "100644",
+      "size": 8771,
+      "git_blob_sha1": "7cf6f388c58e53ff70ff24a3e8c055f99d2ba5b3"
+    },
+    {
+      "path": "tests/test_source_profile.py",
+      "mode": "100644",
+      "size": 6916,
+      "git_blob_sha1": "f2512dd1d87241faf322b8ade4d3a2efe594fddd"
+    },
+    {
+      "path": "tests/test_tier_registry.py",
+      "mode": "100644",
+      "size": 10154,
+      "git_blob_sha1": "b9063c0e88c24fb59f847e79cd42dea432a9f1e7"
+    },
+    {
+      "path": "tests/test_tml_cohort_manifest.py",
+      "mode": "100644",
+      "size": 3212,
+      "git_blob_sha1": "6cce0eb687b116f078a0d0890ed8111a41799c70"
+    },
+    {
+      "path": "tests/test_tml_duplicate_sensitivity.py",
+      "mode": "100644",
+      "size": 4074,
+      "git_blob_sha1": "7372a47078f88f4d9942389cd219ea7b8658e9ac"
+    },
+    {
+      "path": "tests/test_tml_elo_experiment.py",
+      "mode": "100644",
+      "size": 15350,
+      "git_blob_sha1": "ad5c60f79665307553757a971ef99ecdf578514b"
+    },
+    {
+      "path": "tests/test_tml_historical_audit.py",
+      "mode": "100644",
+      "size": 7822,
+      "git_blob_sha1": "7cab7d587ad4d5b28d5bae039aa1603728ea4047"
+    },
+    {
+      "path": "tests/test_tml_identity_audit.py",
+      "mode": "100644",
+      "size": 6671,
+      "git_blob_sha1": "0dfa578e2d425f8e6262d5f94abaf5cc15d20aad"
+    },
+    {
+      "path": "tests/test_tml_revision_audit.py",
+      "mode": "100644",
+      "size": 3002,
+      "git_blob_sha1": "56a4dd874daae5b97f82756a97669d3c327861e8"
+    },
+    {
+      "path": "tests/test_tml_sackmann_crosscheck.py",
+      "mode": "100644",
+      "size": 8339,
+      "git_blob_sha1": "a21fb5874017bde3bd80d4399ad62abe69f1a6cd"
+    },
+    {
+      "path": "tests/test_tml_snapshot.py",
+      "mode": "100644",
+      "size": 9825,
+      "git_blob_sha1": "067a748830323b5e47d513bb76e25b87b84e6987"
+    },
+    {
+      "path": "tests/test_tml_source_watch.py",
+      "mode": "100644",
+      "size": 873,
+      "git_blob_sha1": "0d88e65b51d5050a51aaf74b9cb7bd84c6cc24a4"
+    },
+    {
+      "path": "tests/test_valuebetennis_source.py",
+      "mode": "100644",
+      "size": 8475,
+      "git_blob_sha1": "89220b2802592032ec7daebbe5914ee507d1d31c"
+    },
+    {
+      "path": "tests/test_valuebetennis_tournaments.py",
+      "mode": "100644",
+      "size": 6804,
+      "git_blob_sha1": "143cef8bf454e7c2f51c1d899d769667befb5ac8"
+    }
+  ]
+}
