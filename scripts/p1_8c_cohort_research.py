@@ -62,7 +62,7 @@ def acquire_sources(m, root, *, local_dir=None):
     return current, old, receipts
 
 
-def run_replay(*, local_dir=None):
+def run_replay(*, local_dir=None, bootstrap_replicates=2000):
     m = cohort_manifest()
     with tempfile.TemporaryDirectory(prefix="tml-cohort-") as folder:
         root = Path(folder)
@@ -87,7 +87,8 @@ def run_replay(*, local_dir=None):
             path.write_bytes(data)
             paths.append(path)
         report = run_tml_elo_experiment(paths, normalize_level_a_2024=True,
-                                        embargo_days=m["embargo_days"], bootstrap_replicates=50)
+                                        embargo_days=m["embargo_days"],
+                                        bootstrap_replicates=bootstrap_replicates)
         actual_folds = {f["year"]: f["n"] for f in report["folds"]}
         if (report["source_match_rows_eligible"] != m["expected_eligible"]
                 or report["test_matches"] != m["expected_evaluated"]
@@ -120,13 +121,17 @@ def run_replay(*, local_dir=None):
             leads.append({**item, "eligible_rows": len(affected),
                           "evaluated_rows": sum(x.start.year in m["evaluation_by_year"] for x in affected)})
         output = {
-            "schema": "TML_COHORT_MANIFEST_REPLAY_V2",
+            "schema": "TML_COHORT_MANIFEST_REPLAY_V3",
             "manifest": m,
             "manifest_sha256": hashlib.sha256(json.dumps(m, sort_keys=True, separators=(",", ":")).encode()).hexdigest(),
             "source_receipts": receipts,
             "eligible": len(matches),
             "evaluation_folds": actual_folds,
             "aggregate": report["aggregate"],
+            "folds": report["folds"],
+            "bootstrap": report["bootstrap"],
+            "calendar_attribution": report["calendar_attribution"],
+            "evaluation_status": m["evaluation_status"],
             "identity_summary": {
                 "old_multiple_name_ids": old_profile["multiple_name_ids"] if old_profile is not None else None,
                 "archived_2025_comparison": "RUN" if old_profile is not None else "NOT_RUN_LOCAL_LOCKED_COHORT_ONLY",
@@ -147,9 +152,11 @@ def run_replay(*, local_dir=None):
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Replay the exact locked TML cohort")
     parser.add_argument("--local-dir", type=Path, help="Flat folder of five exact pinned raw CSVs; no network")
+    parser.add_argument("--bootstrap-replicates", type=int, default=2000,
+                        help="Event-cluster bootstrap replicates (default 2000)")
     args = parser.parse_args(argv)
     try:
-        output = run_replay(local_dir=args.local_dir)
+        output = run_replay(local_dir=args.local_dir, bootstrap_replicates=args.bootstrap_replicates)
     except (ValueError, OSError, KeyError, TypeError) as exc:
         print(json.dumps({"status":"ERROR","reason":str(exc),
                           "model_validation_trusted":False,
