@@ -1,0 +1,38 @@
+{
+  "schema": "P2_1R_EXPOSURE_AUDIT_V1",
+  "audited_commit": "f6b7e86ed955fdc0dbef34ea5d5712d30b351efc",
+  "method": "Read selected repository documentation; not a full local filesystem/access log audit",
+  "evidence": [
+    {
+      "path": "docs/RESEARCH_REPRODUCIBILITY.md",
+      "blob": "5f5d780a8a5292bfa2a4ebd2ac30e6f54cf121b9",
+      "lines": [
+        5,
+        7,
+        71
+      ],
+      "finding": "Prior ATP 2026 historical XGBoost/Elo report, 121-match evaluation referenced"
+    },
+    {
+      "path": "docs/DATA_SOURCE_DECISIONS.md",
+      "blob": "e53e585d1678514b91519df1ef17cb17b1cb5500",
+      "lines": [
+        7,
+        28
+      ],
+      "finding": "Existing 2026 partial-year experiment SHA256 a9ff61474edcdd69b14333f02cbcf6ba21b5cf24e75080e2214e507e336a0c13; origin unverified"
+    },
+    {
+      "path": "docs/TOURNAMENT_SEASON_INVENTORY.md",
+      "blob": "b007f4cdf6adc9d3b4b69a967e1a63573a645e04",
+      "lines": [
+        36,
+        42
+      ],
+      "finding": "Owner reported five seasonal CSV inspection, 3589 provisional ATP candidates in 2026"
+    }
+  ],
+  "ruling": "2026_NOT_ATTESTABLE_AS_UNTOUCHED; source vendor change does not erase outcome exposure. 2023-2025 repeatedly inspected. 2027+ not automatically clean; future interval and independent custody not yet reserved.",
+  "new_2026_source_access": false,
+  "untouched_holdout_verified": false
+}

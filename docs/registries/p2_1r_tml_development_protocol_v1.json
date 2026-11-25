@@ -1,0 +1,208 @@
+{
+  "schema": "TML_DEVELOPMENT_PROTOCOL_V1",
+  "registered_before_tml_ml": true,
+  "registration_status": "CANDIDATE_PROTOCOL_REQUIRES_REVIEW_AND_MERGE_BEFORE_FEATURE_IMPLEMENTATION",
+  "foundation_commit": "f6b7e86ed955fdc0dbef34ea5d5712d30b351efc",
+  "cohort_manifest_sha256": "b9b55b6c75f1f43394b3e69d19c6b791faedc8539908608ecf1d74dfaabcb8fb",
+  "scope": "PERSONAL_NONCOMMERCIAL_HISTORICAL_CONDITIONAL_MATCHUP_SKILL",
+  "evaluation_status": "PREVIOUSLY_INSPECTED_DEVELOPMENT_YEARS",
+  "source_seasons": [
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "expected_eligible": 12620,
+  "expected_evaluation_by_year": {
+    "2023": 2600,
+    "2024": 2647,
+    "2025": 2447
+  },
+  "time_unit": "NORMALIZED_EVENT_START_DATE",
+  "outcome_release_rule": "EVENT_START_PLUS_28_CALENDAR_DAYS_ESTIMATE_NOT_VERIFIED_AVAILABILITY",
+  "embargo_days": 28,
+  "fold_rule": {
+    "warmup_start": "2021-01-01",
+    "fit_start": "2022-01-01",
+    "calibration_start": "JULY_1_PRECEDING_EVALUATION_YEAR",
+    "evaluation_start": "JANUARY_1_EVALUATION_YEAR",
+    "evaluation_end_exclusive": "JANUARY_1_NEXT_YEAR",
+    "fit": "start >= fit_start AND start < calibration_start AND start+28d <= calibration_start",
+    "calibration": "start >= calibration_start AND start < evaluation_start AND start+28d <= evaluation_start",
+    "evaluation": "evaluation_start <= start < evaluation_end_exclusive",
+    "gap_rows": "EXCLUDE_FROM_FIT_AND_CALIBRATION_BUT_MATURED_HISTORY_UPDATES_ALLOWED",
+    "model_frozen_per_evaluation_year": true,
+    "event_disjoint_within_fold": true,
+    "prior_evaluation_years_may_enter_later_fold_fit_or_calibration": true,
+    "minimum_fit": 500,
+    "minimum_calibration": 200,
+    "minimum_eval": 200,
+    "minimum_distinct_events_fit": 12,
+    "minimum_distinct_events_calibration": 8,
+    "minimum_distinct_events_eval": 12,
+    "both_outcomes_required_fit_calibration": true,
+    "insufficient_support": "FAIL_FOLD_NO_SILENT_SUBSTITUTION"
+  },
+  "identity": {
+    "key": [
+      "tourney_id",
+      "match_num"
+    ],
+    "orientation": "LEXICOGRAPHIC_EXACT_TRIMMED_PLAYER_ID",
+    "metadata_not_features": [
+      "source_season",
+      "event_id",
+      "match_num",
+      "player_a",
+      "player_b",
+      "outcome_a",
+      "event_start",
+      "source_row"
+    ],
+    "same_event_frozen": true
+  },
+  "features": {
+    "allowlist": [
+      "overall_elo_diff",
+      "surface_elo_diff",
+      "surface_shrinkage_elo_diff",
+      "log1p_total_history_diff",
+      "log1p_surface_history_diff",
+      "win_rate_90d_diff",
+      "win_rate_365d_diff",
+      "log1p_90d_count_diff",
+      "log1p_365d_count_diff",
+      "smoothed_h2h_diff",
+      "log1p_h2h_count",
+      "min_history",
+      "min_surface_history",
+      "both_have_history",
+      "both_have_surface_history",
+      "surface_hard",
+      "surface_clay",
+      "surface_grass"
+    ],
+    "history_window_basis": "EVENT_START_OF_MATURED_RESULTS_ONLY",
+    "rate_prior": "(wins+1)/(n+2)",
+    "h2h_prior": "(A_wins+1)/(meetings+2); diff=2*p-1",
+    "cold_start": "ELO_1500; RATE_0.5; COUNT_0; EXPLICIT_SUPPORT; KEEP_ALL_ELIGIBLE_MATCHES",
+    "excluded": [
+      "current_match_result",
+      "current_match_score",
+      "current_match_stats",
+      "current_match_duration",
+      "current_match_rank_or_rank_points",
+      "current_match_round",
+      "current_match_draw_position",
+      "odds",
+      "name",
+      "player_id_as_feature",
+      "same_event_results",
+      "future_event_results"
+    ],
+    "orientation": "SIGNED_DIFFS_NEGATED_ON_SWAP; SYMMETRIC_COUNTS_AND_SURFACE_UNCHANGED",
+    "event_batch": "AGGREGATE_MATURED_EVENT_START_DATE_WITHOUT_WITHIN_DAY_ORDER"
+  },
+  "baselines": {
+    "coinflip": 0.5,
+    "global_elo": "FROZEN_P1_8C_K24",
+    "surface_elo": "FROZEN_P1_8C_ADDITIVE_0.35_SHRINKAGE",
+    "convex_surface": "(1-w)*overall+w*surface; w=0.35*n/(n+20); same batch updates as baseline",
+    "decay_k": "250/(n+5)^0.4; use prebatch player count; global only",
+    "mean_batch": "K24 times mean per-player residual per matured date; global only",
+    "rank_baseline": "BLOCKED_UNTIL_TIMESTAMPED_PRE_EVENT_RANK_SOURCE_VERIFIED"
+  },
+  "models": {
+    "logistic": {
+      "C": 1,
+      "solver": "lbfgs",
+      "max_iter": 2000,
+      "standardize_fit_only": true
+    },
+    "xgboost": {
+      "n_estimators": 160,
+      "max_depth": 3,
+      "learning_rate": 0.04,
+      "subsample": 0.9,
+      "colsample_bytree": 0.9,
+      "min_child_weight": 5,
+      "reg_lambda": 2,
+      "objective": "binary:logistic",
+      "eval_metric": "logloss",
+      "random_state": 29,
+      "n_jobs": 1,
+      "tree_method": "hist"
+    },
+    "train_augmentation": "A_B_SWAP_FIT_ONLY; BOTH_ORIENTATIONS_SAME_FOLD; NOT_DUPLICATE_EVAL",
+    "probability_symmetry": "p=(f(x)+1-f(swap(x)))/2",
+    "calibration": {
+      "primary": "SYMMETRIC_PLATT_LOGISTIC_ON_LOGIT_OF_FROZEN_MODEL",
+      "C": 1,
+      "fit_calibration_only": true,
+      "orientation_augmented_calibration": true,
+      "apply_symmetrization": true,
+      "secondary": "ISOTONIC_ON_CALIBRATION_ONLY; SYMMETRIZE; REPORT_SEPARATELY; NO_SELECTION_BY_EVAL",
+      "clip": 1e-12
+    },
+    "no_hyperparameter_search": true
+  },
+  "evaluation": {
+    "primary_metric": "MATCH_WEIGHTED_LOG_LOSS",
+    "secondary": [
+      "BRIER",
+      "ECE_10_EQUAL_WIDTH_FIXED_BINS",
+      "CALIBRATION_SLOPE_INTERCEPT_DESCRIPTIVE",
+      "RELIABILITY_BIN_COUNTS",
+      "BRIER_DECOMPOSITION_BINNED_APPROXIMATION_WITH_RESIDUAL",
+      "COVERAGE"
+    ],
+    "calibration_diagnostic": "FIT_LOGISTIC_ON_EVALUATION_LOGITS_ONLY_FOR_DIAGNOSTICS_NEVER_FEEDBACK; UNDEFINED_IF_DEGENERATE",
+    "coverage_denominator": "ALL_LOCKED_ELIGIBLE_EVAL_MATCHES_PER_YEAR",
+    "missing_predictions": "FAIL_PRIMARY_MATCHED_COMPARISON; REPORT_MISSING_COUNTS; NO_DROP",
+    "bootstrap": {
+      "replicates": 2000,
+      "seed": 29,
+      "cluster": "EVENT_ID",
+      "strata": "EVALUATION_YEAR",
+      "paired": true,
+      "interval": "PERCENTILE_95_DESCRIPTIVE",
+      "refit": false
+    },
+    "comparisons": "EACH_FIXED_CANDIDATE_MINUS_GLOBAL_ELO_ON_IDENTICAL_KEYS; LOG_LOSS_AND_BRIER; REPORT_ALL_NEGATIVE_RESULTS; NO_POSTHOC_WINNER_CLAIM",
+    "ablation": "FIXED LOGISTIC FEATURE BLOCKS: ELO_ONLY; ELO+HISTORY; ALL; FULL XGB; ONE CHANGE AT A TIME BASELINE VARIANTS; NO TUNING",
+    "selection": "DEVELOPMENT_ONLY; NO AUTOMATIC CHAMPION OR RELEASE"
+  },
+  "future_holdout": {
+    "status": "NOT_RESERVED_NO_UNTOUCHED_HOLDOUT",
+    "excluded_years": [
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "reservation_requires": [
+      "INDEPENDENT_CUSTODIAN",
+      "OWNER_APPROVED_FUTURE_EVENT_START_INTERVAL",
+      "SOURCE_RIGHTS_AND_PINS",
+      "EXPOSURE_LOG",
+      "MODEL_AND_PROTOCOL_DIGEST_FROZEN_BEFORE_ACCESS",
+      "ONE_TIME_EVALUATION",
+      "NO_FEEDBACK_TO_SAME_HOLDOUT"
+    ],
+    "no_access_this_phase": true
+  },
+  "safety": {
+    "official_match_draw_verified": false,
+    "individual_match_start_verified": false,
+    "participant_known_at_event_start": false,
+    "source_result_availability_exact": false,
+    "model_validation_trusted": false,
+    "allocation_enabled": false,
+    "stake": 0,
+    "eligible_for_model_training": 0,
+    "exploratory_fit_permission": "SEPARATE_EXPLICIT_RESEARCH_ONLY_CONTRACT_REQUIRED_P2_3",
+    "no_raw_redistribution": true,
+    "no_financial_metrics": true
+  }
+}
