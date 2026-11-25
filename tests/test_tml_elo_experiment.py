@@ -359,3 +359,50 @@ def test_normalized_same_event_cannot_learn_its_own_results(tmp_path, monkeypatc
         reordered["aggregate"]["global_elo_log_loss"], abs=1e-12)
     assert result["aggregate"]["surface_elo_log_loss"] == pytest.approx(
         reordered["aggregate"]["surface_elo_log_loss"], abs=1e-12)
+
+
+# P1.9b: reviewer regression cases; all inputs are synthetic.
+@pytest.mark.parametrize("winner,loser", [(" P1 ", "P1"), ("P1", " P1 "), (" ", "P2"), ("P1", "\t")])
+def test_invalid_canonical_identity_rejected(winner, loser):
+    with pytest.raises(ValueError, match="identity"):
+        orient_result(winner, loser)
+
+
+def test_orientation_strips_outer_whitespace_without_casefolding():
+    assert orient_result(" Z ", " A ") == ("A", "Z", 0)
+    assert orient_result("a", "A") == ("A", "a", 0)
+
+
+def test_invalid_identity_rows_are_counted_without_crash(tmp_path):
+    paths = season_files(tmp_path)
+    paths[2] = make_file(tmp_path, 2023, [
+        row(2023, "valid", "20230301", 1),
+        row(2023, "blank", "20230401", 1, winner="  ", loser="Z"),
+        row(2023, "alias", "20230501", 1, winner=" A ", loser="A"),
+    ])
+    out = run_tml_elo_experiment(paths, bootstrap_replicates=50)
+    assert out["excluded_reasons"]["INVALID_PLAYER_ID"] == 2
+    assert out["folds"][0]["n"] == 1
+
+
+@pytest.mark.parametrize("score", [
+    "6-4 3-2 Default", "6-4 3-2 UNFINISHED", "6-4 3-2 ABANDONED",
+    "6-4 3-2 IN PROGRESS", "0-0", "3-2", "6-4 0-0",
+])
+def test_incomplete_or_abnormal_score_not_eligible(tmp_path, score):
+    paths = season_files(tmp_path)
+    paths[2] = make_file(tmp_path, 2023, [
+        row(2023, "valid", "20230301", 1),
+        row(2023, "bad", "20230401", 1, score=score),
+    ])
+    out = run_tml_elo_experiment(paths, bootstrap_replicates=50)
+    assert out["excluded_reasons"]["NON_COMPLETED"] == 1
+    assert out["folds"][0]["n"] == 1
+
+
+@pytest.mark.parametrize("score", ["6-4 6-3", "7-6(5) 6-7(4) 6-0", "6-7(3) 7-5 13-12(3)", "6-4 6-4 6-4"])
+def test_completed_score_formats_remain_eligible(tmp_path, score):
+    paths = season_files(tmp_path)
+    paths[2] = make_file(tmp_path, 2023, [row(2023, "valid", "20230301", 1, score=score)])
+    out = run_tml_elo_experiment(paths, bootstrap_replicates=50)
+    assert out["folds"][0]["n"] == 1
