@@ -73,6 +73,7 @@ def main() -> int:
     elo_research.add_argument('--out',required=True,help='Aggregate-only local JSON report path')
     elo_research.add_argument('--embargo-days',type=int,default=28,help='Fixed tournament-result availability embargo (default 28 days)')
     elo_research.add_argument('--bootstrap-replicates',type=int,default=200,help='Event-cluster bootstrap repeats (default 200)')
+    elo_research.add_argument('--normalize-level-a-2024',action='store_true',help='Opt-in exact reviewed 2024 source normalization')
     tml_cross=sub.add_parser('tml-crosspublication-audit',help='Crosscheck TML and Sackmann 2024 ATP candidate matches; personal noncommercial only')
     tml_cross.add_argument('tml_csv',help='Local TML 2024.csv')
     tml_cross.add_argument('archive_csv',help='Local Sackmann-format atp_matches_2024.csv')
@@ -104,6 +105,7 @@ def main() -> int:
                 sources,
                 embargo_days=args.embargo_days,
                 bootstrap_replicates=args.bootstrap_replicates,
+                normalize_level_a_2024=args.normalize_level_a_2024,
             )
             dest.parent.mkdir(parents=True,exist_ok=True)
             dest.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
