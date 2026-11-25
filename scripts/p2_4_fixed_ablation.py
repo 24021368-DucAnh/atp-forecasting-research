@@ -13,7 +13,7 @@ from atp_gate.tml_development_data import YEARS,load_development_matches,split_f
 from atp_gate.tml_development_features import FEATURE_NAMES,build_features
 from atp_gate.tml_elo_experiment import _elo_p
 from atp_gate.tml_skill_scoring import score_skill
-from atp_gate.tml_ablation import FEATURE_BLOCKS, build_elo_variants
+from atp_gate.tml_ablation import FEATURE_BLOCKS, build_elo_variants, compare_repeated_models
 from atp_gate.tml_research_ml import verify_research_permission,fit_fold,add_diagnostics
 from scripts.p1_8c_cohort_research import acquire_sources
 
@@ -74,12 +74,7 @@ def run(*,allow_exploratory_fit=False,local_dir=None):
             if not math.isclose(report["models"][name+"_elo"]["log_loss"],manifest["expected_"+name+"_log_loss"],abs_tol=1e-12,rel_tol=0):
                 raise ValueError("frozen baseline drift")
         prior=json.loads((ROOT/"docs/research/p2_3_fixed_ml_evidence_20261125.json").read_text(encoding="utf-8"))["result"]
-        repeated={}
-        for name, previous in prior["evaluation"]["models"].items():
-            current=report["models"][name]
-            pairs=[(previous,current),*zip(previous["folds"],current["folds"])]
-            repeated[name]={"max_abs_proper_score_difference":max(abs(a[k]-b[k]) for a,b in pairs for k in ("log_loss","brier")),
-                            "aggregate_ece_difference":current["ece"]-previous["ece"]}
+        repeated=compare_repeated_models(prior["evaluation"]["models"],report["models"])
         return {"schema":"P2_4_FIXED_ABLATION_EVIDENCE_V1",
                 "feature_blocks":{k:list(v) for k,v in FEATURE_BLOCKS.items()},
                 "repeated_p2_3_comparison":repeated,"status":"HISTORICAL_SKILL_RESEARCH_ONLY",
