@@ -23,7 +23,7 @@ from .tml_historical_audit import TML_COLUMNS
 
 _ALLOWED_LEVELS = frozenset({"250", "500", "M", "G"})
 _ALLOWED_SURFACES = frozenset({"Hard", "Clay", "Grass"})
-_BAD_SCORES = re.compile(r"\b(?:RET|W/O|WO|WALKOVER|DEF|ABN|ABD|CANCELLED)\b", re.I)
+_BAD_SCORES = re.compile(r"\b(?:RET|W/O|WO|WALKOVER|DEF|DEFAULT|ABN|ABD|ABANDONED|CANCELLED|UNFINISHED|IN\s+PROGRESS)\b", re.I)
 _FILENAME = re.compile(r"^(\d{4})(?:-([0-9a-f]{64}))?\.csv$")
 _SOURCE_CAP = 20 * 1024 * 1024
 
@@ -64,11 +64,33 @@ class _Match:
 
 def orient_result(winner_id: str, loser_id: str) -> tuple[str, str, int]:
     """Choose A/B independently of the winner-first source column."""
-    if not (isinstance(winner_id, str) and isinstance(loser_id, str)
-            and winner_id.strip() and loser_id.strip() and winner_id != loser_id):
+    if not isinstance(winner_id, str) or not isinstance(loser_id, str):
+        raise ValueError("invalid player identity pair")
+    winner_id, loser_id = winner_id.strip(), loser_id.strip()
+    if not winner_id or not loser_id or winner_id == loser_id:
         raise ValueError("invalid player identity pair")
     a, b = sorted((winner_id, loser_id))
     return a, b, int(winner_id == a)
+
+
+# Conservative standard main-tour set token validation; not proof of
+# official completion or winner correctness. Historical extended advantage
+# sets and 13-12 final-set tie breaks are retained.
+_SET_SCORE = re.compile(r"([0-9]{1,2})-([0-9]{1,2})(?:\([0-9]{1,2}\))?")
+
+
+def _completed_score(score: str) -> bool:
+    if not isinstance(score, str) or not score.strip() or _BAD_SCORES.search(score):
+        return False
+    for token in score.split():
+        match = _SET_SCORE.fullmatch(token)
+        if match is None:
+            return False
+        hi, lo = sorted(map(int, match.groups()), reverse=True)
+        if not ((hi == 6 and lo <= 4) or (hi >= 7 and hi - lo == 2)
+                or (hi, lo) in {(7, 6), (13, 12)}):
+            return False
+    return True
 
 
 def _source_date(raw: str, season: int) -> date:
@@ -169,13 +191,14 @@ def _load(paths: Sequence[Path], *, normalize_level_a_2024: bool = False
                 event_surfaces[tid] = surface
                 event_dates[tid].add(start)
                 score = row["score"]
-                if not score or not any(x.isdigit() for x in score) or _BAD_SCORES.search(score):
+                if not _completed_score(score):
                     excluded["NON_COMPLETED"] += 1
                     continue
-                if not row["winner_id"] or not row["loser_id"] or row["winner_id"] == row["loser_id"]:
+                try:
+                    a, b, y = orient_result(row["winner_id"], row["loser_id"])
+                except ValueError:
                     excluded["INVALID_PLAYER_ID"] += 1
                     continue
-                a, b, y = orient_result(row["winner_id"], row["loser_id"])
                 events.append(_Match(tid, start, surface, a, b, y))
                 if entry is not None:
                     normalized_eligible[tid] += 1
