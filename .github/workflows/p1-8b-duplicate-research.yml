@@ -1,0 +1,21 @@
+name: P1.8b pinned duplicate sensitivity
+on:
+  push:
+    branches: [research/p1-8b-duplicate-sensitivity]
+    paths:
+      - '.github/workflows/p1-8b-duplicate-research.yml'
+      - 'src/atp_gate/tml_duplicate_sensitivity.py'
+      - 'scripts/p1_8b_duplicate_research.py'
+permissions:
+  contents: read
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install -e ".[test,ml]"
+      - run: python -m scripts.p1_8b_duplicate_research
