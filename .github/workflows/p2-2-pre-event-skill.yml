@@ -1,0 +1,30 @@
+name: P2.2 pre-event skill evidence
+on:
+  push:
+    branches: [research/p2-2-pre-event-skill-pipeline]
+    paths-ignore:
+      - MANIFEST_SHA256.txt
+permissions:
+  contents: read
+jobs:
+  manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m scripts.repository_manifest emit-json
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install --no-deps -r requirements/ubuntu-latest-py3.11.txt
+      - run: python -m pip install --no-deps -e ".[test,ml]"
+      - run: python -m pip check
+      - run: python -m pytest -q tests/test_p2_2_pre_event_skill.py
+      - run: python -m scripts.p2_2_pre_event_research
