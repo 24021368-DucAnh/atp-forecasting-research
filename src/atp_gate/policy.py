@@ -11,6 +11,7 @@ from collections.abc import Mapping
 from zoneinfo import ZoneInfo
 from .contracts import DecisionInput, DecisionOutput, RiskState
 from .feature_schema import FEATURE_SCHEMA_HASH
+from .period_risk import period_keys
 
 X = Decimal("1000")
 CENT = Decimal("0.01")
@@ -119,6 +120,9 @@ def evaluate(data: DecisionInput, *, trusted_validation_reports: Mapping[str, st
     trusted_validation_reports = trusted_validation_reports or {}
     if trusted_validation_reports.get(m.validation_report_id) != m.validation_report_sha256:
         reasons.append("UNTRUSTED_VALIDATION_REPORT")
+    actual_day, actual_week = period_keys(t)
+    if r.selection_day != actual_day or r.loss_week_start != actual_week:
+        reasons.append("RISK_PERIOD_UNVERIFIED")
     if r.month != t.astimezone(ZoneInfo("Asia/Bangkok")).strftime("%Y-%m"):
         reasons.append("LEDGER_MONTH_MISMATCH")
     if f.match_id in r.seen_match_ids:
