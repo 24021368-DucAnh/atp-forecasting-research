@@ -2,7 +2,7 @@
 from collections import Counter, defaultdict
 import math
 
-from .tml_development_data import validate_matches, EMBARGO
+from .tml_development_data import validate_matches, EMBARGO, YEARS
 from .tml_development_features import FEATURE_NAMES
 from .tml_elo_experiment import _Ratings, _elo_p
 
@@ -62,61 +62,133 @@ def build_elo_variants(matches):
     return result
 
 
+_REPEAT_MODELS = frozenset({
+    "coinflip", "global_elo", "surface_elo", "logistic_raw",
+    "logistic_platt", "logistic_isotonic", "xgboost_raw",
+    "xgboost_platt", "xgboost_isotonic",
+})
+_BOOTSTRAP_STRINGS = {
+    "assumptions": "EVENT_CLUSTER_RESAMPLING_NOT_PROOF_OF_INDEPENDENCE",
+    "cluster_unit": "EVENT_ID",
+    "estimand": "MATCH_WEIGHTED_MEAN_LOSS_DIFFERENCE",
+    "interval_method": "PAIRED_PERCENTILE_95",
+    "sampling_scope": "FIXED_HISTORICAL_PREDICTIONS_NO_REFIT",
+    "status": "EVENT_BOOTSTRAP_DESCRIPTIVE_ONLY",
+    "stratification": "EVENT_START_CALENDAR_YEAR",
+}
+
+
+def _finite_number(value):
+    if type(value) not in (int, float):
+        return False
+    try:
+        return math.isfinite(value)
+    except OverflowError:
+        return False
+
+
+def _repeat_support(row):
+    if not isinstance(row, dict):
+        raise ValueError("invalid repeat comparison model")
+
+    def support(entry):
+        if not isinstance(entry, dict):
+            raise ValueError("invalid repeat comparison fold")
+        n, coverage = entry.get("n"), entry.get("coverage")
+        if (type(n) is not int or n <= 0 or not _finite_number(coverage)
+                or coverage != 1):
+            raise ValueError("invalid repeat comparison matched support")
+        return n, coverage
+
+    total = support(row)
+    folds = row.get("folds")
+    if not isinstance(folds, list) or len(folds) != len(YEARS):
+        raise ValueError("repeat comparison fold support mismatch")
+    entries = []
+    for expected_year, fold in zip(YEARS, folds):
+        n, coverage = support(fold)
+        year = fold.get("year")
+        if type(year) is not int or year != expected_year:
+            raise ValueError("invalid repeat comparison fold year")
+        entries.append((year, n, coverage))
+    if sum(entry[1] for entry in entries) != total[0]:
+        raise ValueError("repeat comparison fold total mismatch")
+    return total, tuple(entries)
+
+
+def _repeat_bootstrap(row):
+    if not isinstance(row, dict):
+        raise ValueError("missing repeat comparison intervals")
+    boot = row.get("bootstrap")
+    if (not isinstance(boot, dict)
+            or any(boot.get(k) != v for k, v in _BOOTSTRAP_STRINGS.items())
+            or type(boot.get("seed")) is not int or boot["seed"] != 29
+            or type(boot.get("replicates")) is not int or boot["replicates"] != 2000
+            or row.get("brier_ci_probability_semantics") != "CLIPPED_AT_1E_12_FOR_BOOTSTRAP_NUMERICS"):
+        raise ValueError("invalid repeat comparison bootstrap contract")
+    counts = boot.get("event_clusters_by_year")
+    total = boot.get("event_clusters")
+    if (not isinstance(counts, dict) or set(counts) != {str(y) for y in YEARS}
+            or any(type(n) is not int or n <= 0 for n in counts.values())
+            or type(total) is not int or total != sum(counts.values())):
+        raise ValueError("invalid repeat comparison bootstrap cluster support")
+    return boot
+
+
 def compare_repeated_models(previous, current):
-    """Compare the archived P2.3 models against identical evaluation support.
+    """Compare registered P2.3 models on matched historical evaluation support.
 
     Extra P2.4 ablations are deliberately excluded from the repeat comparison.
     Signed differences are current minus previous, not a new acceptance threshold.
     """
-    if "global_elo" not in previous or not previous.keys() <= current.keys():
-        raise ValueError("repeat comparison missing model")
+    if (not isinstance(previous, dict) or not isinstance(current, dict)
+            or set(previous) != _REPEAT_MODELS or not _REPEAT_MODELS <= current.keys()):
+        raise ValueError("repeat comparison model set mismatch")
 
     def number(row, key):
         value = row.get(key)
-        if type(value) not in (int, float) or not math.isfinite(value):
+        if not _finite_number(value):
             raise ValueError(f"invalid repeat comparison metric: {key}")
+        return value
+
+    def difference(new, old):
+        value = new - old
+        if not _finite_number(value):
+            raise ValueError("nonfinite repeat comparison difference")
         return value
 
     def interval(row, metric):
         value = row.get(metric)
         if (not isinstance(value, list) or len(value) != 2
-                or any(type(x) not in (int, float) or not math.isfinite(x) for x in value)
+                or any(not _finite_number(x) for x in value)
                 or value[0] > value[1]):
             raise ValueError(f"invalid repeat comparison interval: {metric}")
         return value
 
+    baseline = _repeat_support(previous["global_elo"])
     repeated = {}
     for name, old in previous.items():
         new = current[name]
-        old_folds, new_folds = old.get("folds"), new.get("folds")
-        if (not isinstance(old_folds, list) or not isinstance(new_folds, list)
-                or len(old_folds) != len(new_folds) or not old_folds):
-            raise ValueError(f"repeat comparison fold support mismatch: {name}")
-        pairs = [(old, new), *zip(old_folds, new_folds)]
-        if any((a.get("year"), a.get("n"), a.get("coverage")) !=
-               (b.get("year"), b.get("n"), b.get("coverage")) for a, b in pairs):
+        if _repeat_support(old) != baseline or _repeat_support(new) != baseline:
             raise ValueError(f"repeat comparison evaluation support mismatch: {name}")
+        pairs = [(old, new), *zip(old["folds"], new["folds"])]
         result = {
             "max_abs_proper_score_difference": max(
-                abs(number(a, k) - number(b, k))
+                abs(difference(number(b, k), number(a, k)))
                 for a, b in pairs for k in ("log_loss", "brier")
             ),
-            "aggregate_ece_difference": number(new, "ece") - number(old, "ece"),
+            "aggregate_ece_difference": difference(number(new, "ece"), number(old, "ece")),
             "bootstrap_endpoint_differences": None,
             "max_abs_bootstrap_endpoint_difference": None,
         }
         if name != "global_elo":
             a, b = old.get("minus_global_elo"), new.get("minus_global_elo")
-            if not isinstance(a, dict) or not isinstance(b, dict):
-                raise ValueError(f"missing repeat comparison intervals: {name}")
-            if (not isinstance(a.get("bootstrap"), dict)
-                    or a["bootstrap"] != b.get("bootstrap")
-                    or a.get("brier_ci_probability_semantics") != b.get("brier_ci_probability_semantics")):
+            if _repeat_bootstrap(a) != _repeat_bootstrap(b):
                 raise ValueError(f"repeat comparison bootstrap contract mismatch: {name}")
             differences = {}
             for metric in ("log_loss_95ci", "brier_95ci"):
                 x, y = interval(a, metric), interval(b, metric)
-                differences[metric] = [y[0] - x[0], y[1] - x[1]]
+                differences[metric] = [difference(y[0], x[0]), difference(y[1], x[1])]
             result["bootstrap_endpoint_differences"] = differences
             result["max_abs_bootstrap_endpoint_difference"] = max(
                 abs(x) for endpoints in differences.values() for x in endpoints
