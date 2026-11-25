@@ -9,6 +9,12 @@ from zoneinfo import ZoneInfoNotFoundError
 from .historical_audit import audit_tennis_data_csv
 
 
+def evaluate(data):
+    """Lazy compatibility hook for the gate CLI and existing callers/tests."""
+    from .policy import evaluate as gate_evaluate
+    return gate_evaluate(data)
+
+
 def main() -> int:
     parser=argparse.ArgumentParser(prog='python -m atp_gate',description='ATP paper-only gate and historical research')
     sub=parser.add_subparsers(dest='cmd',required=True)
@@ -577,7 +583,7 @@ def main() -> int:
     try:
         from pydantic import ValidationError
         from .contracts import DecisionInput
-        from .policy import evaluate
+        from . import policy  # check gate dependencies only on evaluate path
     except ImportError:
         print(json.dumps({'decision':'ABSTAIN','stake':'0',
                           'reasons':['GATE_DEPENDENCY_UNAVAILABLE']},indent=2))
