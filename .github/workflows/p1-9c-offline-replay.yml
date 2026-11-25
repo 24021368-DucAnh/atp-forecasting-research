@@ -1,0 +1,21 @@
+name: P1.9c offline actual-source replay
+on:
+  push:
+    branches: [repair/p1-9c-offline-provenance]
+    paths:
+      - '.github/workflows/p1-9c-offline-replay.yml'
+      - 'scripts/p1_9c_offline_replay_check.py'
+      - 'scripts/p1_8c_cohort_research.py'
+permissions:
+  contents: read
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install -e ".[test,ml]"
+      - run: python -m scripts.p1_9c_offline_replay_check
