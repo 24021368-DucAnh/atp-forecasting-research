@@ -1,0 +1,39 @@
+{
+  "schema": "TML_EXPLORATORY_FIT_PERMISSION_V1",
+  "owner_instruction": "TIẾP (continuation after explicitly proposed P2.3 scope)",
+  "interpretation": "Owner continuation authorizes only proposed private noncommercial historical exploratory fit; not independent third-party rights attestation",
+  "scope": "PRIVATE_NONCOMMERCIAL_LOCKED_TML_DEVELOPMENT_ONLY",
+  "protocol_sha256": "93776dc9949c6c49c16e8172630b606cd61fe328b25ce08a796a06b8ced3bca6",
+  "manifest_sha256": "b9b55b6c75f1f43394b3e69d19c6b791faedc8539908608ecf1d74dfaabcb8fb",
+  "source_terms": {
+    "url": "https://github.com/Tennismylife/TML-Database/blob/master/README.md",
+    "reviewed_on": "2026-11-25",
+    "scope": "Public terms permit personal educational noncommercial research; commercial model training/use requires prior written permission; third-party rights may apply",
+    "third_party_rights_independently_verified": false
+  },
+  "source_seasons": [
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "allowed_models": [
+    "logistic",
+    "xgboost"
+  ],
+  "allowed_calibration": [
+    "raw",
+    "platt",
+    "isotonic"
+  ],
+  "future_holdout_access": false,
+  "artifact_export": false,
+  "raw_redistribution": false,
+  "commercial_use": false,
+  "model_validation_trusted": false,
+  "official_match_draw_verified": false,
+  "eligible_for_model_training": 0,
+  "allocation_enabled": false,
+  "stake": 0
+}
