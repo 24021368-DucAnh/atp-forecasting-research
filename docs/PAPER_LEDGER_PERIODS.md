@@ -98,3 +98,37 @@ trusted external anchoring, and independent review/integration remain separate.
 This verifier is not an API for payments or betting. All values are synthetic;
 no actual profit, model edge, financial transaction, live allocation or
 bookmaker settlement is certified.
+
+## P0.25b.2 — Private content-addressed evidence archive
+
+Use the module `atp_gate.paper_evidence_archive` with complete synthetic evidence:
+
+```python
+from pathlib import Path
+from atp_gate.paper_evidence_archive import store_cash_evidence, verify_cash_evidence
+
+# book, opening, closes and as_of are the complete original research inputs.
+root = Path("data/paper_evidence")
+saved = store_cash_evidence(root, book, opening, closes, as_of)
+# Independently retain saved["archive_sha256"] outside the archive directory.
+checked = verify_cash_evidence(root, saved["archive_sha256"])
+```
+
+The module validates internal cash consistency before publication. It stores one
+complete versioned JSON envelope as `<archive_sha256>.json`, using exact-byte
+SHA-256 and same-directory temporary file plus no-overwrite hard-link
+publication. Identical bytes are idempotent; a damaged existing archive is
+never overwritten. Verification uses the caller's expected digest, rejects
+symlinks, oversized files (16 MiB), duplicate JSON keys and noncanonical or
+incomplete envelopes, then reruns the independent cash audit. The owner must
+use a trusted local directory on a filesystem supporting hard links.
+
+`archive_sha256` covers the entire stored envelope, including the snapshot
+and explicit clock. `evidence_sha256` has the separate canonical history
+semantics documented above. A digest match is **not proof of external truth**.
+The local filesystem is not immutable, and a digest generated after tampering
+cannot authenticate the original. The module does not implement external
+signing, trusted timestamping, automatic evidence capture or cross-machine
+backup. Store locally under gitignored `data/`; never publish private evidence.
+No payments, betting execution, allocation authority or model performance
+claims are provided.
