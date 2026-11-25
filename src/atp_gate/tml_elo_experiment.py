@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import json
 import math
 import random
 import re
@@ -25,6 +26,30 @@ _ALLOWED_SURFACES = frozenset({"Hard", "Clay", "Grass"})
 _BAD_SCORES = re.compile(r"\b(?:RET|W/O|WO|WALKOVER|DEF|ABN|ABD|CANCELLED)\b", re.I)
 _FILENAME = re.compile(r"^(\d{4})(?:-([0-9a-f]{64}))?\.csv$")
 _SOURCE_CAP = 20 * 1024 * 1024
+
+# Versioned, code-owned subset of the reviewed edition inventory. Do not
+# accept caller-supplied mapping files or infer a tier from raw code A.
+_LEVEL_A_2024_SHA256 = "db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8"
+_LEVEL_A_2024_EVENTS = (
+    ("2024-451", "Doha", "20240219", "Hard", 27,
+     "https://www.atptour.com/en/news/mensik-khachanov-doha-2024-final"),
+    ("2024-7480", "Los Cabos", "20240219", "Hard", 27,
+     "https://www.atptour.com/en/news/thompson-first-time-winner-spotlight-los-cabos-2024"),
+)
+
+
+def _level_a_registry() -> dict:
+    return {
+        "schema": "TML_LEVEL_A_2024_NORMALIZATION_V1",
+        "source_season": 2024,
+        "source_sha256": _LEVEL_A_2024_SHA256,
+        "entries": [
+            {"event_id": tid, "event_name": name, "start": start,
+             "surface": surface, "source_level": "A", "canonical_level": "250",
+             "expected_raw_rows": n, "official_metadata_reference": url}
+            for tid, name, start, surface, n, url in _LEVEL_A_2024_EVENTS
+        ],
+    }
 
 
 @dataclass(frozen=True)
@@ -60,7 +85,8 @@ def _source_date(raw: str, season: int) -> date:
     return d
 
 
-def _load(paths: Sequence[Path]) -> tuple[list[_Match], list[dict], Counter, int]:
+def _load(paths: Sequence[Path], *, normalize_level_a_2024: bool = False
+          ) -> tuple[list[_Match], list[dict], Counter, int, dict | None]:
     if not isinstance(paths, (list, tuple)) or len(paths) < 4:
         raise ValueError("four or more local source seasons required")
     inventory: list[dict] = []
@@ -70,6 +96,10 @@ def _load(paths: Sequence[Path]) -> tuple[list[_Match], list[dict], Counter, int
     seen_match_keys: set[tuple[str, str]] = set()
     event_dates: dict[str, set[date]] = defaultdict(set)
     event_surfaces: dict[str, str] = {}
+    registry = _level_a_registry() if normalize_level_a_2024 else None
+    reviewed = {e["event_id"]: e for e in registry["entries"]} if registry else {}
+    normalized_raw: Counter = Counter()
+    normalized_eligible: Counter = Counter()
 
     for raw_path in paths:
         path = Path(raw_path)
@@ -91,6 +121,8 @@ def _load(paths: Sequence[Path]) -> tuple[list[_Match], list[dict], Counter, int
         sha = hashlib.sha256(payload).hexdigest()
         if match.group(2) and match.group(2) != sha:
             raise ValueError("TML research source SHA filename mismatches bytes")
+        if registry and season == 2024 and sha != registry["source_sha256"]:
+            raise ValueError("level-A normalization source SHA256 does not match reviewed pin")
         try:
             from io import StringIO
             reader = csv.DictReader(
@@ -105,6 +137,16 @@ def _load(paths: Sequence[Path]) -> tuple[list[_Match], list[dict], Counter, int
                     excluded["MALFORMED_ROWS"] += 1
                     continue
                 tid, mid = row["tourney_id"], row["match_num"]
+                entry = reviewed.get(tid)
+                level = row["tourney_level"]
+                if entry is not None:
+                    if (season != 2024 or row["tourney_name"] != entry["event_name"]
+                            or row["tourney_date"] != entry["start"]
+                            or row["surface"] != entry["surface"]
+                            or level != entry["source_level"]):
+                        raise ValueError("level-A normalization metadata mismatch")
+                    normalized_raw[tid] += 1
+                    level = entry["canonical_level"]
                 if not tid or not mid:
                     # TML's historical 2025 public snapshot includes many
                     # matches with blank match_num. No guessed canonical ID.
@@ -116,7 +158,7 @@ def _load(paths: Sequence[Path]) -> tuple[list[_Match], list[dict], Counter, int
                 seen_match_keys.add(key)
                 start = _source_date(row["tourney_date"], season)
                 surface = row["surface"]
-                if row["tourney_level"] not in _ALLOWED_LEVELS:
+                if level not in _ALLOWED_LEVELS:
                     excluded["OUT_OF_SCOPE_LEVEL"] += 1
                     continue
                 if surface not in _ALLOWED_SURFACES:
@@ -135,6 +177,8 @@ def _load(paths: Sequence[Path]) -> tuple[list[_Match], list[dict], Counter, int
                     continue
                 a, b, y = orient_result(row["winner_id"], row["loser_id"])
                 events.append(_Match(tid, start, surface, a, b, y))
+                if entry is not None:
+                    normalized_eligible[tid] += 1
             inventory.append({
                 "season": season,
                 "source_file": path.name,
@@ -145,6 +189,29 @@ def _load(paths: Sequence[Path]) -> tuple[list[_Match], list[dict], Counter, int
             })
         except (UnicodeError, csv.Error) as exc:
             raise ValueError("invalid TML source UTF-8/CSV encoding") from exc
+
+    audit = None
+    if registry is not None:
+        if 2024 not in seen_seasons:
+            raise ValueError("level-A normalization requires pinned 2024 source")
+        for tid, entry in reviewed.items():
+            if normalized_raw[tid] != entry["expected_raw_rows"]:
+                raise ValueError("level-A normalization event raw row count mismatch")
+        registry_bytes = json.dumps(registry, sort_keys=True, separators=(",", ":"),
+                                    ensure_ascii=True).encode("utf-8")
+        audit = {
+            "registry_schema": registry["schema"],
+            "registry_sha256": hashlib.sha256(registry_bytes).hexdigest(),
+            "source_sha256": registry["source_sha256"],
+            "raw_rows": sum(normalized_raw.values()),
+            "eligible_rows": sum(normalized_eligible.values()),
+            "events": [
+                {**entry, "raw_rows": normalized_raw[tid],
+                 "eligible_rows": normalized_eligible[tid]}
+                for tid, entry in reviewed.items()
+            ],
+            "official_match_draw_verified": False,
+        }
 
     if not events:
         raise ValueError("no eligible completed tour-level TML matches")
@@ -160,7 +227,7 @@ def _load(paths: Sequence[Path]) -> tuple[list[_Match], list[dict], Counter, int
     # variation. Freeze every match in that tournament at its EARLIEST
     # observed date; never split it into sequential result-updating events.
     normalized = [replace(m, start=earliest[m.event_id]) for m in events]
-    return normalized, sorted(inventory, key=lambda x: x["season"]), excluded, event_date_variants
+    return normalized, sorted(inventory, key=lambda x: x["season"]), excluded, event_date_variants, audit
 
 
 def _elo_p(rating_a: float, rating_b: float) -> float:
@@ -292,6 +359,7 @@ def run_tml_elo_experiment(
     embargo_days: int = 28,
     bootstrap_replicates: int = 200,
     seed: int = 29,
+    normalize_level_a_2024: bool = False,
 ) -> dict:
     """Retrospective conditional-matchup study; never executable live odds."""
     if (not isinstance(test_years, tuple) or len(test_years) < 3 or
@@ -304,7 +372,10 @@ def run_tml_elo_experiment(
         raise ValueError("bootstrap repeats out of bounds")
     if type(seed) is not int:
         raise ValueError("bootstrap seed must be integer")
-    matches, inventory, excluded, date_variants = _load(paths)
+    if type(normalize_level_a_2024) is not bool:
+        raise ValueError("level-A normalization must be an explicit boolean")
+    matches, inventory, excluded, date_variants, normalization = _load(
+        paths, normalize_level_a_2024=normalize_level_a_2024)
     if not any(m.start.year < test_years[0] for m in matches):
         raise ValueError("insufficient pre-holdout warmup history")
     by_date: dict[date, list[_Match]] = defaultdict(list)
@@ -336,6 +407,7 @@ def run_tml_elo_experiment(
         "status": "HISTORICAL_SKILL_RESEARCH_ONLY",
         "mode": "PERSONAL_NONCOMMERCIAL_RESEARCH",
         "source_inventory": inventory,
+        **({"level_a_normalization": normalization} if normalization is not None else {}),
         "source_match_rows_eligible": len(matches),
         "provider_rows_quarantined": (excluded["MALFORMED_ROWS"] + excluded["MISSING_MATCH_ID"]),
         "event_date_variants_grouped": date_variants,
