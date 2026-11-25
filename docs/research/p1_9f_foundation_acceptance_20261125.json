@@ -1,0 +1,714 @@
+{
+  "schema": "P1_9F_EXECUTION_EVIDENCE_V1",
+  "run_id": 45560592222,
+  "job_id": 139023077923,
+  "run_commit": "4ee56efe6d3d2922604822db9e9dd55b04032153",
+  "red": {
+    "run_id": 45560466554,
+    "commit": "35912c50309e659b71187387589c0773bfcaf655",
+    "failure": "ModuleNotFoundError for new acceptance module"
+  },
+  "green": {
+    "targeted_passed": 11,
+    "seconds": 0.04
+  },
+  "main_before": {
+    "commit": "874acd5afa49533676937382302f1c793eb9e02a",
+    "tree_match_p1_9e": 215,
+    "ci_run": 45560265521,
+    "conclusion": "success"
+  },
+  "result": {
+    "acceptance": {
+      "allocation_enabled": false,
+      "bootstrap_replicates": 2000,
+      "eligible": 12620,
+      "evaluated": 7694,
+      "evaluation_status": "PREVIOUSLY_INSPECTED_DEVELOPMENT_YEARS",
+      "independent_reviewer_verified": false,
+      "manifest_sha256": "b9b55b6c75f1f43394b3e69d19c6b791faedc8539908608ecf1d74dfaabcb8fb",
+      "model_validation_trusted": false,
+      "official_match_draw_verified": false,
+      "stake": 0,
+      "status": "FOUNDATION_REPLAY_VERIFIED",
+      "verified_fields": [
+        "manifest",
+        "manifest_sha256",
+        "eligible",
+        "evaluation_folds",
+        "aggregate",
+        "folds",
+        "bootstrap",
+        "calendar_attribution",
+        "evaluation_status"
+      ]
+    },
+    "local_source_bytes_unchanged": true,
+    "offline": {
+      "aggregate": {
+        "coinflip_brier": 0.25,
+        "coinflip_log_loss": 0.6931471805600358,
+        "global_elo_brier": 0.22063010972181757,
+        "global_elo_log_loss": 0.6300670180626626,
+        "global_elo_minus_coinflip_log_loss": -0.06308016249737314,
+        "n": 7694,
+        "surface_elo_brier": 0.2211424236796862,
+        "surface_elo_log_loss": 0.6320572443209497,
+        "surface_elo_minus_coinflip_log_loss": -0.061089936239086096
+      },
+      "allocation_enabled": false,
+      "bootstrap": {
+        "assumptions": "EVENT_CLUSTER_RESAMPLING_NOT_PROOF_OF_INDEPENDENCE",
+        "cluster_unit": "EVENT_ID",
+        "estimand": "MATCH_WEIGHTED_MEAN_LOSS_DIFFERENCE",
+        "event_clusters": 187,
+        "event_clusters_by_year": {
+          "2023": 64,
+          "2024": 66,
+          "2025": 57
+        },
+        "global_elo_minus_coinflip_95ci": [
+          -0.07419196551405663,
+          -0.05124092562391765
+        ],
+        "interval_method": "PAIRED_PERCENTILE_95",
+        "replicates": 2000,
+        "sampling_scope": "FIXED_HISTORICAL_PREDICTIONS_NO_REFIT",
+        "seed": 29,
+        "status": "EVENT_BOOTSTRAP_DESCRIPTIVE_ONLY",
+        "stratification": "EVENT_START_CALENDAR_YEAR",
+        "surface_elo_minus_coinflip_95ci": [
+          -0.07299094072818978,
+          -0.04771511242666935
+        ],
+        "surface_elo_minus_global_elo_brier_95ci": [
+          -0.00012664394502016533,
+          0.0012037230055195968
+        ],
+        "surface_elo_minus_global_elo_log_loss_95ci": [
+          0.00019999139203213153,
+          0.004006145101254748
+        ]
+      },
+      "calendar_attribution": {
+        "cross_year_eligible_rows": 54,
+        "cross_year_evaluated_by_fold": {
+          "2023": 0,
+          "2024": 54,
+          "2025": 0
+        },
+        "evaluation_year_semantics": "NORMALIZED_EVENT_START_CALENDAR_YEAR",
+        "source_season_to_event_start_year": {
+          "2021": {
+            "2021": 2394
+          },
+          "2022": {
+            "2022": 2532
+          },
+          "2023": {
+            "2023": 2600
+          },
+          "2024": {
+            "2024": 2593
+          },
+          "2025": {
+            "2024": 54,
+            "2025": 2447
+          }
+        }
+      },
+      "eligible": 12620,
+      "evaluation_folds": {
+        "2023": 2600,
+        "2024": 2647,
+        "2025": 2447
+      },
+      "evaluation_status": "PREVIOUSLY_INSPECTED_DEVELOPMENT_YEARS",
+      "folds": [
+        {
+          "coinflip_brier": 0.25,
+          "coinflip_log_loss": 0.6931471805599064,
+          "global_elo_brier": 0.22345964890729497,
+          "global_elo_log_loss": 0.6369131615570189,
+          "global_elo_minus_coinflip_log_loss": -0.05623401900288749,
+          "n": 2600,
+          "surface_elo_brier": 0.22355858694878425,
+          "surface_elo_log_loss": 0.6374713208425639,
+          "surface_elo_minus_coinflip_log_loss": -0.05567585971734257,
+          "year": 2023
+        },
+        {
+          "coinflip_brier": 0.25,
+          "coinflip_log_loss": 0.6931471805599061,
+          "global_elo_brier": 0.21885088529753569,
+          "global_elo_log_loss": 0.6255400764375559,
+          "global_elo_minus_coinflip_log_loss": -0.06760710412235016,
+          "n": 2647,
+          "surface_elo_brier": 0.21933921847249607,
+          "surface_elo_log_loss": 0.6274489777464479,
+          "surface_elo_minus_coinflip_log_loss": -0.06569820281345817,
+          "year": 2024
+        },
+        {
+          "coinflip_brier": 0.25,
+          "coinflip_log_loss": 0.6931471805599074,
+          "global_elo_brier": 0.21954829736743733,
+          "global_elo_log_loss": 0.6276897566798779,
+          "global_elo_minus_coinflip_log_loss": -0.06545742388002951,
+          "n": 2447,
+          "surface_elo_brier": 0.22052577459254993,
+          "surface_elo_log_loss": 0.6312895625336523,
+          "surface_elo_minus_coinflip_log_loss": -0.06185761802625511,
+          "year": 2025
+        }
+      ],
+      "identity_summary": {
+        "archived_2025_comparison": "NOT_RUN_LOCAL_LOCKED_COHORT_ONLY",
+        "derived_multiple_id_names": 0,
+        "derived_multiple_name_ids": 2,
+        "identity_remapped": false,
+        "old_multiple_name_ids": null,
+        "revised_multiple_name_ids": 2,
+        "variant_ids_with_eligible_rows": 1
+      },
+      "manifest": {
+        "allocation_enabled": false,
+        "conflicting_groups_by_season": {
+          "2021": 0,
+          "2022": 0,
+          "2023": 0,
+          "2024": 0,
+          "2025": 0
+        },
+        "derived_sha256": {
+          "2021": "2a2c4a331b1cbae87adace77f4ff5f80e5c60207efd89dd958e6998735c90e92",
+          "2022": "125a1c0ece4b29ead7ce878b2e1bf844b1737b311fad2bfa873b3503e1cc39f1",
+          "2023": "9faaf53186ef908b3322d521a8dd2a717401167c0e400a99e1efddb23e13600f",
+          "2024": "db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8",
+          "2025": "5ccf52d912085d6a5ba3effdc5f2f216f170aabfd8850086b5f92c7ccedfd53e"
+        },
+        "duplicate_mode": "COLLAPSE_EXACT_AND_QUARANTINE_CONFLICT",
+        "eligible_for_model_training": 0,
+        "elo_k": 24,
+        "embargo_days": 28,
+        "evaluation_by_year": {
+          "2023": 2600,
+          "2024": 2647,
+          "2025": 2447
+        },
+        "evaluation_status": "PREVIOUSLY_INSPECTED_DEVELOPMENT_YEARS",
+        "exact_groups_by_season": {
+          "2021": 2,
+          "2022": 1,
+          "2023": 0,
+          "2024": 0,
+          "2025": 0
+        },
+        "expected_eligible": 12620,
+        "expected_evaluated": 7694,
+        "expected_global_log_loss": 0.6300670180626626,
+        "expected_surface_log_loss": 0.6320572443209497,
+        "identity_rule": "EXACT_SOURCE_PLAYER_ID_NO_NAME_BASED_MERGE",
+        "individual_match_start_verified": false,
+        "level_a_registry_sha256": "46a6fd05e2224ad0453480db37a900a495a0a67609ea6a24830fe318f47a3f3b",
+        "market_edge_verified": false,
+        "model_validation_trusted": false,
+        "normalize_level_a_2024": true,
+        "official_match_draw_verified": false,
+        "original_git_blobs": {
+          "2021": "2bd4eaf4eb28a09b42ab4ecd5830a8f3ad068faa",
+          "2022": "2b6726106fefb22b40c2816e4c703a48e9d312be",
+          "2023": "5ceb7397e3a217e51f197c9e83ea435faf690eeb",
+          "2024": "cf513429259b4a15e84e2021206895d9bd4ff772"
+        },
+        "original_sha256": {
+          "2021": "80d570be31d778b143eb58380258243785bf3fcb18db144b42704bc6c56d941b",
+          "2022": "d70036c6ee6c27dd3deda6e6c9ccd500b66e6e78106fb00794cb277e37353357",
+          "2023": "9faaf53186ef908b3322d521a8dd2a717401167c0e400a99e1efddb23e13600f",
+          "2024": "db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8",
+          "2025": "5ccf52d912085d6a5ba3effdc5f2f216f170aabfd8850086b5f92c7ccedfd53e"
+        },
+        "participant_known_at_event_start": false,
+        "revised_2025_url": "https://stats.tennismylife.org/data/2025.csv",
+        "schema": "TML_RESEARCH_COHORT_MANIFEST_V1",
+        "source_date_semantics": "TOURNAMENT_START_NOT_MATCH_TIME",
+        "source_result_availability_exact": false,
+        "source_rights_scope": "PERSONAL_NONCOMMERCIAL_RESEARCH",
+        "stake": 0,
+        "status": "HISTORICAL_SKILL_RESEARCH_ONLY",
+        "surface_weight": 0.35
+      },
+      "manifest_sha256": "b9b55b6c75f1f43394b3e69d19c6b791faedc8539908608ecf1d74dfaabcb8fb",
+      "model_validation_trusted": false,
+      "official_match_draw_verified": false,
+      "schema": "TML_COHORT_MANIFEST_REPLAY_V3",
+      "source_receipts": [
+        {
+          "acquisition_mode": "LOCAL_PINNED_SNAPSHOT",
+          "actual_fetch_uri": null,
+          "allocation_enabled": false,
+          "collapsed_rows": 2,
+          "conflicting_groups": 0,
+          "derived_rows": 2733,
+          "derived_sha256": "2a2c4a331b1cbae87adace77f4ff5f80e5c60207efd89dd958e6998735c90e92",
+          "exact_groups": 2,
+          "fetch_uri_semantics": "NO_NETWORK_FETCH_IN_THIS_RUN",
+          "local_filename": "2021-80d570be31d778b143eb58380258243785bf3fcb18db144b42704bc6c56d941b.csv",
+          "malformed_rows": 0,
+          "mode": "COLLAPSE_EXACT_AND_QUARANTINE_CONFLICT",
+          "model_validation_trusted": false,
+          "nominal_publisher_url": "https://stats.tennismylife.org/data/2021.csv",
+          "official_match_id_verified": false,
+          "outside_scope_groups": 0,
+          "quarantined_rows": 0,
+          "raw_sha256": "80d570be31d778b143eb58380258243785bf3fcb18db144b42704bc6c56d941b",
+          "removed_rows": 2,
+          "schema": "TML_DUPLICATE_SENSITIVITY_V1",
+          "season": 2021,
+          "source_rows": 2735,
+          "source_sha256": "80d570be31d778b143eb58380258243785bf3fcb18db144b42704bc6c56d941b",
+          "stake": 0
+        },
+        {
+          "acquisition_mode": "LOCAL_PINNED_SNAPSHOT",
+          "actual_fetch_uri": null,
+          "allocation_enabled": false,
+          "collapsed_rows": 1,
+          "conflicting_groups": 0,
+          "derived_rows": 2917,
+          "derived_sha256": "125a1c0ece4b29ead7ce878b2e1bf844b1737b311fad2bfa873b3503e1cc39f1",
+          "exact_groups": 1,
+          "fetch_uri_semantics": "NO_NETWORK_FETCH_IN_THIS_RUN",
+          "local_filename": "2022-d70036c6ee6c27dd3deda6e6c9ccd500b66e6e78106fb00794cb277e37353357.csv",
+          "malformed_rows": 0,
+          "mode": "COLLAPSE_EXACT_AND_QUARANTINE_CONFLICT",
+          "model_validation_trusted": false,
+          "nominal_publisher_url": "https://stats.tennismylife.org/data/2022.csv",
+          "official_match_id_verified": false,
+          "outside_scope_groups": 0,
+          "quarantined_rows": 0,
+          "raw_sha256": "d70036c6ee6c27dd3deda6e6c9ccd500b66e6e78106fb00794cb277e37353357",
+          "removed_rows": 1,
+          "schema": "TML_DUPLICATE_SENSITIVITY_V1",
+          "season": 2022,
+          "source_rows": 2918,
+          "source_sha256": "d70036c6ee6c27dd3deda6e6c9ccd500b66e6e78106fb00794cb277e37353357",
+          "stake": 0
+        },
+        {
+          "acquisition_mode": "LOCAL_PINNED_SNAPSHOT",
+          "actual_fetch_uri": null,
+          "allocation_enabled": false,
+          "collapsed_rows": 0,
+          "conflicting_groups": 0,
+          "derived_rows": 2995,
+          "derived_sha256": "9faaf53186ef908b3322d521a8dd2a717401167c0e400a99e1efddb23e13600f",
+          "exact_groups": 0,
+          "fetch_uri_semantics": "NO_NETWORK_FETCH_IN_THIS_RUN",
+          "local_filename": "2023-9faaf53186ef908b3322d521a8dd2a717401167c0e400a99e1efddb23e13600f.csv",
+          "malformed_rows": 0,
+          "mode": "COLLAPSE_EXACT_AND_QUARANTINE_CONFLICT",
+          "model_validation_trusted": false,
+          "nominal_publisher_url": "https://stats.tennismylife.org/data/2023.csv",
+          "official_match_id_verified": false,
+          "outside_scope_groups": 0,
+          "quarantined_rows": 0,
+          "raw_sha256": "9faaf53186ef908b3322d521a8dd2a717401167c0e400a99e1efddb23e13600f",
+          "removed_rows": 0,
+          "schema": "TML_DUPLICATE_SENSITIVITY_V1",
+          "season": 2023,
+          "source_rows": 2995,
+          "source_sha256": "9faaf53186ef908b3322d521a8dd2a717401167c0e400a99e1efddb23e13600f",
+          "stake": 0
+        },
+        {
+          "acquisition_mode": "LOCAL_PINNED_SNAPSHOT",
+          "actual_fetch_uri": null,
+          "allocation_enabled": false,
+          "collapsed_rows": 0,
+          "conflicting_groups": 0,
+          "derived_rows": 3076,
+          "derived_sha256": "db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8",
+          "exact_groups": 0,
+          "fetch_uri_semantics": "NO_NETWORK_FETCH_IN_THIS_RUN",
+          "local_filename": "2024-db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8.csv",
+          "malformed_rows": 0,
+          "mode": "COLLAPSE_EXACT_AND_QUARANTINE_CONFLICT",
+          "model_validation_trusted": false,
+          "nominal_publisher_url": "https://stats.tennismylife.org/data/2024.csv",
+          "official_match_id_verified": false,
+          "outside_scope_groups": 1,
+          "quarantined_rows": 0,
+          "raw_sha256": "db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8",
+          "removed_rows": 0,
+          "schema": "TML_DUPLICATE_SENSITIVITY_V1",
+          "season": 2024,
+          "source_rows": 3076,
+          "source_sha256": "db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8",
+          "stake": 0
+        },
+        {
+          "acquisition_mode": "LOCAL_PINNED_SNAPSHOT",
+          "actual_fetch_uri": null,
+          "allocation_enabled": false,
+          "collapsed_rows": 0,
+          "conflicting_groups": 0,
+          "derived_rows": 2943,
+          "derived_sha256": "5ccf52d912085d6a5ba3effdc5f2f216f170aabfd8850086b5f92c7ccedfd53e",
+          "exact_groups": 0,
+          "fetch_uri_semantics": "NO_NETWORK_FETCH_IN_THIS_RUN",
+          "local_filename": "2025-5ccf52d912085d6a5ba3effdc5f2f216f170aabfd8850086b5f92c7ccedfd53e.csv",
+          "malformed_rows": 0,
+          "mode": "COLLAPSE_EXACT_AND_QUARANTINE_CONFLICT",
+          "model_validation_trusted": false,
+          "nominal_publisher_url": "https://stats.tennismylife.org/data/2025.csv",
+          "official_match_id_verified": false,
+          "outside_scope_groups": 0,
+          "quarantined_rows": 0,
+          "raw_sha256": "5ccf52d912085d6a5ba3effdc5f2f216f170aabfd8850086b5f92c7ccedfd53e",
+          "removed_rows": 0,
+          "schema": "TML_DUPLICATE_SENSITIVITY_V1",
+          "season": 2025,
+          "source_rows": 2943,
+          "source_sha256": "5ccf52d912085d6a5ba3effdc5f2f216f170aabfd8850086b5f92c7ccedfd53e",
+          "stake": 0
+        }
+      ],
+      "stake": 0
+    },
+    "online": {
+      "aggregate": {
+        "coinflip_brier": 0.25,
+        "coinflip_log_loss": 0.6931471805600358,
+        "global_elo_brier": 0.22063010972181757,
+        "global_elo_log_loss": 0.6300670180626626,
+        "global_elo_minus_coinflip_log_loss": -0.06308016249737314,
+        "n": 7694,
+        "surface_elo_brier": 0.2211424236796862,
+        "surface_elo_log_loss": 0.6320572443209497,
+        "surface_elo_minus_coinflip_log_loss": -0.061089936239086096
+      },
+      "allocation_enabled": false,
+      "bootstrap": {
+        "assumptions": "EVENT_CLUSTER_RESAMPLING_NOT_PROOF_OF_INDEPENDENCE",
+        "cluster_unit": "EVENT_ID",
+        "estimand": "MATCH_WEIGHTED_MEAN_LOSS_DIFFERENCE",
+        "event_clusters": 187,
+        "event_clusters_by_year": {
+          "2023": 64,
+          "2024": 66,
+          "2025": 57
+        },
+        "global_elo_minus_coinflip_95ci": [
+          -0.07419196551405663,
+          -0.05124092562391765
+        ],
+        "interval_method": "PAIRED_PERCENTILE_95",
+        "replicates": 2000,
+        "sampling_scope": "FIXED_HISTORICAL_PREDICTIONS_NO_REFIT",
+        "seed": 29,
+        "status": "EVENT_BOOTSTRAP_DESCRIPTIVE_ONLY",
+        "stratification": "EVENT_START_CALENDAR_YEAR",
+        "surface_elo_minus_coinflip_95ci": [
+          -0.07299094072818978,
+          -0.04771511242666935
+        ],
+        "surface_elo_minus_global_elo_brier_95ci": [
+          -0.00012664394502016533,
+          0.0012037230055195968
+        ],
+        "surface_elo_minus_global_elo_log_loss_95ci": [
+          0.00019999139203213153,
+          0.004006145101254748
+        ]
+      },
+      "calendar_attribution": {
+        "cross_year_eligible_rows": 54,
+        "cross_year_evaluated_by_fold": {
+          "2023": 0,
+          "2024": 54,
+          "2025": 0
+        },
+        "evaluation_year_semantics": "NORMALIZED_EVENT_START_CALENDAR_YEAR",
+        "source_season_to_event_start_year": {
+          "2021": {
+            "2021": 2394
+          },
+          "2022": {
+            "2022": 2532
+          },
+          "2023": {
+            "2023": 2600
+          },
+          "2024": {
+            "2024": 2593
+          },
+          "2025": {
+            "2024": 54,
+            "2025": 2447
+          }
+        }
+      },
+      "eligible": 12620,
+      "evaluation_folds": {
+        "2023": 2600,
+        "2024": 2647,
+        "2025": 2447
+      },
+      "evaluation_status": "PREVIOUSLY_INSPECTED_DEVELOPMENT_YEARS",
+      "folds": [
+        {
+          "coinflip_brier": 0.25,
+          "coinflip_log_loss": 0.6931471805599064,
+          "global_elo_brier": 0.22345964890729497,
+          "global_elo_log_loss": 0.6369131615570189,
+          "global_elo_minus_coinflip_log_loss": -0.05623401900288749,
+          "n": 2600,
+          "surface_elo_brier": 0.22355858694878425,
+          "surface_elo_log_loss": 0.6374713208425639,
+          "surface_elo_minus_coinflip_log_loss": -0.05567585971734257,
+          "year": 2023
+        },
+        {
+          "coinflip_brier": 0.25,
+          "coinflip_log_loss": 0.6931471805599061,
+          "global_elo_brier": 0.21885088529753569,
+          "global_elo_log_loss": 0.6255400764375559,
+          "global_elo_minus_coinflip_log_loss": -0.06760710412235016,
+          "n": 2647,
+          "surface_elo_brier": 0.21933921847249607,
+          "surface_elo_log_loss": 0.6274489777464479,
+          "surface_elo_minus_coinflip_log_loss": -0.06569820281345817,
+          "year": 2024
+        },
+        {
+          "coinflip_brier": 0.25,
+          "coinflip_log_loss": 0.6931471805599074,
+          "global_elo_brier": 0.21954829736743733,
+          "global_elo_log_loss": 0.6276897566798779,
+          "global_elo_minus_coinflip_log_loss": -0.06545742388002951,
+          "n": 2447,
+          "surface_elo_brier": 0.22052577459254993,
+          "surface_elo_log_loss": 0.6312895625336523,
+          "surface_elo_minus_coinflip_log_loss": -0.06185761802625511,
+          "year": 2025
+        }
+      ],
+      "identity_summary": {
+        "archived_2025_comparison": "RUN",
+        "derived_multiple_id_names": 0,
+        "derived_multiple_name_ids": 2,
+        "identity_remapped": false,
+        "old_multiple_name_ids": 1,
+        "revised_multiple_name_ids": 2,
+        "variant_ids_with_eligible_rows": 1
+      },
+      "manifest": {
+        "allocation_enabled": false,
+        "conflicting_groups_by_season": {
+          "2021": 0,
+          "2022": 0,
+          "2023": 0,
+          "2024": 0,
+          "2025": 0
+        },
+        "derived_sha256": {
+          "2021": "2a2c4a331b1cbae87adace77f4ff5f80e5c60207efd89dd958e6998735c90e92",
+          "2022": "125a1c0ece4b29ead7ce878b2e1bf844b1737b311fad2bfa873b3503e1cc39f1",
+          "2023": "9faaf53186ef908b3322d521a8dd2a717401167c0e400a99e1efddb23e13600f",
+          "2024": "db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8",
+          "2025": "5ccf52d912085d6a5ba3effdc5f2f216f170aabfd8850086b5f92c7ccedfd53e"
+        },
+        "duplicate_mode": "COLLAPSE_EXACT_AND_QUARANTINE_CONFLICT",
+        "eligible_for_model_training": 0,
+        "elo_k": 24,
+        "embargo_days": 28,
+        "evaluation_by_year": {
+          "2023": 2600,
+          "2024": 2647,
+          "2025": 2447
+        },
+        "evaluation_status": "PREVIOUSLY_INSPECTED_DEVELOPMENT_YEARS",
+        "exact_groups_by_season": {
+          "2021": 2,
+          "2022": 1,
+          "2023": 0,
+          "2024": 0,
+          "2025": 0
+        },
+        "expected_eligible": 12620,
+        "expected_evaluated": 7694,
+        "expected_global_log_loss": 0.6300670180626626,
+        "expected_surface_log_loss": 0.6320572443209497,
+        "identity_rule": "EXACT_SOURCE_PLAYER_ID_NO_NAME_BASED_MERGE",
+        "individual_match_start_verified": false,
+        "level_a_registry_sha256": "46a6fd05e2224ad0453480db37a900a495a0a67609ea6a24830fe318f47a3f3b",
+        "market_edge_verified": false,
+        "model_validation_trusted": false,
+        "normalize_level_a_2024": true,
+        "official_match_draw_verified": false,
+        "original_git_blobs": {
+          "2021": "2bd4eaf4eb28a09b42ab4ecd5830a8f3ad068faa",
+          "2022": "2b6726106fefb22b40c2816e4c703a48e9d312be",
+          "2023": "5ceb7397e3a217e51f197c9e83ea435faf690eeb",
+          "2024": "cf513429259b4a15e84e2021206895d9bd4ff772"
+        },
+        "original_sha256": {
+          "2021": "80d570be31d778b143eb58380258243785bf3fcb18db144b42704bc6c56d941b",
+          "2022": "d70036c6ee6c27dd3deda6e6c9ccd500b66e6e78106fb00794cb277e37353357",
+          "2023": "9faaf53186ef908b3322d521a8dd2a717401167c0e400a99e1efddb23e13600f",
+          "2024": "db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8",
+          "2025": "5ccf52d912085d6a5ba3effdc5f2f216f170aabfd8850086b5f92c7ccedfd53e"
+        },
+        "participant_known_at_event_start": false,
+        "revised_2025_url": "https://stats.tennismylife.org/data/2025.csv",
+        "schema": "TML_RESEARCH_COHORT_MANIFEST_V1",
+        "source_date_semantics": "TOURNAMENT_START_NOT_MATCH_TIME",
+        "source_result_availability_exact": false,
+        "source_rights_scope": "PERSONAL_NONCOMMERCIAL_RESEARCH",
+        "stake": 0,
+        "status": "HISTORICAL_SKILL_RESEARCH_ONLY",
+        "surface_weight": 0.35
+      },
+      "manifest_sha256": "b9b55b6c75f1f43394b3e69d19c6b791faedc8539908608ecf1d74dfaabcb8fb",
+      "model_validation_trusted": false,
+      "official_match_draw_verified": false,
+      "schema": "TML_COHORT_MANIFEST_REPLAY_V3",
+      "source_receipts": [
+        {
+          "acquisition_mode": "VERIFIED_GIT_BLOB",
+          "actual_fetch_uri": "https://api.github.com/repos/Tennismylife/TML-Database/git/blobs/2bd4eaf4eb28a09b42ab4ecd5830a8f3ad068faa",
+          "allocation_enabled": false,
+          "collapsed_rows": 2,
+          "conflicting_groups": 0,
+          "derived_rows": 2733,
+          "derived_sha256": "2a2c4a331b1cbae87adace77f4ff5f80e5c60207efd89dd958e6998735c90e92",
+          "exact_groups": 2,
+          "fetch_uri_semantics": "VERIFIED_GIT_BLOB_REQUEST",
+          "local_filename": null,
+          "malformed_rows": 0,
+          "mode": "COLLAPSE_EXACT_AND_QUARANTINE_CONFLICT",
+          "model_validation_trusted": false,
+          "nominal_publisher_url": "https://stats.tennismylife.org/data/2021.csv",
+          "official_match_id_verified": false,
+          "outside_scope_groups": 0,
+          "quarantined_rows": 0,
+          "raw_sha256": "80d570be31d778b143eb58380258243785bf3fcb18db144b42704bc6c56d941b",
+          "removed_rows": 2,
+          "schema": "TML_DUPLICATE_SENSITIVITY_V1",
+          "season": 2021,
+          "source_rows": 2735,
+          "source_sha256": "80d570be31d778b143eb58380258243785bf3fcb18db144b42704bc6c56d941b",
+          "stake": 0
+        },
+        {
+          "acquisition_mode": "VERIFIED_GIT_BLOB",
+          "actual_fetch_uri": "https://api.github.com/repos/Tennismylife/TML-Database/git/blobs/2b6726106fefb22b40c2816e4c703a48e9d312be",
+          "allocation_enabled": false,
+          "collapsed_rows": 1,
+          "conflicting_groups": 0,
+          "derived_rows": 2917,
+          "derived_sha256": "125a1c0ece4b29ead7ce878b2e1bf844b1737b311fad2bfa873b3503e1cc39f1",
+          "exact_groups": 1,
+          "fetch_uri_semantics": "VERIFIED_GIT_BLOB_REQUEST",
+          "local_filename": null,
+          "malformed_rows": 0,
+          "mode": "COLLAPSE_EXACT_AND_QUARANTINE_CONFLICT",
+          "model_validation_trusted": false,
+          "nominal_publisher_url": "https://stats.tennismylife.org/data/2022.csv",
+          "official_match_id_verified": false,
+          "outside_scope_groups": 0,
+          "quarantined_rows": 0,
+          "raw_sha256": "d70036c6ee6c27dd3deda6e6c9ccd500b66e6e78106fb00794cb277e37353357",
+          "removed_rows": 1,
+          "schema": "TML_DUPLICATE_SENSITIVITY_V1",
+          "season": 2022,
+          "source_rows": 2918,
+          "source_sha256": "d70036c6ee6c27dd3deda6e6c9ccd500b66e6e78106fb00794cb277e37353357",
+          "stake": 0
+        },
+        {
+          "acquisition_mode": "VERIFIED_GIT_BLOB",
+          "actual_fetch_uri": "https://api.github.com/repos/Tennismylife/TML-Database/git/blobs/5ceb7397e3a217e51f197c9e83ea435faf690eeb",
+          "allocation_enabled": false,
+          "collapsed_rows": 0,
+          "conflicting_groups": 0,
+          "derived_rows": 2995,
+          "derived_sha256": "9faaf53186ef908b3322d521a8dd2a717401167c0e400a99e1efddb23e13600f",
+          "exact_groups": 0,
+          "fetch_uri_semantics": "VERIFIED_GIT_BLOB_REQUEST",
+          "local_filename": null,
+          "malformed_rows": 0,
+          "mode": "COLLAPSE_EXACT_AND_QUARANTINE_CONFLICT",
+          "model_validation_trusted": false,
+          "nominal_publisher_url": "https://stats.tennismylife.org/data/2023.csv",
+          "official_match_id_verified": false,
+          "outside_scope_groups": 0,
+          "quarantined_rows": 0,
+          "raw_sha256": "9faaf53186ef908b3322d521a8dd2a717401167c0e400a99e1efddb23e13600f",
+          "removed_rows": 0,
+          "schema": "TML_DUPLICATE_SENSITIVITY_V1",
+          "season": 2023,
+          "source_rows": 2995,
+          "source_sha256": "9faaf53186ef908b3322d521a8dd2a717401167c0e400a99e1efddb23e13600f",
+          "stake": 0
+        },
+        {
+          "acquisition_mode": "VERIFIED_GIT_BLOB",
+          "actual_fetch_uri": "https://api.github.com/repos/Tennismylife/TML-Database/git/blobs/cf513429259b4a15e84e2021206895d9bd4ff772",
+          "allocation_enabled": false,
+          "collapsed_rows": 0,
+          "conflicting_groups": 0,
+          "derived_rows": 3076,
+          "derived_sha256": "db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8",
+          "exact_groups": 0,
+          "fetch_uri_semantics": "VERIFIED_GIT_BLOB_REQUEST",
+          "local_filename": null,
+          "malformed_rows": 0,
+          "mode": "COLLAPSE_EXACT_AND_QUARANTINE_CONFLICT",
+          "model_validation_trusted": false,
+          "nominal_publisher_url": "https://stats.tennismylife.org/data/2024.csv",
+          "official_match_id_verified": false,
+          "outside_scope_groups": 1,
+          "quarantined_rows": 0,
+          "raw_sha256": "db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8",
+          "removed_rows": 0,
+          "schema": "TML_DUPLICATE_SENSITIVITY_V1",
+          "season": 2024,
+          "source_rows": 3076,
+          "source_sha256": "db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8",
+          "stake": 0
+        },
+        {
+          "acquisition_mode": "PINNED_PUBLISHER_DOWNLOAD",
+          "actual_fetch_uri": "https://stats.tennismylife.org/data/2025.csv",
+          "allocation_enabled": false,
+          "collapsed_rows": 0,
+          "conflicting_groups": 0,
+          "derived_rows": 2943,
+          "derived_sha256": "5ccf52d912085d6a5ba3effdc5f2f216f170aabfd8850086b5f92c7ccedfd53e",
+          "exact_groups": 0,
+          "fetch_uri_semantics": "REQUESTED_ENDPOINT_FINAL_PATH_UNATTESTED",
+          "local_filename": null,
+          "malformed_rows": 0,
+          "mode": "COLLAPSE_EXACT_AND_QUARANTINE_CONFLICT",
+          "model_validation_trusted": false,
+          "nominal_publisher_url": "https://stats.tennismylife.org/data/2025.csv",
+          "official_match_id_verified": false,
+          "outside_scope_groups": 0,
+          "quarantined_rows": 0,
+          "raw_sha256": "5ccf52d912085d6a5ba3effdc5f2f216f170aabfd8850086b5f92c7ccedfd53e",
+          "removed_rows": 0,
+          "schema": "TML_DUPLICATE_SENSITIVITY_V1",
+          "season": 2025,
+          "source_rows": 2943,
+          "source_sha256": "5ccf52d912085d6a5ba3effdc5f2f216f170aabfd8850086b5f92c7ccedfd53e",
+          "stake": 0
+        }
+      ],
+      "stake": 0
+    },
+    "python_level_network_guard": true,
+    "schema": "P1_9F_FOUNDATION_ACCEPTANCE_V1"
+  }
+}
