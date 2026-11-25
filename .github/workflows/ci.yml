@@ -37,6 +37,9 @@ jobs:
           python -m pip install --no-deps -e ".[test,ml]"
           python -m pip check
 
+      - name: Verify canonical tracked-file SHA256 manifest
+        run: python -m scripts.repository_manifest verify
+
       - name: Run complete automated test suite
         run: python -m pytest -q
 
