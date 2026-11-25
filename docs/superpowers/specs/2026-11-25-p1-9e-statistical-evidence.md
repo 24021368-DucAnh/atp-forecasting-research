@@ -1,0 +1,6 @@
+# P1.9e statistical evidence remediation
+
+Base 60d51d56; P1.9d merged, main CI 45550513860 successful; exact 210-file tree matches 891d295d. Address review P0-2 and P2-4. Do not fit/tune any model or change cohort/embargo.
+- Paired event-cluster percentile bootstrap, stratified by event-start calendar year. Sample the same event groups for both models and coinflip within each replicate; retain row-weighted estimand, variable sample size. 2000 replicates, seed 29 in locked replay. Minimum 12 total clusters and 2 per stratum; no invented CI when insufficient. Report paired surface-minus-global log loss and Brier, plus existing coinflip differences, counts and assumptions. Positive difference means surface has higher loss; descriptive conditional on fixed predictions and previously inspected years, no model refit, no independence claim or prospective validation.
+- Full fold metrics (n, LL, Brier), aggregate, confidence intervals and cross-year source-season versus normalized event-start year accounting; raw/derived SHA unchanged. No match rows printed. Retain existing baseline scores exactly. Explicit development status in locked replay, no calibration claim.
+- Test-first, run actual locked replay and CI, regenerate root manifest after edits. New single draft PR directly to main; no merge.
