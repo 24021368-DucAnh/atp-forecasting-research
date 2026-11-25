@@ -1,0 +1,42 @@
+name: P2.4 fixed ablation evidence
+on:
+  push:
+    branches: [research/p2-4-fixed-ablation]
+    paths-ignore:
+      - MANIFEST_SHA256.txt
+permissions:
+  contents: read
+jobs:
+  manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m scripts.repository_manifest emit-json
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install --no-deps -r requirements/ubuntu-latest-py3.11.txt
+      - run: python -m pip install --no-deps -e ".[test,ml]"
+      - run: python -m pip check
+      - run: python -m pytest -q tests/test_p2_4_ablation.py tests/test_p2_3_research_ml.py
+      - run: python -m scripts.p2_4_fixed_ablation --allow-exploratory-fit
+  windows-pin:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect exact pinned working-tree bytes
+        shell: pwsh
+        run: |
+          Get-FileHash docs/registries/p2_1r_tml_development_protocol_v1.json
+          Get-FileHash docs/registries/p2_3_research_permission_v1.json
+          git check-attr eol -- docs/registries/p2_1r_tml_development_protocol_v1.json docs/registries/p2_3_research_permission_v1.json
+          if ((Get-FileHash docs/registries/p2_1r_tml_development_protocol_v1.json).Hash.ToLower() -ne '93776dc9949c6c49c16e8172630b606cd61fe328b25ce08a796a06b8ced3bca6') { throw 'protocol bytes drift' }
+          if ((Get-FileHash docs/registries/p2_3_research_permission_v1.json).Hash.ToLower() -ne '2783d980d1ee2488c35a9206a2b270a71e78941c1a758a161aebf0a3c6b223d6') { throw 'permission bytes drift' }
