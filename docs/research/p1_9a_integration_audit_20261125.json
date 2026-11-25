@@ -1,0 +1,1546 @@
+{
+  "schema": "P1_9A_INTEGRATION_AUDIT_V1",
+  "review_checkpoint": "2e084eedfc44c8ffaabd1fc5cbfb00769b703574",
+  "broken_main": "932c80ec7b934aa05a8d7e5346a1ed1a4ab71491",
+  "recovery_commit": "fb7424a260972afdfa9b212c6210771f053ac165",
+  "recovery_tree": "d10399f911dd9b083cd7ab4eea2b4f4ec9573aa5",
+  "checkpoint_tree": "2e084eedfc44c8ffaabd1fc5cbfb00769b703574",
+  "checkpoint_file_count": 189,
+  "main_file_count": 136,
+  "missing": 53,
+  "different": 6,
+  "main_only": [],
+  "all_files": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "checkpoint_blob": "a1bd0c4a1a750a88ffe19f8ce2581f9c864ceaab",
+      "main_blob": "a1bd0c4a1a750a88ffe19f8ce2581f9c864ceaab",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": ".github/workflows/p1-7c-level-a-research.yml",
+      "checkpoint_blob": "a0d2d7dc847d8a1207fafcf94a8107105c2db486",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": ".github/workflows/p1-8a-identity-research.yml",
+      "checkpoint_blob": "05bc172fb0fd876b742631dd07bddabf95d081ee",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": ".github/workflows/p1-8b-duplicate-research.yml",
+      "checkpoint_blob": "0c70eba41c8ca3b68bc18bb2152a01646c11c654",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": ".github/workflows/p1-8c-cohort-research.yml",
+      "checkpoint_blob": "6f38b58ebdfda8ab9ec5aacc1a826949feacb724",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": ".github/workflows/p2-pinned-reproduction.yml",
+      "checkpoint_blob": "b5a4b91ac524e72e46e917dd90cae7609bbca227",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": ".github/workflows/revised-source-sensitivity.yml",
+      "checkpoint_blob": "db7afcc4d46cb175f85e71f1872172a51a5d316a",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": ".github/workflows/tml-2025-revision-research.yml",
+      "checkpoint_blob": "5b2b4f61111494a95674e50ec6d5f3242ded3102",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": ".github/workflows/tml-source-watch.yml",
+      "checkpoint_blob": "da3e8c81711019196d2fcbb1dfb37f6a1ef5f1ee",
+      "main_blob": "da3e8c81711019196d2fcbb1dfb37f6a1ef5f1ee",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": ".gitignore",
+      "checkpoint_blob": "923673739671eea83c7c0f320d635f5093d8e3de",
+      "main_blob": "923673739671eea83c7c0f320d635f5093d8e3de",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "MANIFEST_SHA256.txt",
+      "checkpoint_blob": "cbfe610752d9cedc32b24ae8341ad6b30de32349",
+      "main_blob": "cbfe610752d9cedc32b24ae8341ad6b30de32349",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "README.md",
+      "checkpoint_blob": "58f30afd38fb58a699a8fc8edb5d138d4c1191df",
+      "main_blob": "58f30afd38fb58a699a8fc8edb5d138d4c1191df",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/BUGFIX_V0.2.1.md",
+      "checkpoint_blob": "e51cc7ac2380deaf959746f31a275ebb6d001447",
+      "main_blob": "e51cc7ac2380deaf959746f31a275ebb6d001447",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/DATA_SOURCE_DECISIONS.md",
+      "checkpoint_blob": "e53e585d1678514b91519df1ef17cb17b1cb5500",
+      "main_blob": "e53e585d1678514b91519df1ef17cb17b1cb5500",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/EXPERIMENT_INTEGRITY.md",
+      "checkpoint_blob": "00702a97ded902d07fe82d0f7e0b56fe052f30ca",
+      "main_blob": "00702a97ded902d07fe82d0f7e0b56fe052f30ca",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/HISTORICAL_SOURCE_INTAKE.md",
+      "checkpoint_blob": "223fc0360061832abc276d23e39b86e9c82f050a",
+      "main_blob": "223fc0360061832abc276d23e39b86e9c82f050a",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/INPUT_AUDIT.md",
+      "checkpoint_blob": "5e1f845584980e9df1ff0e85d31b1917bcac9b8a",
+      "main_blob": "5e1f845584980e9df1ff0e85d31b1917bcac9b8a",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/INVENTORY_ANOMALY_REVIEW.md",
+      "checkpoint_blob": "285912478c6694b0dfb4bdad0578b3827148fa48",
+      "main_blob": "285912478c6694b0dfb4bdad0578b3827148fa48",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/LEGACY_ARCHIVE_CROSSWALK.md",
+      "checkpoint_blob": "dd404b94750a8bb0f105ffe381c8288ea8523561",
+      "main_blob": "dd404b94750a8bb0f105ffe381c8288ea8523561",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/OFFICIAL_CALENDAR_COVERAGE.md",
+      "checkpoint_blob": "bc8c3165f3f875bf688774cc16d5b0178b0dc691",
+      "main_blob": "bc8c3165f3f875bf688774cc16d5b0178b0dc691",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/P2_MATCHED_FOLD_SCORING.md",
+      "checkpoint_blob": "fce1857a7b9c8d5be7529be29067f045ba08b02a",
+      "main_blob": "fce1857a7b9c8d5be7529be29067f045ba08b02a",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/P2_TML_ELO_RESEARCH.md",
+      "checkpoint_blob": "a7e62524db2c278ff438805c20ec9238afb43d3d",
+      "main_blob": "a7e62524db2c278ff438805c20ec9238afb43d3d",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/P3_T60_RECEIPT_AUDIT.md",
+      "checkpoint_blob": "cb006f4257b007ca0828b7abb691ae5f42f17319",
+      "main_blob": "cb006f4257b007ca0828b7abb691ae5f42f17319",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/PAPER_LEDGER_PERIODS.md",
+      "checkpoint_blob": "6df1f02d4774acce77bd0bf8aab025479b50a519",
+      "main_blob": "90d2264d036b0c9f64d1aade8776b0146e403b17",
+      "status": "DIFFERENT"
+    },
+    {
+      "path": "docs/RAW_SOURCE_GAP_FORENSICS.md",
+      "checkpoint_blob": "28a15d780f24a0def5f7e93ff687e8c7a375449f",
+      "main_blob": "28a15d780f24a0def5f7e93ff687e8c7a375449f",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/RESEARCH_REPRODUCIBILITY.md",
+      "checkpoint_blob": "5f5d780a8a5292bfa2a4ebd2ac30e6f54cf121b9",
+      "main_blob": "5f5d780a8a5292bfa2a4ebd2ac30e6f54cf121b9",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/THIRD_PARTY_NOTICES.md",
+      "checkpoint_blob": "b50c11555dc2cc759d2e88b3f5dac49574df1a16",
+      "main_blob": "b50c11555dc2cc759d2e88b3f5dac49574df1a16",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/TIER_REGISTRY_AUDIT.md",
+      "checkpoint_blob": "e662dd6680acf8a65fcbad854e190ce2d976a3d1",
+      "main_blob": "e662dd6680acf8a65fcbad854e190ce2d976a3d1",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/TML_NONCOMMERCIAL_RESEARCH.md",
+      "checkpoint_blob": "546639cdf8f1063a8a59cf7efe2d8a192b0df137",
+      "main_blob": "546639cdf8f1063a8a59cf7efe2d8a192b0df137",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/TOURNAMENT_SEASON_INVENTORY.md",
+      "checkpoint_blob": "b007f4cdf6adc9d3b4b69a967e1a63573a645e04",
+      "main_blob": "b007f4cdf6adc9d3b4b69a967e1a63573a645e04",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/VALUEBETENNIS_SOURCE_INSPECTION.md",
+      "checkpoint_blob": "8ef54a8b190caa02fb2870ba2f6c90aeb48f2128",
+      "main_blob": "8ef54a8b190caa02fb2870ba2f6c90aeb48f2128",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/licenses/coenensam_tennis_match_predictor_MIT.txt",
+      "checkpoint_blob": "3869d27c4d24c74b47ebb6d4e94b7dc4309cae38",
+      "main_blob": "3869d27c4d24c74b47ebb6d4e94b7dc4309cae38",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/registries/atp_2024_february_official_events_v1.json",
+      "checkpoint_blob": "ebbf782f711f97b966dbd8005a3e8040a443780d",
+      "main_blob": "ebbf782f711f97b966dbd8005a3e8040a443780d",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/registries/tml_2024_feb_source_crosswalk_v1.json",
+      "checkpoint_blob": "0610603acd6086156ae8dee609eb63450533f0c2",
+      "main_blob": "0610603acd6086156ae8dee609eb63450533f0c2",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/registries/tml_level_a_event_inventory_2021_2025_v1.json",
+      "checkpoint_blob": "7ecc6ca6b69950e954050dff5199bd487425a2ed",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/registries/tml_sackmann_2024_player_aliases_v1.json",
+      "checkpoint_blob": "b4b4e5aada50a400f4b86d709f4a782eb871e330",
+      "main_blob": "b4b4e5aada50a400f4b86d709f4a782eb871e330",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/registries/valuebetennis_2022_2026_tiers_v1.json",
+      "checkpoint_blob": "c78783e6db0f397f440a0a6dbee6f75c89e8f577",
+      "main_blob": "c78783e6db0f397f440a0a6dbee6f75c89e8f577",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/registries/valuebetennis_legacy_2024_02_crosswalk_v1.json",
+      "checkpoint_blob": "0b47db0c58d01ddcb837e16a9de8dc91e06179c2",
+      "main_blob": "0b47db0c58d01ddcb837e16a9de8dc91e06179c2",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/research/p1_7c_level_a_normalization_20261125.json",
+      "checkpoint_blob": "ef0472ace2258f3eb2caaecfe741ce87efcd69a9",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/research/p1_8a_duplicate_forensics_20261125.json",
+      "checkpoint_blob": "bf4bb25ecd7985b2f5aa17d024cdfdd3f9645a76",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/research/p1_8a_identity_audit_20261125.json",
+      "checkpoint_blob": "9c870e459ef9f08b9b90ba1dd89289b22f9f0e89",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/research/p1_8a_identity_audit_v2_20261125.json",
+      "checkpoint_blob": "2f3311a829dd4ffba215efc4c4f785261620b424",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/research/p1_8b_duplicate_sensitivity_20261125.json",
+      "checkpoint_blob": "5495ec2f5016b109922674b45130dfcd38c35090",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/research/p1_8c_cohort_manifest_20261125.json",
+      "checkpoint_blob": "338083578454e6e61ff024c5fa49a0ea15e9e584",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/research/p1_tml_2025_revision_audit_20261124.json",
+      "checkpoint_blob": "51d6ce57781c4e7c3bb970a0c01d62d8ceb2806b",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/research/p1_tml_2025_revision_audit_v2_20261124.json",
+      "checkpoint_blob": "37bf478658bb559f591b8a5716d7e67305981be2",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/research/p2_pinned_elo_reproduction_20261124.json",
+      "checkpoint_blob": "bfff8e94e668647cc37a69c16e20faa6cb9d125d",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/research/p2_revised_source_sensitivity_20261124.json",
+      "checkpoint_blob": "26c0078d492857a1c54254662a73355ed8d0a6d7",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/research/p2_tml_selection_quality_20261124.json",
+      "checkpoint_blob": "d40d0e05aa43cacb4105f409efaf7bb485699bb8",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-23-atp-input-gate.md",
+      "checkpoint_blob": "1bb71ca24441981c40f32afcc772f91cd0aa0c88",
+      "main_blob": "1bb71ca24441981c40f32afcc772f91cd0aa0c88",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-23-p0-engineering-foundation.md",
+      "checkpoint_blob": "eb7d6d9940c3e2e3418b24745e708a91d41f4685",
+      "main_blob": "eb7d6d9940c3e2e3418b24745e708a91d41f4685",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-23-p0-research-replay.md",
+      "checkpoint_blob": "ea2c474be280a070ab18477b9cf603b1fc026844",
+      "main_blob": "ea2c474be280a070ab18477b9cf603b1fc026844",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-23-p1-inventory-anomaly-review.md",
+      "checkpoint_blob": "51007535196d877771217873f07499384400c819",
+      "main_blob": "51007535196d877771217873f07499384400c819",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-23-p1-legacy-crosswalk.md",
+      "checkpoint_blob": "b2498bda423878d49220e7fd1b5ed048e7436eb7",
+      "main_blob": "b2498bda423878d49220e7fd1b5ed048e7436eb7",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-23-p1-official-calendar-coverage.md",
+      "checkpoint_blob": "390db99005e03a469d22d6209217da77f3cf8562",
+      "main_blob": "390db99005e03a469d22d6209217da77f3cf8562",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-23-p1-raw-gap-forensics.md",
+      "checkpoint_blob": "f6ada0ced1e5ae5b5e325c96d6f0ca795fd8df9c",
+      "main_blob": "f6ada0ced1e5ae5b5e325c96d6f0ca795fd8df9c",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-23-p1-source-quality-profile.md",
+      "checkpoint_blob": "a9cfeca98c75e7c7a71ba838fdb44abcd8cd607a",
+      "main_blob": "a9cfeca98c75e7c7a71ba838fdb44abcd8cd607a",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-23-p1-tier-registry.md",
+      "checkpoint_blob": "42ea8a51febfa3ae77a34413e34e573a6b9655c4",
+      "main_blob": "42ea8a51febfa3ae77a34413e34e573a6b9655c4",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-23-p1-tournament-inventory.md",
+      "checkpoint_blob": "882f769c25332d77a7ed4567958e84bb8fc12b1f",
+      "main_blob": "882f769c25332d77a7ed4567958e84bb8fc12b1f",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-23-p1-valuebetennis-inspection.md",
+      "checkpoint_blob": "c87172dfb44baa28ce33707b4a1523dc2b32ce7a",
+      "main_blob": "c87172dfb44baa28ce33707b4a1523dc2b32ce7a",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-23-research-pipeline.md",
+      "checkpoint_blob": "8dad1d75f95d7a8863286cca9fa348039a78076c",
+      "main_blob": "8dad1d75f95d7a8863286cca9fa348039a78076c",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-p0-cross-month-paper-carry.md",
+      "checkpoint_blob": "dff61dc867fdc3c478aa609d4bd3025911d9f381",
+      "main_blob": "dff61dc867fdc3c478aa609d4bd3025911d9f381",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-p0-exact-win-journal.md",
+      "checkpoint_blob": "b1ff82788fba7ddb85e39b91799f350a079915c0",
+      "main_blob": "b1ff82788fba7ddb85e39b91799f350a079915c0",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-p0-paper-ledger-period-integrity.md",
+      "checkpoint_blob": "a8d48806e644738bb6fc0e797160fa96f4eb8c32",
+      "main_blob": "a8d48806e644738bb6fc0e797160fa96f4eb8c32",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-p1-authorized-source-intake.md",
+      "checkpoint_blob": "8cd773ad8c467078f5bb9ae1ac777754af00ea78",
+      "main_blob": "8cd773ad8c467078f5bb9ae1ac777754af00ea78",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-p1-tml-feb-audit.md",
+      "checkpoint_blob": "4d157aa67367490d93fe22af1b9150209c4b3223",
+      "main_blob": "4d157aa67367490d93fe22af1b9150209c4b3223",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-p2-matched-fold-scoring.md",
+      "checkpoint_blob": "2a79ee32e3d9b22eed34ac8cf2e52121b4b1fdaf",
+      "main_blob": "2a79ee32e3d9b22eed34ac8cf2e52121b4b1fdaf",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-p2-pinned-python-reproduction.md",
+      "checkpoint_blob": "5a4be0e34b7eaec2f203e9a09064536eb5410003",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-p2b-tml-elo-baseline.md",
+      "checkpoint_blob": "db3cf0724a53d2b0f2514fbc4682a01c693d8856",
+      "main_blob": "db3cf0724a53d2b0f2514fbc4682a01c693d8856",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-p3-quote-receipt-preflight.md",
+      "checkpoint_blob": "7ca905ed564c41c8fcc266519cf245dc4cfc7c91",
+      "main_blob": "7ca905ed564c41c8fcc266519cf245dc4cfc7c91",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-paper-cash-history.md",
+      "checkpoint_blob": "e649f236ba088f9a87b1113475939543d05f59da",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-paper-evidence-archive.md",
+      "checkpoint_blob": "b619a82af2360f5331d2d177b2ac7e64122ba5d8",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-revised-source-sensitivity.md",
+      "checkpoint_blob": "029e56e39c67f9756483b79bbad1652c0325c31c",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-tml-2025-revision-audit.md",
+      "checkpoint_blob": "4afed1d5b4e50b3db42c669dee6fab94f08c159c",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-tml-sackmann-crosspublication.md",
+      "checkpoint_blob": "6442d9bcbbecdc75c52e58b48ed6c75156c673df",
+      "main_blob": "6442d9bcbbecdc75c52e58b48ed6c75156c673df",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-24-tml-versioned-updater.md",
+      "checkpoint_blob": "43b0f09556f5a8af31a4583e2347d62b13e40110",
+      "main_blob": "43b0f09556f5a8af31a4583e2347d62b13e40110",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-25-p1-7c-level-a-normalization.md",
+      "checkpoint_blob": "ad6d015c7f8ac00ef53f98916ddb332cc0e754b6",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-25-p1-8a-identity-audit-ledger.md",
+      "checkpoint_blob": "c3e80a81f6e4b1f8fcca289820c8779bb248cd1b",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-25-p1-8b-duplicate-sensitivity-ledger.md",
+      "checkpoint_blob": "4a155b4ae349e80a4cd51b9dd65b8f1e1b0dca34",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-25-p1-8c-cohort-ledger.md",
+      "checkpoint_blob": "cd130f74488227c57c6d362b15f9a079accad81d",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-23-atp-input-gate-design.md",
+      "checkpoint_blob": "ae6a01be2a6e6f991d8f2cecad3f3a89a32d1175",
+      "main_blob": "ae6a01be2a6e6f991d8f2cecad3f3a89a32d1175",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-23-p1-inventory-anomaly-review.md",
+      "checkpoint_blob": "032704a68aba34d64bfedffccf3daeaffa1302ca",
+      "main_blob": "032704a68aba34d64bfedffccf3daeaffa1302ca",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-23-p1-legacy-crosswalk.md",
+      "checkpoint_blob": "81ce0eade8f198116256c283b30b877976f5fec4",
+      "main_blob": "81ce0eade8f198116256c283b30b877976f5fec4",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-23-p1-official-calendar-coverage.md",
+      "checkpoint_blob": "54bdc63f7caeaa924f734565ac47a78063696bcc",
+      "main_blob": "54bdc63f7caeaa924f734565ac47a78063696bcc",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-23-p1-raw-gap-forensics.md",
+      "checkpoint_blob": "f7f148e0f1daac04a2748f22e17c00d091373bb3",
+      "main_blob": "f7f148e0f1daac04a2748f22e17c00d091373bb3",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-23-p1-source-quality-design.md",
+      "checkpoint_blob": "9bcc41a5f0792e9d0b1dd33fd67b2880635924bd",
+      "main_blob": "9bcc41a5f0792e9d0b1dd33fd67b2880635924bd",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-23-p1-tier-registry.md",
+      "checkpoint_blob": "0be6c540c8b86a576ce413e5eddf4e9797763d0b",
+      "main_blob": "0be6c540c8b86a576ce413e5eddf4e9797763d0b",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-23-p1-tournament-inventory.md",
+      "checkpoint_blob": "735572f80655bd55bd0211b29b2f6390d7759111",
+      "main_blob": "735572f80655bd55bd0211b29b2f6390d7759111",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-23-p1-valuebetennis-inspection.md",
+      "checkpoint_blob": "d9e5426830b8ed855af8dac6082ee066bcbaac87",
+      "main_blob": "d9e5426830b8ed855af8dac6082ee066bcbaac87",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-23-research-pipeline-design.md",
+      "checkpoint_blob": "3d1687758d0a124118b3b69c28a10738fe6b20e3",
+      "main_blob": "3d1687758d0a124118b3b69c28a10738fe6b20e3",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-p0-cross-month-paper-carry-design.md",
+      "checkpoint_blob": "3006c752cd543135fc7c8d59efebcfd33e07c6fa",
+      "main_blob": "3006c752cd543135fc7c8d59efebcfd33e07c6fa",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-p0-exact-win-journal.md",
+      "checkpoint_blob": "98affdb0e23ceb2676abfd7277e86fb0235f0438",
+      "main_blob": "98affdb0e23ceb2676abfd7277e86fb0235f0438",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-p0-paper-ledger-period-integrity-design.md",
+      "checkpoint_blob": "fcf85213465644ef6f46ab49a8bece6658630c77",
+      "main_blob": "fcf85213465644ef6f46ab49a8bece6658630c77",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-p1-authorized-source-intake-design.md",
+      "checkpoint_blob": "a547862480c0e4cfa69bfe71f2ecf7c7ce5f3ab9",
+      "main_blob": "a547862480c0e4cfa69bfe71f2ecf7c7ce5f3ab9",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-p1-tml-feb-audit.md",
+      "checkpoint_blob": "66e1e6c2bef6022bf9c40b7c56fcd6b49d6fc119",
+      "main_blob": "66e1e6c2bef6022bf9c40b7c56fcd6b49d6fc119",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-p2-matched-fold-score-design.md",
+      "checkpoint_blob": "ca4a3363a61773b73e8a2f30a52fbd424758172e",
+      "main_blob": "ca4a3363a61773b73e8a2f30a52fbd424758172e",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-p2-pinned-python-reproduction.md",
+      "checkpoint_blob": "73628afa6a73252523561188bed1913a4cb98037",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-p2b-tml-elo-baseline.md",
+      "checkpoint_blob": "a9068bf1e93012ed10885fe4a56a1b949fb4da45",
+      "main_blob": "a9068bf1e93012ed10885fe4a56a1b949fb4da45",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-p3-quote-receipt-preflight-design.md",
+      "checkpoint_blob": "8028e75184f5c3c3e222404f52987b79cb237548",
+      "main_blob": "8028e75184f5c3c3e222404f52987b79cb237548",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-paper-cash-history.md",
+      "checkpoint_blob": "8525b8840c5c9d24b274aeb6241c0c530ffac23c",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-paper-evidence-archive.md",
+      "checkpoint_blob": "41d340b668af4a7b0d4ab31d79462011da251ede",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-tml-2025-revision-audit.md",
+      "checkpoint_blob": "a6332b98f013561eb3c6939c78e426e3fe240230",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-tml-sackmann-crosspublication.md",
+      "checkpoint_blob": "befa4c6d6a426b93fe18f04a57fa73ff1cc2830b",
+      "main_blob": "befa4c6d6a426b93fe18f04a57fa73ff1cc2830b",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-24-tml-versioned-updater.md",
+      "checkpoint_blob": "ccf5f4726ef2c40c82b923e039a52ea937f34d38",
+      "main_blob": "ccf5f4726ef2c40c82b923e039a52ea937f34d38",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-25-p1-8a-identity-audit.md",
+      "checkpoint_blob": "4c8a7faa9c3b1f440216f5a3ee5dfa2733ed022f",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-25-p1-8b-duplicate-sensitivity.md",
+      "checkpoint_blob": "a99d0fdaf03347aa2fa753255d19e74d531f8445",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-11-25-p1-8c-cohort-manifest.md",
+      "checkpoint_blob": "f44a1cc931627c381c6c2ac829ff3d4f482087a3",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "examples/historical_toy.csv",
+      "checkpoint_blob": "f0099b0d2823c8fad0f4cee258afb4d597efc629",
+      "main_blob": "f0099b0d2823c8fad0f4cee258afb4d597efc629",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "examples/research_synthetic.csv",
+      "checkpoint_blob": "22d5efe9f7b3f388000ec34945adb55ed34c7e31",
+      "main_blob": "22d5efe9f7b3f388000ec34945adb55ed34c7e31",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "examples/synthetic_unvalidated.json",
+      "checkpoint_blob": "492639592c865c986a2069605299c0cd34b8bc3e",
+      "main_blob": "492639592c865c986a2069605299c0cd34b8bc3e",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "pyproject.toml",
+      "checkpoint_blob": "07a28fcdcbb8648256c6a06888a1b72a8c5ecd6c",
+      "main_blob": "07a28fcdcbb8648256c6a06888a1b72a8c5ecd6c",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "scripts/download_atp_2026.ps1",
+      "checkpoint_blob": "a13f20cc82f8496ea3e103f9d2a021dbed7b07e9",
+      "main_blob": "a13f20cc82f8496ea3e103f9d2a021dbed7b07e9",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "scripts/p1_7c_level_a_research.py",
+      "checkpoint_blob": "e0e18725e6119136764730c731da8e6015b8014c",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "scripts/p1_8a_identity_research.py",
+      "checkpoint_blob": "4cab5d5d7f65035625a3b0b7a6d86c620f27479c",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "scripts/p1_8b_duplicate_research.py",
+      "checkpoint_blob": "65cf3f37903c3f06c064514c0a5d3c50c965045c",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "scripts/p1_8c_cohort_research.py",
+      "checkpoint_blob": "6eb35550d1675b09318a1b98c02f99744d766773",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "scripts/replay_research.py",
+      "checkpoint_blob": "f7efbf13c4f5788bc9264f2c73731aaa0f2f7894",
+      "main_blob": "f7efbf13c4f5788bc9264f2c73731aaa0f2f7894",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "scripts/reproduce_pinned_tml_elo.py",
+      "checkpoint_blob": "b46ccc20b2fa44202ba402dfc5ab38e0faf2ff55",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "scripts/revised_source_sensitivity.py",
+      "checkpoint_blob": "dec90f5c870d29b20141372afd99e611574f88da",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "scripts/run_tml_elo_research.ps1",
+      "checkpoint_blob": "4f389557007f30589de6fc0b699e99a36fc71316",
+      "main_blob": "4f389557007f30589de6fc0b699e99a36fc71316",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "scripts/tml_2025_revision_audit.py",
+      "checkpoint_blob": "463e8526de8026f230494b783452ebf26c8c0562",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "scripts/tml_daily_update.ps1",
+      "checkpoint_blob": "0cc312bfe33f3618f7bddc797d013af41a225372",
+      "main_blob": "0cc312bfe33f3618f7bddc797d013af41a225372",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "src/atp_gate/__init__.py",
+      "checkpoint_blob": "0b1eac5e8530bd8cefd23de693dacf2907765d77",
+      "main_blob": "0b1eac5e8530bd8cefd23de693dacf2907765d77",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "src/atp_gate/__main__.py",
+      "checkpoint_blob": "6b3ad6fb9884af2ad1f6b60cd3ffbc8db30a7c0f",
+      "main_blob": "602da6bfd658685b4d7e89d4c42ed3d67d24b8c9",
+      "status": "DIFFERENT"
+    },
+    {
+      "path": "src/atp_gate/contracts.py",
+      "checkpoint_blob": "65304265bb7317908255064c33784daf1e70123f",
+      "main_blob": "65304265bb7317908255064c33784daf1e70123f",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "src/atp_gate/feature_schema.py",
+      "checkpoint_blob": "af0a0c0e550656b402529da55892c265f80d135b",
+      "main_blob": "af0a0c0e550656b402529da55892c265f80d135b",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "src/atp_gate/fold_scoring.py",
+      "checkpoint_blob": "eb8169e737ffba00ad17221eb533a016e4fe140c",
+      "main_blob": "eb8169e737ffba00ad17221eb533a016e4fe140c",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "src/atp_gate/historical_audit.py",
+      "checkpoint_blob": "5acbd231dc2136f112a38c183c052a4b1a9e44fa",
+      "main_blob": "5acbd231dc2136f112a38c183c052a4b1a9e44fa",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "src/atp_gate/inventory_review.py",
+      "checkpoint_blob": "2d347bc977e6034fba593c1974c00261be33bbb7",
+      "main_blob": "2d347bc977e6034fba593c1974c00261be33bbb7",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "src/atp_gate/legacy_archive_crosswalk.py",
+      "checkpoint_blob": "4318eea14ec3176dd53b070f80327e0f001bf35c",
+      "main_blob": "4318eea14ec3176dd53b070f80327e0f001bf35c",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "src/atp_gate/official_calendar_coverage.py",
+      "checkpoint_blob": "fa36ea27cff6f3a331d06dffd3a8f9bad2936691",
+      "main_blob": "fa36ea27cff6f3a331d06dffd3a8f9bad2936691",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "src/atp_gate/paper_cash_history.py",
+      "checkpoint_blob": "3f0e7752fb2451f70c43ac1f86ac69df25363120",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "src/atp_gate/paper_evidence_archive.py",
+      "checkpoint_blob": "507d75696cc3f60cd6a81f386035f746621f39ee",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "src/atp_gate/paper_ledger.py",
+      "checkpoint_blob": "30bbc44cd7ef4eed796156fef3f839df02bbcad3",
+      "main_blob": "45b8ed2553a1e062ba3586c0303fa653a16f75ed",
+      "status": "DIFFERENT"
+    },
+    {
+      "path": "src/atp_gate/period_risk.py",
+      "checkpoint_blob": "7bd9cbe98802e9d6a571c80b1abb50a48d50d063",
+      "main_blob": "040f029df3a71b5f67e9f96c515266ce216d4be6",
+      "status": "DIFFERENT"
+    },
+    {
+      "path": "src/atp_gate/policy.py",
+      "checkpoint_blob": "a3657a1d420e916459450a57bd9d1089114abcfa",
+      "main_blob": "a3657a1d420e916459450a57bd9d1089114abcfa",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "src/atp_gate/quote_receipt.py",
+      "checkpoint_blob": "5fcae7248a3f57e26e56eca34cca719a7d1af80b",
+      "main_blob": "5fcae7248a3f57e26e56eca34cca719a7d1af80b",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "src/atp_gate/report_integrity.py",
+      "checkpoint_blob": "54865a1c12d23c3b34785ef11d7df226c5fbd81f",
+      "main_blob": "54865a1c12d23c3b34785ef11d7df226c5fbd81f",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "src/atp_gate/research_data.py",
+      "checkpoint_blob": "b63a441b8b98e2f031595f6201034240b6b2bfd6",
+      "main_blob": "b63a441b8b98e2f031595f6201034240b6b2bfd6",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "src/atp_gate/research_features.py",
+      "checkpoint_blob": "366a4a52cff2602eb576911cf4eb4fff5ab51816",
+      "main_blob": "366a4a52cff2602eb576911cf4eb4fff5ab51816",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "src/atp_gate/research_replay.py",
+      "checkpoint_blob": "57b303f240ad8fdb759ec58766dda7024e43a4da",
+      "main_blob": "57b303f240ad8fdb759ec58766dda7024e43a4da",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "src/atp_gate/research_train.py",
+      "checkpoint_blob": "cb2e7c89a37a2f22b554a4ce157fd00be067ca22",
+      "main_blob": "cb2e7c89a37a2f22b554a4ce157fd00be067ca22",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "src/atp_gate/source_gap_forensics.py",
+      "checkpoint_blob": "1febc75b6e53539af90e7f5815f330ffd4865b29",
+      "main_blob": "1febc75b6e53539af90e7f5815f330ffd4865b29",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "src/atp_gate/source_intake.py",
+      "checkpoint_blob": "d577a283e119e3195f856f23ad5d3c65ae2fbae0",
+      "main_blob": "d577a283e119e3195f856f23ad5d3c65ae2fbae0",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "src/atp_gate/source_profile.py",
+      "checkpoint_blob": "7affc3d62055d2af550c62106a359b1db39d757b",
+      "main_blob": "7affc3d62055d2af550c62106a359b1db39d757b",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "src/atp_gate/tier_registry.py",
+      "checkpoint_blob": "2b65a76346140ff1f955516a130503e72020cba6",
+      "main_blob": "2b65a76346140ff1f955516a130503e72020cba6",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "src/atp_gate/tml_cohort_manifest.py",
+      "checkpoint_blob": "396f6f516ed1d964f7c57b1a5475088b8cf0892a",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "src/atp_gate/tml_duplicate_sensitivity.py",
+      "checkpoint_blob": "0ac29b4e06d2855550dabeaacfe6fb09f96a640b",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "src/atp_gate/tml_elo_experiment.py",
+      "checkpoint_blob": "0a259b21cbf287f292015a4aa1878303c02ea6e9",
+      "main_blob": "b8ea8f118f1c56bfa05a0fea613dfa48a68bea87",
+      "status": "DIFFERENT"
+    },
+    {
+      "path": "src/atp_gate/tml_historical_audit.py",
+      "checkpoint_blob": "2b5cd69bb47ff88f277ec0717e481e9a16462b32",
+      "main_blob": "2b5cd69bb47ff88f277ec0717e481e9a16462b32",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "src/atp_gate/tml_identity_audit.py",
+      "checkpoint_blob": "4a0cf855ba116b841997e2bd08333c35a5ec6223",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "src/atp_gate/tml_sackmann_crosscheck.py",
+      "checkpoint_blob": "ca8982b61e8fe40b4fa5a8b9dcb4122f368e8281",
+      "main_blob": "ca8982b61e8fe40b4fa5a8b9dcb4122f368e8281",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "src/atp_gate/tml_snapshot.py",
+      "checkpoint_blob": "db30b9531a2272617b99d46059b61288d3000fa8",
+      "main_blob": "db30b9531a2272617b99d46059b61288d3000fa8",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "src/atp_gate/valuebetennis_source.py",
+      "checkpoint_blob": "2c25c1fa2ad000b67de4ee8c0e6c9323bbc0efb2",
+      "main_blob": "2c25c1fa2ad000b67de4ee8c0e6c9323bbc0efb2",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_cli.py",
+      "checkpoint_blob": "8444513b64d01e71a333f7bbf267296bf253d53e",
+      "main_blob": "8444513b64d01e71a333f7bbf267296bf253d53e",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_cross_month_carry.py",
+      "checkpoint_blob": "250f4856e350356f4badbb8a883989f2c8c97192",
+      "main_blob": "250f4856e350356f4badbb8a883989f2c8c97192",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_exact_win_payout_replay.py",
+      "checkpoint_blob": "151f3361e6cb48d39363795b83051c6ea7983241",
+      "main_blob": "151f3361e6cb48d39363795b83051c6ea7983241",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_fold_scoring.py",
+      "checkpoint_blob": "80d1711cbf24156500a8e9733283d7dce05fd444",
+      "main_blob": "80d1711cbf24156500a8e9733283d7dce05fd444",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_gate.py",
+      "checkpoint_blob": "685525d2bf6809ae1812a2d6ba99ceb0b6600605",
+      "main_blob": "685525d2bf6809ae1812a2d6ba99ceb0b6600605",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_history_audit.py",
+      "checkpoint_blob": "d4de54cc7c4933c00dc60317a7f34ec8b899157c",
+      "main_blob": "d4de54cc7c4933c00dc60317a7f34ec8b899157c",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_inventory_review.py",
+      "checkpoint_blob": "96fb47bb97eeb656a5e83a6c2346e15ee1287000",
+      "main_blob": "96fb47bb97eeb656a5e83a6c2346e15ee1287000",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_ledger.py",
+      "checkpoint_blob": "4435a992647da6b7433feb1cbd40c667c968988e",
+      "main_blob": "4435a992647da6b7433feb1cbd40c667c968988e",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_legacy_crosswalk.py",
+      "checkpoint_blob": "9f0e2af98481fbadb1a5cdcd55b762cd85173d9e",
+      "main_blob": "9f0e2af98481fbadb1a5cdcd55b762cd85173d9e",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_official_calendar_coverage.py",
+      "checkpoint_blob": "0fad217cadd3e74e049e0053fa1446ec675ad935",
+      "main_blob": "0fad217cadd3e74e049e0053fa1446ec675ad935",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_paper_cash_history.py",
+      "checkpoint_blob": "27afb01960c7cad80d09b8b9598b2f43f189b7f7",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "tests/test_paper_evidence_archive.py",
+      "checkpoint_blob": "570dc234b193c37fe3760eb0360fa61ee59483bc",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "tests/test_period_risk.py",
+      "checkpoint_blob": "ed0df5a91400e15c65d9380f8d0b5558e1b80380",
+      "main_blob": "ed0df5a91400e15c65d9380f8d0b5558e1b80380",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_quote_receipt.py",
+      "checkpoint_blob": "ec5fb12a9f3cadd2ca76fa9f80c31d38d302a14b",
+      "main_blob": "ec5fb12a9f3cadd2ca76fa9f80c31d38d302a14b",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_report_integrity.py",
+      "checkpoint_blob": "5bc92caf421b51eee069215d88b3fc38517424dc",
+      "main_blob": "5bc92caf421b51eee069215d88b3fc38517424dc",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_research_cli.py",
+      "checkpoint_blob": "e9aee62e32dcf7730837179691cd054ac6a4260a",
+      "main_blob": "e9aee62e32dcf7730837179691cd054ac6a4260a",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_research_data.py",
+      "checkpoint_blob": "50443e8dc20d62d8b6661bb071e5b06a78a6efbb",
+      "main_blob": "50443e8dc20d62d8b6661bb071e5b06a78a6efbb",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_research_features.py",
+      "checkpoint_blob": "9ef5fb22659553bd86a9db697c2b338310ee1122",
+      "main_blob": "9ef5fb22659553bd86a9db697c2b338310ee1122",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_research_replay.py",
+      "checkpoint_blob": "6285038b02d8d6fa605b21b03cbfbe7053d8ae9c",
+      "main_blob": "6285038b02d8d6fa605b21b03cbfbe7053d8ae9c",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_research_train.py",
+      "checkpoint_blob": "a0eac0400eb2d237b64271e029976268a4166043",
+      "main_blob": "a0eac0400eb2d237b64271e029976268a4166043",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_source_gap_forensics.py",
+      "checkpoint_blob": "aae7496a2d20c56b19127ed39a1d9b81807e1829",
+      "main_blob": "aae7496a2d20c56b19127ed39a1d9b81807e1829",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_source_intake.py",
+      "checkpoint_blob": "7cf6f388c58e53ff70ff24a3e8c055f99d2ba5b3",
+      "main_blob": "7cf6f388c58e53ff70ff24a3e8c055f99d2ba5b3",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_source_profile.py",
+      "checkpoint_blob": "f2512dd1d87241faf322b8ade4d3a2efe594fddd",
+      "main_blob": "f2512dd1d87241faf322b8ade4d3a2efe594fddd",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_tier_registry.py",
+      "checkpoint_blob": "b9063c0e88c24fb59f847e79cd42dea432a9f1e7",
+      "main_blob": "b9063c0e88c24fb59f847e79cd42dea432a9f1e7",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_tml_cohort_manifest.py",
+      "checkpoint_blob": "6cce0eb687b116f078a0d0890ed8111a41799c70",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "tests/test_tml_duplicate_sensitivity.py",
+      "checkpoint_blob": "7372a47078f88f4d9942389cd219ea7b8658e9ac",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "tests/test_tml_elo_experiment.py",
+      "checkpoint_blob": "ad5c60f79665307553757a971ef99ecdf578514b",
+      "main_blob": "0ba51e1252b2927111f0bd34e5f48d24ea0de8df",
+      "status": "DIFFERENT"
+    },
+    {
+      "path": "tests/test_tml_historical_audit.py",
+      "checkpoint_blob": "7cab7d587ad4d5b28d5bae039aa1603728ea4047",
+      "main_blob": "7cab7d587ad4d5b28d5bae039aa1603728ea4047",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_tml_identity_audit.py",
+      "checkpoint_blob": "0dfa578e2d425f8e6262d5f94abaf5cc15d20aad",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "tests/test_tml_revision_audit.py",
+      "checkpoint_blob": "56a4dd874daae5b97f82756a97669d3c327861e8",
+      "main_blob": null,
+      "status": "MISSING"
+    },
+    {
+      "path": "tests/test_tml_sackmann_crosscheck.py",
+      "checkpoint_blob": "a21fb5874017bde3bd80d4399ad62abe69f1a6cd",
+      "main_blob": "a21fb5874017bde3bd80d4399ad62abe69f1a6cd",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_tml_snapshot.py",
+      "checkpoint_blob": "067a748830323b5e47d513bb76e25b87b84e6987",
+      "main_blob": "067a748830323b5e47d513bb76e25b87b84e6987",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_tml_source_watch.py",
+      "checkpoint_blob": "0d88e65b51d5050a51aaf74b9cb7bd84c6cc24a4",
+      "main_blob": "0d88e65b51d5050a51aaf74b9cb7bd84c6cc24a4",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_valuebetennis_source.py",
+      "checkpoint_blob": "89220b2802592032ec7daebbe5914ee507d1d31c",
+      "main_blob": "89220b2802592032ec7daebbe5914ee507d1d31c",
+      "status": "IDENTICAL"
+    },
+    {
+      "path": "tests/test_valuebetennis_tournaments.py",
+      "checkpoint_blob": "143cef8bf454e7c2f51c1d899d769667befb5ac8",
+      "main_blob": "143cef8bf454e7c2f51c1d899d769667befb5ac8",
+      "status": "IDENTICAL"
+    }
+  ],
+  "prior_prs": [
+    {
+      "number": 38,
+      "head": "2e084eedfc44c8ffaabd1fc5cbfb00769b703574",
+      "base": "research/p1-8b-duplicate-sensitivity",
+      "merged_at": "2026-11-25T03:34:53Z",
+      "merge_commit": "3439f60273acd7bee813beb0842b8eec73722787",
+      "state": "closed"
+    },
+    {
+      "number": 37,
+      "head": "3439f60273acd7bee813beb0842b8eec73722787",
+      "base": "research/p1-8-identity-completeness",
+      "merged_at": "2026-11-25T03:37:18Z",
+      "merge_commit": "905cdd5f657c6713c0f7b6b7db1a44fc7fb3fef3",
+      "state": "closed"
+    },
+    {
+      "number": 36,
+      "head": "bf59c2f4e37084f9be8544bf5c13ebdb7c3124dd",
+      "base": "research/p1-7c-level-a-normalization",
+      "merged_at": "2026-11-25T03:35:03Z",
+      "merge_commit": "1c49b3c7b96e4108ba53daa830ac841179ec3b15",
+      "state": "closed"
+    },
+    {
+      "number": 35,
+      "head": "d4f7f63f461d6e379efbf13096099ab1efb22176",
+      "base": "research/p1-p2-revised-source-sensitivity",
+      "merged_at": "2026-11-25T03:34:43Z",
+      "merge_commit": "e7d6805f799c8ee25bb1d4c4f11b3c12bd2e9e07",
+      "state": "closed"
+    },
+    {
+      "number": 34,
+      "head": "be56b9e0073385c3285942b82322499e8a8350d2",
+      "base": "feat/p0-paper-cash-history",
+      "merged_at": "2026-11-25T03:35:16Z",
+      "merge_commit": "fb8592f186791db93c145e849c4d2b18461ed60e",
+      "state": "closed"
+    },
+    {
+      "number": 33,
+      "head": "16c4c58940383930e3d849ca2fd1d2796dc91ae0",
+      "base": "feat/p0-paper-odds-payout-replay",
+      "merged_at": "2026-11-25T03:34:20Z",
+      "merge_commit": "9636fa3ac2e9c2858f7964079be163d05dd9056a",
+      "state": "closed"
+    },
+    {
+      "number": 32,
+      "head": "9c1596d330086dd44fa18344c3ff8dc0bf179d87",
+      "base": "integration/atp-research-v0-3",
+      "merged_at": "2026-11-25T03:34:16Z",
+      "merge_commit": "e1d8fb22c1866fc5ba8906ecce576b794b33fc7e",
+      "state": "closed"
+    },
+    {
+      "number": 31,
+      "head": "cf72d7cab014fd83193fe114c940f8cc58e8c2c7",
+      "base": "main",
+      "merged_at": "2026-11-25T03:36:27Z",
+      "merge_commit": "932c80ec7b934aa05a8d7e5346a1ed1a4ab71491",
+      "state": "closed"
+    },
+    {
+      "number": 30,
+      "head": "07d002b537b7ace975c8e219d4d01c06d9f496a0",
+      "base": "feat/p1-tml-versioned-updates",
+      "merged_at": "2026-11-25T03:34:05Z",
+      "merge_commit": "41be12a58a0821c698030139db13a3baca0fc8b7",
+      "state": "closed"
+    },
+    {
+      "number": 28,
+      "head": "99231c9789966133931744e76b3e648d83e183a3",
+      "base": "feat/p1-tml-noncommercial-2024-audit",
+      "merged_at": "2026-11-25T03:37:06Z",
+      "merge_commit": "67e9bbd814a582577daf54ed76211918a51f4e68",
+      "state": "closed"
+    },
+    {
+      "number": 27,
+      "head": "4e8bad49eb126e44c797592ea9a26b451fe22035",
+      "base": "main",
+      "merged_at": "2026-11-25T03:33:57Z",
+      "merge_commit": "a6ab7eca1bf1869b6575ad8b92e85ba73f180678",
+      "state": "closed"
+    },
+    {
+      "number": 26,
+      "head": "126507564afde234d2619cc655f92162f2358363",
+      "base": "main",
+      "merged_at": "2026-11-25T03:33:21Z",
+      "merge_commit": "aa3438359553d7f94d184129dd81e8337b0faaf4",
+      "state": "closed"
+    },
+    {
+      "number": 24,
+      "head": "0223ee9132dfae071e0a1a2b99bb7e1b7066fb69",
+      "base": "main",
+      "merged_at": "2026-11-25T03:33:02Z",
+      "merge_commit": "d1cabc4128b12abbbb425ede13312a2433e8e8ab",
+      "state": "closed"
+    },
+    {
+      "number": 23,
+      "head": "394d70d23e04442ec819d5ca9ae98a64c15b70ec",
+      "base": "main",
+      "merged_at": "2026-11-25T03:32:52Z",
+      "merge_commit": "15c427b30e99272d8b089e4c9d8bfd2ce120873b",
+      "state": "closed"
+    },
+    {
+      "number": 22,
+      "head": "4bfb347a1a519b4ec41c9e853901e0ab980e37de",
+      "base": "feat/p0-risk-periods",
+      "merged_at": "2026-11-25T03:36:38Z",
+      "merge_commit": "a27c42c8fb1c1b75b3180d39ec2815b33071bce4",
+      "state": "closed"
+    },
+    {
+      "number": 20,
+      "head": "8a745dd17032656a7b8f9055da42f65b3e52d4de",
+      "base": "main",
+      "merged_at": "2026-11-25T03:29:57Z",
+      "merge_commit": "9aa36d8a4c08256219879fad5bb3fc8d0f7c69d8",
+      "state": "closed"
+    }
+  ],
+  "diverged_pr_file_matrix": [
+    {
+      "pr": 20,
+      "head": "8a745dd17032656a7b8f9055da42f65b3e52d4de",
+      "merge_commit": "9aa36d8a4c08256219879fad5bb3fc8d0f7c69d8",
+      "merged_at": "2026-11-25T03:29:57Z",
+      "files": [
+        {
+          "path": "docs/PAPER_LEDGER_PERIODS.md",
+          "pr_blob": "90d2264d036b0c9f64d1aade8776b0146e403b17",
+          "checkpoint_blob": "6df1f02d4774acce77bd0bf8aab025479b50a519",
+          "main_blob": "90d2264d036b0c9f64d1aade8776b0146e403b17",
+          "checkpoint_relation": "SUPERSEDED_OR_DIFFERENT"
+        },
+        {
+          "path": "docs/superpowers/plans/2026-11-24-p0-paper-ledger-period-integrity.md",
+          "pr_blob": "a8d48806e644738bb6fc0e797160fa96f4eb8c32",
+          "checkpoint_blob": "a8d48806e644738bb6fc0e797160fa96f4eb8c32",
+          "main_blob": "a8d48806e644738bb6fc0e797160fa96f4eb8c32",
+          "checkpoint_relation": "EXACT"
+        },
+        {
+          "path": "src/atp_gate/contracts.py",
+          "pr_blob": "65304265bb7317908255064c33784daf1e70123f",
+          "checkpoint_blob": "65304265bb7317908255064c33784daf1e70123f",
+          "main_blob": "65304265bb7317908255064c33784daf1e70123f",
+          "checkpoint_relation": "EXACT"
+        },
+        {
+          "path": "src/atp_gate/paper_ledger.py",
+          "pr_blob": "9e8f04eabac2e128772f7b39a345bc872f3a7878",
+          "checkpoint_blob": "30bbc44cd7ef4eed796156fef3f839df02bbcad3",
+          "main_blob": "45b8ed2553a1e062ba3586c0303fa653a16f75ed",
+          "checkpoint_relation": "SUPERSEDED_OR_DIFFERENT"
+        },
+        {
+          "path": "src/atp_gate/period_risk.py",
+          "pr_blob": "040f029df3a71b5f67e9f96c515266ce216d4be6",
+          "checkpoint_blob": "7bd9cbe98802e9d6a571c80b1abb50a48d50d063",
+          "main_blob": "040f029df3a71b5f67e9f96c515266ce216d4be6",
+          "checkpoint_relation": "SUPERSEDED_OR_DIFFERENT"
+        },
+        {
+          "path": "src/atp_gate/policy.py",
+          "pr_blob": "a3657a1d420e916459450a57bd9d1089114abcfa",
+          "checkpoint_blob": "a3657a1d420e916459450a57bd9d1089114abcfa",
+          "main_blob": "a3657a1d420e916459450a57bd9d1089114abcfa",
+          "checkpoint_relation": "EXACT"
+        },
+        {
+          "path": "tests/test_gate.py",
+          "pr_blob": "685525d2bf6809ae1812a2d6ba99ceb0b6600605",
+          "checkpoint_blob": "685525d2bf6809ae1812a2d6ba99ceb0b6600605",
+          "main_blob": "685525d2bf6809ae1812a2d6ba99ceb0b6600605",
+          "checkpoint_relation": "EXACT"
+        },
+        {
+          "path": "tests/test_period_risk.py",
+          "pr_blob": "ed0df5a91400e15c65d9380f8d0b5558e1b80380",
+          "checkpoint_blob": "ed0df5a91400e15c65d9380f8d0b5558e1b80380",
+          "main_blob": "ed0df5a91400e15c65d9380f8d0b5558e1b80380",
+          "checkpoint_relation": "EXACT"
+        }
+      ]
+    },
+    {
+      "pr": 22,
+      "head": "4bfb347a1a519b4ec41c9e853901e0ab980e37de",
+      "merge_commit": "a27c42c8fb1c1b75b3180d39ec2815b33071bce4",
+      "merged_at": "2026-11-25T03:36:38Z",
+      "files": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "pr_blob": "a1bd0c4a1a750a88ffe19f8ce2581f9c864ceaab",
+          "checkpoint_blob": "a1bd0c4a1a750a88ffe19f8ce2581f9c864ceaab",
+          "main_blob": "a1bd0c4a1a750a88ffe19f8ce2581f9c864ceaab",
+          "checkpoint_relation": "EXACT"
+        },
+        {
+          "path": "docs/PAPER_LEDGER_PERIODS.md",
+          "pr_blob": "7e5720ecc630f0555a50dad98323e2095da3f198",
+          "checkpoint_blob": "6df1f02d4774acce77bd0bf8aab025479b50a519",
+          "main_blob": "90d2264d036b0c9f64d1aade8776b0146e403b17",
+          "checkpoint_relation": "SUPERSEDED_OR_DIFFERENT"
+        },
+        {
+          "path": "docs/superpowers/plans/2026-11-24-p0-cross-month-paper-carry.md",
+          "pr_blob": "dff61dc867fdc3c478aa609d4bd3025911d9f381",
+          "checkpoint_blob": "dff61dc867fdc3c478aa609d4bd3025911d9f381",
+          "main_blob": "dff61dc867fdc3c478aa609d4bd3025911d9f381",
+          "checkpoint_relation": "EXACT"
+        },
+        {
+          "path": "docs/superpowers/specs/2026-11-24-p0-cross-month-paper-carry-design.md",
+          "pr_blob": "3006c752cd543135fc7c8d59efebcfd33e07c6fa",
+          "checkpoint_blob": "3006c752cd543135fc7c8d59efebcfd33e07c6fa",
+          "main_blob": "3006c752cd543135fc7c8d59efebcfd33e07c6fa",
+          "checkpoint_relation": "EXACT"
+        },
+        {
+          "path": "src/atp_gate/paper_ledger.py",
+          "pr_blob": "f2a04f76ec42f9c91353c2e21fb997d7e49a7390",
+          "checkpoint_blob": "30bbc44cd7ef4eed796156fef3f839df02bbcad3",
+          "main_blob": "45b8ed2553a1e062ba3586c0303fa653a16f75ed",
+          "checkpoint_relation": "SUPERSEDED_OR_DIFFERENT"
+        },
+        {
+          "path": "tests/test_cross_month_carry.py",
+          "pr_blob": "250f4856e350356f4badbb8a883989f2c8c97192",
+          "checkpoint_blob": "250f4856e350356f4badbb8a883989f2c8c97192",
+          "main_blob": "250f4856e350356f4badbb8a883989f2c8c97192",
+          "checkpoint_relation": "EXACT"
+        },
+        {
+          "path": "tests/test_ledger.py",
+          "pr_blob": "4435a992647da6b7433feb1cbd40c667c968988e",
+          "checkpoint_blob": "4435a992647da6b7433feb1cbd40c667c968988e",
+          "main_blob": "4435a992647da6b7433feb1cbd40c667c968988e",
+          "checkpoint_relation": "EXACT"
+        }
+      ]
+    },
+    {
+      "pr": 23,
+      "head": "394d70d23e04442ec819d5ca9ae98a64c15b70ec",
+      "merge_commit": "15c427b30e99272d8b089e4c9d8bfd2ce120873b",
+      "merged_at": "2026-11-25T03:32:52Z",
+      "files": [
+        {
+          "path": "docs/HISTORICAL_SOURCE_INTAKE.md",
+          "pr_blob": "223fc0360061832abc276d23e39b86e9c82f050a",
+          "checkpoint_blob": "223fc0360061832abc276d23e39b86e9c82f050a",
+          "main_blob": "223fc0360061832abc276d23e39b86e9c82f050a",
+          "checkpoint_relation": "EXACT"
+        },
+        {
+          "path": "docs/superpowers/plans/2026-11-24-p1-authorized-source-intake.md",
+          "pr_blob": "8cd773ad8c467078f5bb9ae1ac777754af00ea78",
+          "checkpoint_blob": "8cd773ad8c467078f5bb9ae1ac777754af00ea78",
+          "main_blob": "8cd773ad8c467078f5bb9ae1ac777754af00ea78",
+          "checkpoint_relation": "EXACT"
+        },
+        {
+          "path": "docs/superpowers/specs/2026-11-24-p1-authorized-source-intake-design.md",
+          "pr_blob": "a547862480c0e4cfa69bfe71f2ecf7c7ce5f3ab9",
+          "checkpoint_blob": "a547862480c0e4cfa69bfe71f2ecf7c7ce5f3ab9",
+          "main_blob": "a547862480c0e4cfa69bfe71f2ecf7c7ce5f3ab9",
+          "checkpoint_relation": "EXACT"
+        },
+        {
+          "path": "src/atp_gate/__main__.py",
+          "pr_blob": "39b3fb97eef60b58a7e9ffaff7ee40e1b211b01e",
+          "checkpoint_blob": "6b3ad6fb9884af2ad1f6b60cd3ffbc8db30a7c0f",
+          "main_blob": "602da6bfd658685b4d7e89d4c42ed3d67d24b8c9",
+          "checkpoint_relation": "SUPERSEDED_OR_DIFFERENT"
+        },
+        {
+          "path": "src/atp_gate/source_intake.py",
+          "pr_blob": "d577a283e119e3195f856f23ad5d3c65ae2fbae0",
+          "checkpoint_blob": "d577a283e119e3195f856f23ad5d3c65ae2fbae0",
+          "main_blob": "d577a283e119e3195f856f23ad5d3c65ae2fbae0",
+          "checkpoint_relation": "EXACT"
+        },
+        {
+          "path": "tests/test_source_intake.py",
+          "pr_blob": "7cf6f388c58e53ff70ff24a3e8c055f99d2ba5b3",
+          "checkpoint_blob": "7cf6f388c58e53ff70ff24a3e8c055f99d2ba5b3",
+          "main_blob": "7cf6f388c58e53ff70ff24a3e8c055f99d2ba5b3",
+          "checkpoint_relation": "EXACT"
+        }
+      ]
+    },
+    {
+      "pr": 24,
+      "head": "0223ee9132dfae071e0a1a2b99bb7e1b7066fb69",
+      "merge_commit": "d1cabc4128b12abbbb425ede13312a2433e8e8ab",
+      "merged_at": "2026-11-25T03:33:02Z",
+      "files": [
+        {
+          "path": "docs/P2_MATCHED_FOLD_SCORING.md",
+          "pr_blob": "fce1857a7b9c8d5be7529be29067f045ba08b02a",
+          "checkpoint_blob": "fce1857a7b9c8d5be7529be29067f045ba08b02a",
+          "main_blob": "fce1857a7b9c8d5be7529be29067f045ba08b02a",
+          "checkpoint_relation": "EXACT"
+        },
+        {
+          "path": "docs/superpowers/plans/2026-11-24-p2-matched-fold-scoring.md",
+          "pr_blob": "2a79ee32e3d9b22eed34ac8cf2e52121b4b1fdaf",
+          "checkpoint_blob": "2a79ee32e3d9b22eed34ac8cf2e52121b4b1fdaf",
+          "main_blob": "2a79ee32e3d9b22eed34ac8cf2e52121b4b1fdaf",
+          "checkpoint_relation": "EXACT"
+        },
+        {
+          "path": "docs/superpowers/specs/2026-11-24-p2-matched-fold-score-design.md",
+          "pr_blob": "ca4a3363a61773b73e8a2f30a52fbd424758172e",
+          "checkpoint_blob": "ca4a3363a61773b73e8a2f30a52fbd424758172e",
+          "main_blob": "ca4a3363a61773b73e8a2f30a52fbd424758172e",
+          "checkpoint_relation": "EXACT"
+        },
+        {
+          "path": "src/atp_gate/fold_scoring.py",
+          "pr_blob": "eb8169e737ffba00ad17221eb533a016e4fe140c",
+          "checkpoint_blob": "eb8169e737ffba00ad17221eb533a016e4fe140c",
+          "main_blob": "eb8169e737ffba00ad17221eb533a016e4fe140c",
+          "checkpoint_relation": "EXACT"
+        },
+        {
+          "path": "tests/test_fold_scoring.py",
+          "pr_blob": "80d1711cbf24156500a8e9733283d7dce05fd444",
+          "checkpoint_blob": "80d1711cbf24156500a8e9733283d7dce05fd444",
+          "main_blob": "80d1711cbf24156500a8e9733283d7dce05fd444",
+          "checkpoint_relation": "EXACT"
+        }
+      ]
+    },
+    {
+      "pr": 26,
+      "head": "126507564afde234d2619cc655f92162f2358363",
+      "merge_commit": "aa3438359553d7f94d184129dd81e8337b0faaf4",
+      "merged_at": "2026-11-25T03:33:21Z",
+      "files": [
+        {
+          "path": "docs/P3_T60_RECEIPT_AUDIT.md",
+          "pr_blob": "cb006f4257b007ca0828b7abb691ae5f42f17319",
+          "checkpoint_blob": "cb006f4257b007ca0828b7abb691ae5f42f17319",
+          "main_blob": "cb006f4257b007ca0828b7abb691ae5f42f17319",
+          "checkpoint_relation": "EXACT"
+        },
+        {
+          "path": "docs/superpowers/plans/2026-11-24-p3-quote-receipt-preflight.md",
+          "pr_blob": "7ca905ed564c41c8fcc266519cf245dc4cfc7c91",
+          "checkpoint_blob": "7ca905ed564c41c8fcc266519cf245dc4cfc7c91",
+          "main_blob": "7ca905ed564c41c8fcc266519cf245dc4cfc7c91",
+          "checkpoint_relation": "EXACT"
+        },
+        {
+          "path": "docs/superpowers/specs/2026-11-24-p3-quote-receipt-preflight-design.md",
+          "pr_blob": "8028e75184f5c3c3e222404f52987b79cb237548",
+          "checkpoint_blob": "8028e75184f5c3c3e222404f52987b79cb237548",
+          "main_blob": "8028e75184f5c3c3e222404f52987b79cb237548",
+          "checkpoint_relation": "EXACT"
+        },
+        {
+          "path": "src/atp_gate/quote_receipt.py",
+          "pr_blob": "5fcae7248a3f57e26e56eca34cca719a7d1af80b",
+          "checkpoint_blob": "5fcae7248a3f57e26e56eca34cca719a7d1af80b",
+          "main_blob": "5fcae7248a3f57e26e56eca34cca719a7d1af80b",
+          "checkpoint_relation": "EXACT"
+        },
+        {
+          "path": "tests/test_quote_receipt.py",
+          "pr_blob": "ec5fb12a9f3cadd2ca76fa9f80c31d38d302a14b",
+          "checkpoint_blob": "ec5fb12a9f3cadd2ca76fa9f80c31d38d302a14b",
+          "main_blob": "ec5fb12a9f3cadd2ca76fa9f80c31d38d302a14b",
+          "checkpoint_relation": "EXACT"
+        }
+      ]
+    }
+  ],
+  "broken_ci": {
+    "run_id": 45541147214,
+    "job_id": 138959686995,
+    "passed": 313,
+    "failed": 22,
+    "conclusion": "failure"
+  },
+  "ruling": "Restore exact previously reviewed tree in a new child of current main, preserving history. No main-only paths. Six modified files differ by older implementations; CI failures in main corroborate regression. No merge or close operations performed by remediation. Full CI on recovered tree required."
+}
