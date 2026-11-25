@@ -1,0 +1,158 @@
+{
+  "schema": "P2_4_BOOTSTRAP_REPEAT_COMPARISON_EVIDENCE_V1",
+  "status": "HISTORICAL_SKILL_RESEARCH_ONLY",
+  "method": "OFFLINE_COMPARISON_OF_ARCHIVED_AGGREGATE_EVIDENCE",
+  "difference_direction": "P2_4_MINUS_P2_3",
+  "source_commit": "61ca9bef7573abc85bcfb3a90dcc4e3278fae27c",
+  "implementation_commit": "f07c16c0a007b10a939ab5916d3507bab48ef644",
+  "source_files": [
+    {
+      "path": "docs/research/p2_3_fixed_ml_evidence_20261125.json",
+      "sha256": "ae9fd7d9333933c7655d146333c4ba9fcfb846855199d1df78543e7c95a78481"
+    },
+    {
+      "path": "docs/research/p2_4_fixed_ablation_evidence_20261125.json",
+      "sha256": "6005a0eb688b5d7765d50915abfffb8af471110fb873c6349df9e0b8700a8af6"
+    }
+  ],
+  "red_ci_run": 45570997433,
+  "green_ci_run": 45571772659,
+  "models_compared": 9,
+  "models_with_paired_intervals": 8,
+  "interval_endpoints_compared": 32,
+  "max_abs_bootstrap_endpoint_difference": 6.439798101894045e-9,
+  "repeated_p2_3_comparison": {
+    "coinflip": {
+      "max_abs_proper_score_difference": 0,
+      "aggregate_ece_difference": 0,
+      "bootstrap_endpoint_differences": {
+        "log_loss_95ci": [
+          0,
+          0
+        ],
+        "brier_95ci": [
+          0,
+          0
+        ]
+      },
+      "max_abs_bootstrap_endpoint_difference": 0
+    },
+    "global_elo": {
+      "max_abs_proper_score_difference": 0,
+      "aggregate_ece_difference": 0,
+      "bootstrap_endpoint_differences": null,
+      "max_abs_bootstrap_endpoint_difference": null
+    },
+    "logistic_isotonic": {
+      "max_abs_proper_score_difference": 2.343463301190951e-8,
+      "aggregate_ece_difference": 4.452462305098992e-9,
+      "bootstrap_endpoint_differences": {
+        "log_loss_95ci": [
+          -5.924430768883271e-9,
+          3.1731068050877553e-9
+        ],
+        "brier_95ci": [
+          -6.439798101894045e-9,
+          -2.2777659630397046e-9
+        ]
+      },
+      "max_abs_bootstrap_endpoint_difference": 6.439798101894045e-9
+    },
+    "logistic_platt": {
+      "max_abs_proper_score_difference": 4.83661111161382e-10,
+      "aggregate_ece_difference": 7.880729402387487e-10,
+      "bootstrap_endpoint_differences": {
+        "log_loss_95ci": [
+          2.0797966994445805e-10,
+          6.26613693224809e-10
+        ],
+        "brier_95ci": [
+          -3.5713489457411818e-12,
+          1.6575941313989873e-10
+        ]
+      },
+      "max_abs_bootstrap_endpoint_difference": 6.26613693224809e-10
+    },
+    "logistic_raw": {
+      "max_abs_proper_score_difference": 2.549886413127922e-9,
+      "aggregate_ece_difference": 0.00012997953299039022,
+      "bootstrap_endpoint_differences": {
+        "log_loss_95ci": [
+          1.0006913613719304e-9,
+          9.848658807974989e-10
+        ],
+        "brier_95ci": [
+          1.0065637212619549e-10,
+          4.4623376543352633e-10
+        ]
+      },
+      "max_abs_bootstrap_endpoint_difference": 1.0006913613719304e-9
+    },
+    "surface_elo": {
+      "max_abs_proper_score_difference": 0,
+      "aggregate_ece_difference": 0,
+      "bootstrap_endpoint_differences": {
+        "log_loss_95ci": [
+          0,
+          0
+        ],
+        "brier_95ci": [
+          0,
+          0
+        ]
+      },
+      "max_abs_bootstrap_endpoint_difference": 0
+    },
+    "xgboost_isotonic": {
+      "max_abs_proper_score_difference": 0,
+      "aggregate_ece_difference": 0,
+      "bootstrap_endpoint_differences": {
+        "log_loss_95ci": [
+          0,
+          0
+        ],
+        "brier_95ci": [
+          0,
+          0
+        ]
+      },
+      "max_abs_bootstrap_endpoint_difference": 0
+    },
+    "xgboost_platt": {
+      "max_abs_proper_score_difference": 0,
+      "aggregate_ece_difference": 0,
+      "bootstrap_endpoint_differences": {
+        "log_loss_95ci": [
+          0,
+          1.3010426069826053e-18
+        ],
+        "brier_95ci": [
+          0,
+          4.336808689942018e-19
+        ]
+      },
+      "max_abs_bootstrap_endpoint_difference": 1.3010426069826053e-18
+    },
+    "xgboost_raw": {
+      "max_abs_proper_score_difference": 0,
+      "aggregate_ece_difference": 0,
+      "bootstrap_endpoint_differences": {
+        "log_loss_95ci": [
+          0,
+          0
+        ],
+        "brier_95ci": [
+          0,
+          0
+        ]
+      },
+      "max_abs_bootstrap_endpoint_difference": 0
+    }
+  },
+  "new_model_fitting_performed": false,
+  "future_holdout_accessed": false,
+  "official_match_draw_verified": false,
+  "model_validation_trusted": false,
+  "allocation_enabled": false,
+  "stake": 0
+}
