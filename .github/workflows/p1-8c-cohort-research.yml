@@ -1,0 +1,21 @@
+name: P1.8c locked cohort replay
+on:
+  push:
+    branches: [research/p1-8c-cohort-manifest]
+    paths:
+      - '.github/workflows/p1-8c-cohort-research.yml'
+      - 'src/atp_gate/tml_cohort_manifest.py'
+      - 'scripts/p1_8c_cohort_research.py'
+permissions:
+  contents: read
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install -e ".[test,ml]"
+      - run: python -m scripts.p1_8c_cohort_research

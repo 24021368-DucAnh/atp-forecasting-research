@@ -1,0 +1,481 @@
+{
+  "schema": "P1_7C_PINNED_NORMALIZATION_EXECUTION_V1",
+  "status": "REPRODUCED_HISTORICAL_SKILL_ONLY",
+  "run_id": 45446615209,
+  "job_id": 138632001558,
+  "run_commit": "ea53231adb6e33314f51196349804f5160f91e91",
+  "source_provenance_note": "Original snapshots fetched via verified GitHub blobs with pinned SHA256; revised 2025 fetched via publisher updater and exact pinned SHA256. Nominal source_url inside source_inventory does not identify actual original retrieval URL.",
+  "interpretation": "Matched-cohort sensitivity is descriptive, not independent prospective validation or statistical significance. No source match-level draw certification.",
+  "results": [
+    {
+      "added_cohort": {
+        "coinflip_brier": 0.25,
+        "coinflip_log_loss": 0.6931471805599447,
+        "global_elo_brier": 0.24105833057877207,
+        "global_elo_log_loss": 0.6758599961461385,
+        "global_elo_minus_coinflip_log_loss": -0.017287184413806278,
+        "n": 53,
+        "surface_elo_brier": 0.24678294045560326,
+        "surface_elo_log_loss": 0.692617442036944,
+        "surface_elo_minus_coinflip_log_loss": -0.0005297385230007556
+      },
+      "allocation_enabled": false,
+      "baseline": {
+        "aggregate": {
+          "coinflip_brier": 0.25,
+          "coinflip_log_loss": 0.6931471805600301,
+          "global_elo_brier": 0.2203622277110962,
+          "global_elo_log_loss": 0.6297340915746316,
+          "global_elo_minus_coinflip_log_loss": -0.06341308898539855,
+          "n": 7194,
+          "surface_elo_brier": 0.22054957775527642,
+          "surface_elo_log_loss": 0.6309176483852493,
+          "surface_elo_minus_coinflip_log_loss": -0.06222953217478078
+        },
+        "eligible": 12123,
+        "excluded": {
+          "MALFORMED_ROWS": 1,
+          "MISSING_MATCH_ID": 489,
+          "NON_COMPLETED": 443,
+          "OUT_OF_SCOPE_LEVEL": 1612
+        },
+        "folds": [
+          {
+            "coinflip_brier": 0.25,
+            "coinflip_log_loss": 0.6931471805599064,
+            "global_elo_brier": 0.2234393518038646,
+            "global_elo_log_loss": 0.6368703615850754,
+            "global_elo_minus_coinflip_log_loss": -0.056276818974831055,
+            "n": 2600,
+            "surface_elo_brier": 0.22353984011427921,
+            "surface_elo_log_loss": 0.6374294174309088,
+            "surface_elo_minus_coinflip_log_loss": -0.05571776312899768,
+            "year": 2023
+          },
+          {
+            "coinflip_brier": 0.25,
+            "coinflip_log_loss": 0.6931471805599064,
+            "global_elo_brier": 0.2186234466352871,
+            "global_elo_log_loss": 0.6252029590854966,
+            "global_elo_minus_coinflip_log_loss": -0.06794422147440982,
+            "n": 2594,
+            "surface_elo_brier": 0.2191382040377845,
+            "surface_elo_log_loss": 0.6273018556755943,
+            "surface_elo_minus_coinflip_log_loss": -0.06584532488431216,
+            "year": 2024
+          },
+          {
+            "coinflip_brier": 0.25,
+            "coinflip_log_loss": 0.6931471805599112,
+            "global_elo_brier": 0.21861716544582221,
+            "global_elo_log_loss": 0.6263338193994538,
+            "global_elo_minus_coinflip_log_loss": -0.06681336116045744,
+            "n": 2000,
+            "surface_elo_brier": 0.21849278840016015,
+            "surface_elo_log_loss": 0.6271420317703063,
+            "surface_elo_minus_coinflip_log_loss": -0.06600514878960495,
+            "year": 2025
+          }
+        ]
+      },
+      "market_edge_verified": false,
+      "matched_cohort": {
+        "after": {
+          "coinflip_brier": 0.25,
+          "coinflip_log_loss": 0.6931471805600301,
+          "global_elo_brier": 0.2202441320065013,
+          "global_elo_log_loss": 0.6293945361233453,
+          "global_elo_minus_coinflip_log_loss": -0.06375264443668482,
+          "n": 7194,
+          "surface_elo_brier": 0.22037602401395628,
+          "surface_elo_log_loss": 0.6303651673781325,
+          "surface_elo_minus_coinflip_log_loss": -0.06278201318189758
+        },
+        "before": {
+          "coinflip_brier": 0.25,
+          "coinflip_log_loss": 0.6931471805600301,
+          "global_elo_brier": 0.2203622277110962,
+          "global_elo_log_loss": 0.6297340915746316,
+          "global_elo_minus_coinflip_log_loss": -0.06341308898539855,
+          "n": 7194,
+          "surface_elo_brier": 0.22054957775527642,
+          "surface_elo_log_loss": 0.6309176483852493,
+          "surface_elo_minus_coinflip_log_loss": -0.06222953217478078
+        }
+      },
+      "model_validation_trusted": false,
+      "normalized": {
+        "aggregate": {
+          "coinflip_brier": 0.25,
+          "coinflip_log_loss": 0.6931471805600308,
+          "global_elo_brier": 0.2203963539637706,
+          "global_elo_log_loss": 0.6297343552735056,
+          "global_elo_minus_coinflip_log_loss": -0.06341282528652514,
+          "n": 7247,
+          "surface_elo_brier": 0.22056914759218282,
+          "surface_elo_log_loss": 0.6308204413614248,
+          "surface_elo_minus_coinflip_log_loss": -0.062326739198605985
+        },
+        "eligible": 12176,
+        "excluded": {
+          "MALFORMED_ROWS": 1,
+          "MISSING_MATCH_ID": 489,
+          "NON_COMPLETED": 444,
+          "OUT_OF_SCOPE_LEVEL": 1558
+        },
+        "folds": [
+          {
+            "coinflip_brier": 0.25,
+            "coinflip_log_loss": 0.6931471805599064,
+            "global_elo_brier": 0.2234393518038646,
+            "global_elo_log_loss": 0.6368703615850754,
+            "global_elo_minus_coinflip_log_loss": -0.056276818974831055,
+            "n": 2600,
+            "surface_elo_brier": 0.22353984011427921,
+            "surface_elo_log_loss": 0.6374294174309088,
+            "surface_elo_minus_coinflip_log_loss": -0.05571776312899768,
+            "year": 2023
+          },
+          {
+            "coinflip_brier": 0.25,
+            "coinflip_log_loss": 0.6931471805599061,
+            "global_elo_brier": 0.21884359450110866,
+            "global_elo_log_loss": 0.6255234711382403,
+            "global_elo_minus_coinflip_log_loss": -0.06762370942166585,
+            "n": 2647,
+            "surface_elo_brier": 0.219330607319695,
+            "surface_elo_log_loss": 0.6274309605338589,
+            "surface_elo_minus_coinflip_log_loss": -0.06571622002604716,
+            "year": 2024
+          },
+          {
+            "coinflip_brier": 0.25,
+            "coinflip_log_loss": 0.6931471805599112,
+            "global_elo_brier": 0.21849553392048068,
+            "global_elo_log_loss": 0.6260306522214811,
+            "global_elo_minus_coinflip_log_loss": -0.06711652833843007,
+            "n": 2000,
+            "surface_elo_brier": 0.21834645536409678,
+            "surface_elo_log_loss": 0.6267147503463817,
+            "surface_elo_minus_coinflip_log_loss": -0.06643243021352951,
+            "year": 2025
+          }
+        ]
+      },
+      "official_match_draw_verified": false,
+      "registry": {
+        "eligible_rows": 53,
+        "events": [
+          {
+            "canonical_level": "250",
+            "eligible_rows": 26,
+            "event_id": "2024-451",
+            "event_name": "Doha",
+            "expected_raw_rows": 27,
+            "official_metadata_reference": "https://www.atptour.com/en/news/mensik-khachanov-doha-2024-final",
+            "raw_rows": 27,
+            "source_level": "A",
+            "start": "20240219",
+            "surface": "Hard"
+          },
+          {
+            "canonical_level": "250",
+            "eligible_rows": 27,
+            "event_id": "2024-7480",
+            "event_name": "Los Cabos",
+            "expected_raw_rows": 27,
+            "official_metadata_reference": "https://www.atptour.com/en/news/thompson-first-time-winner-spotlight-los-cabos-2024",
+            "raw_rows": 27,
+            "source_level": "A",
+            "start": "20240219",
+            "surface": "Hard"
+          }
+        ],
+        "official_match_draw_verified": false,
+        "raw_rows": 54,
+        "registry_schema": "TML_LEVEL_A_2024_NORMALIZATION_V1",
+        "registry_sha256": "46a6fd05e2224ad0453480db37a900a495a0a67609ea6a24830fe318f47a3f3b",
+        "source_sha256": "db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8"
+      },
+      "schema": "TML_LEVEL_A_2024_SENSITIVITY_V1",
+      "source_inventory": [
+        {
+          "season": 2021,
+          "sha256": "80d570be31d778b143eb58380258243785bf3fcb18db144b42704bc6c56d941b",
+          "size_bytes": 576869,
+          "source_file": "2021-80d570be31d778b143eb58380258243785bf3fcb18db144b42704bc6c56d941b.csv",
+          "source_rows": 2735,
+          "source_url": "https://stats.tennismylife.org/data/2021.csv"
+        },
+        {
+          "season": 2022,
+          "sha256": "d70036c6ee6c27dd3deda6e6c9ccd500b66e6e78106fb00794cb277e37353357",
+          "size_bytes": 612757,
+          "source_file": "2022-d70036c6ee6c27dd3deda6e6c9ccd500b66e6e78106fb00794cb277e37353357.csv",
+          "source_rows": 2918,
+          "source_url": "https://stats.tennismylife.org/data/2022.csv"
+        },
+        {
+          "season": 2023,
+          "sha256": "9faaf53186ef908b3322d521a8dd2a717401167c0e400a99e1efddb23e13600f",
+          "size_bytes": 630603,
+          "source_file": "2023-9faaf53186ef908b3322d521a8dd2a717401167c0e400a99e1efddb23e13600f.csv",
+          "source_rows": 2995,
+          "source_url": "https://stats.tennismylife.org/data/2023.csv"
+        },
+        {
+          "season": 2024,
+          "sha256": "db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8",
+          "size_bytes": 653073,
+          "source_file": "2024-db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8.csv",
+          "source_rows": 3076,
+          "source_url": "https://stats.tennismylife.org/data/2024.csv"
+        },
+        {
+          "season": 2025,
+          "sha256": "a00f5f991b4949c2c6867637ac02a8c44b9058780da67aba8600e9140002f8d3",
+          "size_bytes": 619784,
+          "source_file": "2025-a00f5f991b4949c2c6867637ac02a8c44b9058780da67aba8600e9140002f8d3.csv",
+          "source_rows": 2944,
+          "source_url": "https://stats.tennismylife.org/data/2025.csv"
+        }
+      ],
+      "source_variant": "ORIGINAL_PINNED",
+      "stake": 0,
+      "status": "HISTORICAL_SKILL_RESEARCH_ONLY"
+    },
+    {
+      "added_cohort": {
+        "coinflip_brier": 0.25,
+        "coinflip_log_loss": 0.6931471805599447,
+        "global_elo_brier": 0.24105833057877207,
+        "global_elo_log_loss": 0.6758599961461385,
+        "global_elo_minus_coinflip_log_loss": -0.017287184413806278,
+        "n": 53,
+        "surface_elo_brier": 0.24678294045560326,
+        "surface_elo_log_loss": 0.692617442036944,
+        "surface_elo_minus_coinflip_log_loss": -0.0005297385230007556
+      },
+      "allocation_enabled": false,
+      "baseline": {
+        "aggregate": {
+          "coinflip_brier": 0.25,
+          "coinflip_log_loss": 0.6931471805600352,
+          "global_elo_brier": 0.22058423345258646,
+          "global_elo_log_loss": 0.6300316523790878,
+          "global_elo_minus_coinflip_log_loss": -0.06311552818094746,
+          "n": 7641,
+          "surface_elo_brier": 0.22110649766589185,
+          "surface_elo_log_loss": 0.6321003508328172,
+          "surface_elo_minus_coinflip_log_loss": -0.06104682972721798
+        },
+        "eligible": 12570,
+        "excluded": {
+          "NON_COMPLETED": 475,
+          "OUT_OF_SCOPE_LEVEL": 1622
+        },
+        "folds": [
+          {
+            "coinflip_brier": 0.25,
+            "coinflip_log_loss": 0.6931471805599064,
+            "global_elo_brier": 0.2234393518038646,
+            "global_elo_log_loss": 0.6368703615850754,
+            "global_elo_minus_coinflip_log_loss": -0.056276818974831055,
+            "n": 2600,
+            "surface_elo_brier": 0.22353984011427921,
+            "surface_elo_log_loss": 0.6374294174309088,
+            "surface_elo_minus_coinflip_log_loss": -0.05571776312899768,
+            "year": 2023
+          },
+          {
+            "coinflip_brier": 0.25,
+            "coinflip_log_loss": 0.6931471805599064,
+            "global_elo_brier": 0.2186234466352871,
+            "global_elo_log_loss": 0.6252029590854966,
+            "global_elo_minus_coinflip_log_loss": -0.06794422147440982,
+            "n": 2594,
+            "surface_elo_brier": 0.2191382040377845,
+            "surface_elo_log_loss": 0.6273018556755943,
+            "surface_elo_minus_coinflip_log_loss": -0.06584532488431216,
+            "year": 2024
+          },
+          {
+            "coinflip_brier": 0.25,
+            "coinflip_log_loss": 0.6931471805599074,
+            "global_elo_brier": 0.21962917554116565,
+            "global_elo_log_loss": 0.6278841192642592,
+            "global_elo_minus_coinflip_log_loss": -0.06526306129564818,
+            "n": 2447,
+            "surface_elo_brier": 0.22060754519572423,
+            "surface_elo_log_loss": 0.631524839301466,
+            "surface_elo_minus_coinflip_log_loss": -0.06162234125844146,
+            "year": 2025
+          }
+        ]
+      },
+      "market_edge_verified": false,
+      "matched_cohort": {
+        "after": {
+          "coinflip_brier": 0.25,
+          "coinflip_log_loss": 0.6931471805600352,
+          "global_elo_brier": 0.2204771834195191,
+          "global_elo_log_loss": 0.6297249984143157,
+          "global_elo_minus_coinflip_log_loss": -0.06342218214571949,
+          "n": 7641,
+          "surface_elo_brier": 0.22095328054145588,
+          "surface_elo_log_loss": 0.6316126772694128,
+          "surface_elo_minus_coinflip_log_loss": -0.06153450329062238
+        },
+        "before": {
+          "coinflip_brier": 0.25,
+          "coinflip_log_loss": 0.6931471805600352,
+          "global_elo_brier": 0.22058423345258646,
+          "global_elo_log_loss": 0.6300316523790878,
+          "global_elo_minus_coinflip_log_loss": -0.06311552818094746,
+          "n": 7641,
+          "surface_elo_brier": 0.22110649766589185,
+          "surface_elo_log_loss": 0.6321003508328172,
+          "surface_elo_minus_coinflip_log_loss": -0.06104682972721798
+        }
+      },
+      "model_validation_trusted": false,
+      "normalized": {
+        "aggregate": {
+          "coinflip_brier": 0.25,
+          "coinflip_log_loss": 0.6931471805600358,
+          "global_elo_brier": 0.22061895633340534,
+          "global_elo_log_loss": 0.63004279863264,
+          "global_elo_minus_coinflip_log_loss": -0.06310438192739576,
+          "n": 7694,
+          "surface_elo_brier": 0.22113120775427758,
+          "surface_elo_log_loss": 0.6320329076479779,
+          "surface_elo_minus_coinflip_log_loss": -0.06111427291205784
+        },
+        "eligible": 12623,
+        "excluded": {
+          "NON_COMPLETED": 476,
+          "OUT_OF_SCOPE_LEVEL": 1568
+        },
+        "folds": [
+          {
+            "coinflip_brier": 0.25,
+            "coinflip_log_loss": 0.6931471805599064,
+            "global_elo_brier": 0.2234393518038646,
+            "global_elo_log_loss": 0.6368703615850754,
+            "global_elo_minus_coinflip_log_loss": -0.056276818974831055,
+            "n": 2600,
+            "surface_elo_brier": 0.22353984011427921,
+            "surface_elo_log_loss": 0.6374294174309088,
+            "surface_elo_minus_coinflip_log_loss": -0.05571776312899768,
+            "year": 2023
+          },
+          {
+            "coinflip_brier": 0.25,
+            "coinflip_log_loss": 0.6931471805599061,
+            "global_elo_brier": 0.21884359450110866,
+            "global_elo_log_loss": 0.6255234711382403,
+            "global_elo_minus_coinflip_log_loss": -0.06762370942166585,
+            "n": 2647,
+            "surface_elo_brier": 0.219330607319695,
+            "surface_elo_log_loss": 0.6274309605338589,
+            "surface_elo_minus_coinflip_log_loss": -0.06571622002604716,
+            "year": 2024
+          },
+          {
+            "coinflip_brier": 0.25,
+            "coinflip_log_loss": 0.6931471805599074,
+            "global_elo_brier": 0.21954268111758923,
+            "global_elo_log_loss": 0.6276770430957921,
+            "global_elo_minus_coinflip_log_loss": -0.06547013746411534,
+            "n": 2447,
+            "surface_elo_brier": 0.22051974278261427,
+            "surface_elo_log_loss": 0.6312770550020695,
+            "surface_elo_minus_coinflip_log_loss": -0.061870125557837885,
+            "year": 2025
+          }
+        ]
+      },
+      "official_match_draw_verified": false,
+      "registry": {
+        "eligible_rows": 53,
+        "events": [
+          {
+            "canonical_level": "250",
+            "eligible_rows": 26,
+            "event_id": "2024-451",
+            "event_name": "Doha",
+            "expected_raw_rows": 27,
+            "official_metadata_reference": "https://www.atptour.com/en/news/mensik-khachanov-doha-2024-final",
+            "raw_rows": 27,
+            "source_level": "A",
+            "start": "20240219",
+            "surface": "Hard"
+          },
+          {
+            "canonical_level": "250",
+            "eligible_rows": 27,
+            "event_id": "2024-7480",
+            "event_name": "Los Cabos",
+            "expected_raw_rows": 27,
+            "official_metadata_reference": "https://www.atptour.com/en/news/thompson-first-time-winner-spotlight-los-cabos-2024",
+            "raw_rows": 27,
+            "source_level": "A",
+            "start": "20240219",
+            "surface": "Hard"
+          }
+        ],
+        "official_match_draw_verified": false,
+        "raw_rows": 54,
+        "registry_schema": "TML_LEVEL_A_2024_NORMALIZATION_V1",
+        "registry_sha256": "46a6fd05e2224ad0453480db37a900a495a0a67609ea6a24830fe318f47a3f3b",
+        "source_sha256": "db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8"
+      },
+      "schema": "TML_LEVEL_A_2024_SENSITIVITY_V1",
+      "source_inventory": [
+        {
+          "season": 2021,
+          "sha256": "80d570be31d778b143eb58380258243785bf3fcb18db144b42704bc6c56d941b",
+          "size_bytes": 576869,
+          "source_file": "2021-80d570be31d778b143eb58380258243785bf3fcb18db144b42704bc6c56d941b.csv",
+          "source_rows": 2735,
+          "source_url": "https://stats.tennismylife.org/data/2021.csv"
+        },
+        {
+          "season": 2022,
+          "sha256": "d70036c6ee6c27dd3deda6e6c9ccd500b66e6e78106fb00794cb277e37353357",
+          "size_bytes": 612757,
+          "source_file": "2022-d70036c6ee6c27dd3deda6e6c9ccd500b66e6e78106fb00794cb277e37353357.csv",
+          "source_rows": 2918,
+          "source_url": "https://stats.tennismylife.org/data/2022.csv"
+        },
+        {
+          "season": 2023,
+          "sha256": "9faaf53186ef908b3322d521a8dd2a717401167c0e400a99e1efddb23e13600f",
+          "size_bytes": 630603,
+          "source_file": "2023-9faaf53186ef908b3322d521a8dd2a717401167c0e400a99e1efddb23e13600f.csv",
+          "source_rows": 2995,
+          "source_url": "https://stats.tennismylife.org/data/2023.csv"
+        },
+        {
+          "season": 2024,
+          "sha256": "db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8",
+          "size_bytes": 653073,
+          "source_file": "2024-db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8.csv",
+          "source_rows": 3076,
+          "source_url": "https://stats.tennismylife.org/data/2024.csv"
+        },
+        {
+          "season": 2025,
+          "sha256": "5ccf52d912085d6a5ba3effdc5f2f216f170aabfd8850086b5f92c7ccedfd53e",
+          "size_bytes": 620959,
+          "source_file": "2025-5ccf52d912085d6a5ba3effdc5f2f216f170aabfd8850086b5f92c7ccedfd53e.csv",
+          "source_rows": 2943,
+          "source_url": "https://stats.tennismylife.org/data/2025.csv"
+        }
+      ],
+      "source_variant": "REVISED_2025_PINNED",
+      "stake": 0,
+      "status": "HISTORICAL_SKILL_RESEARCH_ONLY"
+    }
+  ]
+}

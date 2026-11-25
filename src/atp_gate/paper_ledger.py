@@ -74,7 +74,9 @@ def _verify_journal_state(book: PaperBook, replay: PeriodReplay) -> None:
         raise ValueError("risk open exposure disagrees with journal")
     for match_id, position in book.open_positions.items():
         if (position.match_id != match_id or position.stake != replay.open_stakes[match_id]
-                or position.placed_at != replay.reserve_at[match_id]):
+                or position.placed_at != replay.reserve_at[match_id]
+                or position.odds != replay.reserve_odds.get(match_id)
+                or position.side != replay.reserve_sides.get(match_id)):
             raise ValueError("risk open-position data disagrees with journal")
 
     this_month_ids = [
@@ -216,17 +218,25 @@ def close_month(book: PaperBook, next_month: str) -> tuple[PaperBook, MonthlyRep
     if replay.daily_counts.get(next_day, 0):
         raise ValueError("new-month reservation found before the month rollover")
 
-    net = book.risk.free_cash + book.risk.protected_cash - X
+    carry = book.risk.open_exposure
+    if carry > X:
+        raise ValueError("carried open exposure exceeds reference capital")
+    net = book.risk.free_cash + book.risk.protected_cash + carry - X
     report = MonthlyReport(
         month=book.risk.month, net=net,
         protected=book.risk.protected_cash,
         ending_unlocked=book.risk.free_cash,
         needed_topup=max(-net, Decimal("0")),
+        carried_open_exposure=carry,
     )
-    year_losses = Decimal("0") if expected_year != year else book.risk.annual_negative_month_loss
-    year_losses += max(-net, Decimal("0"))
+    # December belongs to the closing year, not the new annual counter.
+    # Its deficit remains visible in the returned monthly report.
+    year_losses = (
+        book.risk.annual_negative_month_loss + max(-net, Decimal("0"))
+        if expected_year == year else Decimal("0")
+    )
     newrisk = RiskState(
-        month=next_month, free_cash=X, open_exposure=0, protected_cash=0,
+        month=next_month, free_cash=X-carry, open_exposure=carry, protected_cash=0,
         phase="STOPPED" if year_losses >= ANNUAL_NEGATIVE_MONTH_MAX else "NORMAL",
         selection_day=next_day, loss_week_start=next_week,
         selections_today=0,
@@ -235,4 +245,7 @@ def close_month(book: PaperBook, next_month: str) -> tuple[PaperBook, MonthlyRep
         annual_negative_month_loss=year_losses,
         seen_match_ids=[],
     )
-    return PaperBook(risk=newrisk, journal=list(book.journal)), report
+    return PaperBook(
+        risk=newrisk, open_positions=dict(book.open_positions),
+        journal=list(book.journal),
+    ), report

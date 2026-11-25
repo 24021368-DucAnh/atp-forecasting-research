@@ -58,6 +58,27 @@ def main() -> int:
     legacy_crosswalk.add_argument('calendar',help='Curated official ATP February 2024 event reference')
     legacy_crosswalk.add_argument('manifest',help='Curated legacy provider HTML tournament-index metadata')
     legacy_crosswalk.add_argument('--out',help='Optional local JSON report under ignored reports directory')
+    tml_feb=sub.add_parser('tml-february-audit',help='Audit local TML ATP February 2024 candidates; personal noncommercial research only')
+    tml_feb.add_argument('csv_path',help='Locally downloaded TML 2024.csv')
+    tml_feb.add_argument('crosswalk',help='Curated TML-to-official 2024 February event registry')
+    tml_feb.add_argument('official',help='Pinned official ATP 2024 February calendar registry')
+    tml_feb.add_argument('--out',help='Optional ignored local JSON audit report')
+    tml_update=sub.add_parser('tml-update',help='Owner-invoked daily versioned TML CSV refresh; private noncommercial only')
+    tml_update.add_argument('--year',required=True,type=int,help='ATP season year')
+    tml_update.add_argument('--root',default='data/tml',help='Private locally ignored versioned snapshot directory')
+    tml_update.add_argument('--force',action='store_true',help='Explicitly bypass daily freshness check')
+
+    elo_research=sub.add_parser('tml-elo-experiment',help='Local noncommercial pre-tournament Elo skill study; not betting forecasts')
+    elo_research.add_argument('paths',nargs='+',help='Local TML YYYY.csv or immutable YYYY-SHA256.csv snapshots')
+    elo_research.add_argument('--out',required=True,help='Aggregate-only local JSON report path')
+    elo_research.add_argument('--embargo-days',type=int,default=28,help='Fixed tournament-result availability embargo (default 28 days)')
+    elo_research.add_argument('--bootstrap-replicates',type=int,default=200,help='Event-cluster bootstrap repeats (default 200)')
+    tml_cross=sub.add_parser('tml-crosspublication-audit',help='Crosscheck TML and Sackmann 2024 ATP candidate matches; personal noncommercial only')
+    tml_cross.add_argument('tml_csv',help='Local TML 2024.csv')
+    tml_cross.add_argument('archive_csv',help='Local Sackmann-format atp_matches_2024.csv')
+    tml_cross.add_argument('crosswalk',help='Curated 2024 February event registry')
+    tml_cross.add_argument('aliases',help='Pinned explicit player display-name alias registry')
+    tml_cross.add_argument('--out',help='Optional aggregate-only JSON report, not an input file')
     source_intake=sub.add_parser('historical-source-intake',help='Verify pinned local correction-source bytes and permission review; never unlock training')
     source_intake.add_argument('artifact',help='Local, separately acquired match-level CSV')
     source_intake.add_argument('manifest',help='Correction-source provenance/rights manifest JSON')
@@ -72,53 +93,105 @@ def main() -> int:
     research_train.add_argument('--seed',type=int,default=20261123)
     args=parser.parse_args()
 
-    if args.cmd=='historical-source-intake':
+    if args.cmd=='tml-elo-experiment':
         try:
-            from datetime import datetime, timezone
-            import hashlib
-            from .source_intake import audit_source_intake
-
-            artifact=Path(args.artifact)
-            manifest_path=Path(args.manifest)
-            inventory_path=Path(args.inventory)
-            official_path=Path(args.official)
-            original_inputs={p.resolve() for p in (
-                artifact,manifest_path,inventory_path,official_path
-            )}
-            if args.out and Path(args.out).resolve() in original_inputs:
-                raise ValueError('intake report cannot overwrite an input')
-            inventory_bytes=inventory_path.read_bytes()
-            digest=hashlib.sha256(inventory_bytes).hexdigest()
-            official=json.loads(official_path.read_text(encoding='utf-8-sig'))
-            if (not isinstance(official,dict)
-                    or official.get('inventory_sha256')!=digest
-                    or not isinstance(official.get('events'),list)):
-                raise ValueError('official event calendar not bound to inventory SHA256')
-            keys=set()
-            for item in official['events']:
-                if not isinstance(item,dict) or not isinstance(item.get('event_key'),str):
-                    raise ValueError('invalid official event reference')
-                if item['event_key'] in keys:
-                    raise ValueError('duplicate official event reference')
-                keys.add(item['event_key'])
-            manifest=json.loads(manifest_path.read_text(encoding='utf-8-sig'))
-            result=audit_source_intake(
-                artifact,manifest,inventory_sha256=digest,
-                allowed_event_keys=keys,as_of=datetime.now(timezone.utc),
+            from .tml_elo_experiment import run_tml_elo_experiment
+            sources=[Path(p) for p in args.paths]
+            dest=Path(args.out)
+            if dest.resolve() in {p.resolve() for p in sources}:
+                raise ValueError('research report cannot overwrite any TML source snapshot')
+            result=run_tml_elo_experiment(
+                sources,
+                embargo_days=args.embargo_days,
+                bootstrap_replicates=args.bootstrap_replicates,
             )
-            if args.out:
-                dest=Path(args.out)
-                dest.parent.mkdir(parents=True,exist_ok=True)
-                dest.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+            dest.parent.mkdir(parents=True,exist_ok=True)
+            dest.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
             print(json.dumps(result,ensure_ascii=False,indent=2))
             return 0
         except (ValueError,OSError,UnicodeError,TypeError,KeyError) as exc:
             print(json.dumps({
-                'status':'ERROR','mode':'HISTORICAL_RESEARCH_ONLY',
-                'reason':str(exc),'rights_reviewed':False,
-                'event_identity_verified':False,'main_draw_verified':False,
-                't60_quote_verified':False,'eligible_for_model_training':0,
+                'status':'ERROR','mode':'PERSONAL_NONCOMMERCIAL_RESEARCH',
+                'reason':str(exc),'model_validation_trusted':False,
+                't60_quote_verified':False,'market_edge_verified':False,
                 'allocation_enabled':False,'stake':0,
+            },ensure_ascii=False,indent=2))
+            return 2
+
+    if args.cmd=='tml-update':
+        try:
+            from datetime import datetime,timezone
+            from .tml_snapshot import update_tml_season
+            result=update_tml_season(
+                args.year,Path(args.root),at=datetime.now(timezone.utc),
+                force=args.force,
+            )
+            print(json.dumps(result,ensure_ascii=False,indent=2))
+            return 0
+        except (ValueError,OSError,TypeError,UnicodeError) as exc:
+            print(json.dumps({
+                'status':'ERROR','mode':'PERSONAL_NONCOMMERCIAL_RESEARCH',
+                'reason':str(exc),'eligible_for_model_training':0,
+                'allocation_enabled':False,'t60_quote_verified':False,
+                'stake':0,
+            },ensure_ascii=False,indent=2))
+            return 2
+
+    if args.cmd=='tml-crosspublication-audit':
+        try:
+            from .tml_sackmann_crosscheck import audit_tml_sackmann_crosspublication
+
+            files=[Path(args.tml_csv),Path(args.archive_csv),
+                   Path(args.crosswalk),Path(args.aliases)]
+            if args.out and Path(args.out).resolve() in {p.resolve() for p in files}:
+                raise ValueError('crosspublication report cannot overwrite an input')
+            reg=json.loads(files[2].read_text(encoding='utf-8-sig'))
+            names=json.loads(files[3].read_text(encoding='utf-8-sig'))
+            report=audit_tml_sackmann_crosspublication(files[0],files[1],reg,names)
+            if args.out:
+                dest=Path(args.out)
+                dest.parent.mkdir(parents=True,exist_ok=True)
+                dest.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',
+                                encoding='utf-8')
+            print(json.dumps(report,ensure_ascii=False,indent=2))
+            return 0
+        except (ValueError,OSError,UnicodeError,TypeError,KeyError) as exc:
+            print(json.dumps({
+                'status':'ERROR','mode':'PERSONAL_NONCOMMERCIAL_RESEARCH',
+                'reason':str(exc),'official_match_draw_verified':False,
+                'source_independence_verified':False,
+                'eligible_for_model_training':0,'allocation_enabled':False,
+                'stake':0,
+            },ensure_ascii=False,indent=2))
+            return 2
+
+    if args.cmd=='tml-february-audit':
+        try:
+            from .tml_historical_audit import audit_tml_february_2024
+
+            source=Path(args.csv_path)
+            crosswalk_file=Path(args.crosswalk)
+            official_file=Path(args.official)
+            inputs={p.resolve() for p in (source,crosswalk_file,official_file)}
+            if args.out and Path(args.out).resolve() in inputs:
+                raise ValueError('TML audit report cannot overwrite any source/registry input')
+            crosswalk=json.loads(crosswalk_file.read_text(encoding='utf-8-sig'))
+            official=json.loads(official_file.read_text(encoding='utf-8-sig'))
+            report=audit_tml_february_2024(source,crosswalk,official)
+            if args.out:
+                dest=Path(args.out)
+                dest.parent.mkdir(parents=True,exist_ok=True)
+                dest.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',
+                                encoding='utf-8')
+            print(json.dumps(report,ensure_ascii=False,indent=2))
+            return 0
+        except (ValueError,OSError,UnicodeError,TypeError,KeyError) as exc:
+            print(json.dumps({
+                'status':'ERROR','mode':'PERSONAL_NONCOMMERCIAL_RESEARCH',
+                'reason':str(exc),'main_draw_verified':False,
+                'individual_match_start_verified':False,
+                'eligible_for_model_training':0,'allocation_enabled':False,
+                't60_quote_verified':False,'stake':0,
             },ensure_ascii=False,indent=2))
             return 2
 

@@ -1,0 +1,216 @@
+{
+  "schema": "TML_2025_SOURCE_REVISION_AUDIT_V2",
+  "run_id": 45357509313,
+  "job_id": 138318896403,
+  "commit": "7ab2018e2ae0443f7af21da1c15d3da5579b4a8d",
+  "synthetic_tests_passed": 7,
+  "current_source": {
+    "checked_at_utc": "2026-11-24T08:36:05.807338+00:00",
+    "url": "https://stats.tennismylife.org/data/2025.csv"
+  },
+  "old_source": {
+    "git_blob_sha1": "1aff9b077cf4de7806b665ec0c6d8b4032a040f3",
+    "provider": "TennisMyLife GitHub archive"
+  },
+  "revision_audit": {
+    "allocation_enabled": false,
+    "changed_non_number_columns": {
+      "l_1stIn": 40,
+      "l_1stWon": 42,
+      "l_2ndWon": 41,
+      "l_SvGms": 49,
+      "l_ace": 35,
+      "l_bpFaced": 37,
+      "l_bpSaved": 37,
+      "l_df": 34,
+      "l_svpt": 36,
+      "loser_age": 2,
+      "loser_entry": 4,
+      "loser_ht": 1,
+      "loser_id": 1,
+      "loser_ioc": 1,
+      "loser_name": 20,
+      "loser_rank": 177,
+      "loser_rank_points": 151,
+      "minutes": 128,
+      "score": 15,
+      "surface": 27,
+      "tourney_date": 95,
+      "w_1stIn": 39,
+      "w_1stWon": 42,
+      "w_2ndWon": 40,
+      "w_SvGms": 39,
+      "w_ace": 32,
+      "w_bpFaced": 33,
+      "w_bpSaved": 31,
+      "w_df": 29,
+      "w_svpt": 37,
+      "winner_age": 1,
+      "winner_ht": 1,
+      "winner_id": 1,
+      "winner_ioc": 2,
+      "winner_name": 15,
+      "winner_rank": 161,
+      "winner_rank_points": 150
+    },
+    "current_ambiguous_candidate_groups": 0,
+    "current_duplicate_number_groups": 0,
+    "current_malformed_rows": 0,
+    "current_missing_match_num": 0,
+    "current_raw_rows": 2943,
+    "current_sha256": "5ccf52d912085d6a5ba3effdc5f2f216f170aabfd8850086b5f92c7ccedfd53e",
+    "eligible_for_model_training": 0,
+    "missing_core_changes_by_event": {
+      "2025-5014": {
+        "changed_rows": 95,
+        "fields": {
+          "tourney_date": 95
+        }
+      }
+    },
+    "missing_disposition": {
+      "CHANGED_CORE": 95,
+      "REPAIRED_CANDIDATE": 394
+    },
+    "model_validation_trusted": false,
+    "new_unique_candidate_keys_absent_from_old": 4,
+    "numbered_core_changes_by_event": {
+      "2025-4462": {
+        "changed_rows": 1,
+        "fields": {
+          "score": 1
+        }
+      },
+      "2025-520": {
+        "changed_rows": 1,
+        "fields": {
+          "score": 1
+        }
+      },
+      "2025-8996": {
+        "changed_rows": 27,
+        "fields": {
+          "surface": 27
+        }
+      },
+      "2025-M-DC-2025-QLS-M-AUS-BEL-01": {
+        "changed_rows": 1,
+        "fields": {
+          "score": 1
+        }
+      },
+      "2025-M-DC-2025-QLS-M-HUN-AUT-01": {
+        "changed_rows": 1,
+        "fields": {
+          "score": 1
+        }
+      },
+      "2025-M-DC-2025-QLS-M-ISR-GER-01": {
+        "changed_rows": 1,
+        "fields": {
+          "score": 1
+        }
+      },
+      "2025-M-DC-2025-QLS-M-JPN-GER-01": {
+        "changed_rows": 1,
+        "fields": {
+          "score": 1
+        }
+      },
+      "2025-M-DC-2025-WG1-PO-GEO-POL-01": {
+        "changed_rows": 1,
+        "fields": {
+          "loser_id": 1,
+          "winner_id": 1
+        }
+      },
+      "2025-M-DC-2025-WG1-R1-BUL-FIN-01": {
+        "changed_rows": 1,
+        "fields": {
+          "score": 1
+        }
+      },
+      "2025-M-DC-2025-WG1-R1-CAN-ISR-01": {
+        "changed_rows": 1,
+        "fields": {
+          "score": 1
+        }
+      },
+      "2025-M-DC-2025-WG1-R1-CHI-LUX-01": {
+        "changed_rows": 1,
+        "fields": {
+          "score": 1
+        }
+      },
+      "2025-M-DC-2025-WG1-R1-ECU-BIH-01": {
+        "changed_rows": 1,
+        "fields": {
+          "score": 1
+        }
+      },
+      "2025-M-DC-2025-WG1-R1-POL-GBR-01": {
+        "changed_rows": 1,
+        "fields": {
+          "score": 1
+        }
+      },
+      "2025-M-DC-2025-WG1-R1-SRB-TUR-01": {
+        "changed_rows": 1,
+        "fields": {
+          "score": 1
+        }
+      },
+      "2025-M-DC-2025-WG1-R1-SUI-IND-01": {
+        "changed_rows": 2,
+        "fields": {
+          "score": 2
+        }
+      },
+      "2025-M-DC-2025-WG1-R1-SWE-TUN-01": {
+        "changed_rows": 1,
+        "fields": {
+          "score": 1
+        }
+      }
+    },
+    "numbered_disposition": {
+      "AMBIGUOUS_IDENTITY": 2,
+      "CHANGED_CORE": 43,
+      "MISSING_IN_CURRENT": 3,
+      "NUMBER_CHANGED": 21,
+      "UNCHANGED_NUMBER": 2385
+    },
+    "official_match_draw_verified": false,
+    "old_ambiguous_candidate_groups": 1,
+    "old_malformed_rows": 1,
+    "old_missing_match_num": 489,
+    "old_raw_rows": 2944,
+    "old_sha256": "a00f5f991b4949c2c6867637ac02a8c44b9058780da67aba8600e9140002f8d3",
+    "repair_candidates_by_event": {
+      "2025-329": 31,
+      "2025-422": 95,
+      "2025-4713": 27,
+      "2025-560": 127,
+      "2025-6242": 47,
+      "2025-747": 31,
+      "2025-7581": 27,
+      "2025-9210": 9
+    },
+    "stake": 0,
+    "status": "SOURCE_REVISION_REVIEW_REQUIRED"
+  },
+  "external_event_calendar_evidence": {
+    "event": "2025-5014",
+    "name": "Shanghai Masters",
+    "official_main_draw_start": "2025-10-01",
+    "official_main_draw_end": "2025-10-12",
+    "official_qualifying_start": "2025-09-29",
+    "old_provider_event_date": "2025-09-24",
+    "new_provider_event_date": "NOT_EXPORTED_IN_CURRENT_AGGREGATE_REPORT",
+    "sources": [
+      "https://www.atptour.com/en/tournaments/atp-masters-1000-shanghai/5014/overview",
+      "https://www.atptour.com/en/news/shanghai-2025-atp-masters-1000-history-draws-schedule"
+    ],
+    "scope": "Official event schedule only; new source date and all match results still require explicit confirmation."
+  }
+}

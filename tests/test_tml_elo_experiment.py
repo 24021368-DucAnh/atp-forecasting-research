@@ -261,3 +261,101 @@ def test_multiweek_tournament_date_conflict_is_not_silently_normalized(tmp_path)
     ])
     with pytest.raises(ValueError,match="start|date|spread"):
         run_tml_elo_experiment(paths,bootstrap_replicates=50)
+
+
+def level_a_files(tmp_path):
+    files = season_files(tmp_path)
+    rows = [row(2024, "normal", "20240301", 1)]
+    for event, name in (("451", "Doha"), ("7480", "Los Cabos")):
+        for n in range(1, 28):
+            record = row(2024, event, "20240219", n, level="A",
+                         score="2-3 RET" if event == "451" and n == 27 else "6-4 6-3")
+            record["tourney_name"] = name
+            rows.append(record)
+    rows.append(row(2024, "unreviewed", "20240501", 1, level="A"))
+    files[3] = make_file(tmp_path, 2024, rows)
+    return files
+
+
+def pin_synthetic_level_a_source(monkeypatch, files):
+    from atp_gate import tml_elo_experiment as experiment
+    monkeypatch.setattr(experiment, "_LEVEL_A_2024_SHA256",
+                        hashlib.sha256(files[3].read_bytes()).hexdigest(), raising=False)
+
+
+def test_level_a_normalization_is_opt_in_and_preserves_filters(tmp_path, monkeypatch):
+    files = level_a_files(tmp_path)
+    pin_synthetic_level_a_source(monkeypatch, files)
+    original = files[3].read_bytes()
+    baseline = run_tml_elo_experiment(files, bootstrap_replicates=50)
+    assert baseline["excluded_reasons"]["OUT_OF_SCOPE_LEVEL"] == 55
+    normalized = run_tml_elo_experiment(files, bootstrap_replicates=50,
+                                        normalize_level_a_2024=True)
+    assert normalized["test_matches"] == baseline["test_matches"] + 53
+    assert normalized["source_match_rows_eligible"] == baseline["source_match_rows_eligible"] + 53
+    assert normalized["excluded_reasons"]["OUT_OF_SCOPE_LEVEL"] == 1
+    assert normalized["excluded_reasons"]["NON_COMPLETED"] == 1
+    audit = normalized["level_a_normalization"]
+    assert audit["raw_rows"] == 54
+    assert audit["eligible_rows"] == 53
+    assert len(audit["registry_sha256"]) == 64
+    assert audit["source_sha256"] == hashlib.sha256(original).hexdigest()
+    assert normalized["allocation_enabled"] is False and normalized["stake"] == 0
+    assert normalized["model_validation_trusted"] is False
+    assert files[3].read_bytes() == original
+
+
+def test_level_a_normalization_rejects_unpinned_source(tmp_path):
+    files = level_a_files(tmp_path)
+    with pytest.raises(ValueError, match="SHA|hash|pin"):
+        run_tml_elo_experiment(files, normalize_level_a_2024=True,
+                               bootstrap_replicates=50)
+
+
+@pytest.mark.parametrize("field,value", [
+    ("tourney_name", "Wrong tournament"),
+    ("tourney_date", "20240220"),
+    ("surface", "Clay"),
+    ("tourney_level", "500"),
+])
+def test_level_a_normalization_rejects_metadata_drift(tmp_path, monkeypatch, field, value):
+    files = level_a_files(tmp_path)
+    with files[3].open(newline="", encoding="utf-8") as handle:
+        records = list(csv.DictReader(handle))
+    records[1][field] = value
+    files[3] = make_file(tmp_path, 2024, records)
+    pin_synthetic_level_a_source(monkeypatch, files)
+    with pytest.raises(ValueError, match="metadata"):
+        run_tml_elo_experiment(files, normalize_level_a_2024=True,
+                               bootstrap_replicates=50)
+
+
+def test_level_a_normalization_requires_complete_reviewed_event_counts(tmp_path, monkeypatch):
+    files = level_a_files(tmp_path)
+    with files[3].open(newline="", encoding="utf-8") as handle:
+        records = list(csv.DictReader(handle))
+    files[3] = make_file(tmp_path, 2024, records[0:1] + records[2:])
+    pin_synthetic_level_a_source(monkeypatch, files)
+    with pytest.raises(ValueError, match="count"):
+        run_tml_elo_experiment(files, normalize_level_a_2024=True,
+                               bootstrap_replicates=50)
+
+
+def test_normalized_same_event_cannot_learn_its_own_results(tmp_path, monkeypatch):
+    files = level_a_files(tmp_path)
+    pin_synthetic_level_a_source(monkeypatch, files)
+    result = run_tml_elo_experiment(files, normalize_level_a_2024=True,
+                                    bootstrap_replicates=50)
+    # All 53 newly accepted rows share one date. On the unmodified
+    # replay their A/Z history is already known; the entire date batch
+    # must nevertheless see exactly the same priors, irrespective of order.
+    with files[3].open(newline="", encoding="utf-8") as handle:
+        records = list(csv.DictReader(handle))
+    files[3] = make_file(tmp_path, 2024, list(reversed(records)))
+    pin_synthetic_level_a_source(monkeypatch, files)
+    reordered = run_tml_elo_experiment(files, normalize_level_a_2024=True,
+                                       bootstrap_replicates=50)
+    assert result["aggregate"]["global_elo_log_loss"] == pytest.approx(
+        reordered["aggregate"]["global_elo_log_loss"], abs=1e-12)
+    assert result["aggregate"]["surface_elo_log_loss"] == pytest.approx(
+        reordered["aggregate"]["surface_elo_log_loss"], abs=1e-12)

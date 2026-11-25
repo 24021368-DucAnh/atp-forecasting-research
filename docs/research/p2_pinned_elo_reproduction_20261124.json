@@ -1,0 +1,218 @@
+{
+  "schema": "P2_PINNED_PYTHON_REPRODUCTION_1",
+  "run_id": 45352171915,
+  "job_id": 138301063194,
+  "run_commit": "50645e3c2ae22461bee5d9ff57b75669edc9b63e",
+  "status": "REPRODUCED_HISTORICAL_SKILL_ONLY",
+  "source_provenance_note": "Actual fetched source is GitHub Git blob API; CLI source_url is nominal website endpoint, not actual fetch provenance. Keep both distinct.",
+  "actual_sources": [
+    {
+      "season": 2021,
+      "git_blob_sha1": "2bd4eaf4eb28a09b42ab4ecd5830a8f3ad068faa",
+      "url": "https://api.github.com/repos/Tennismylife/TML-Database/git/blobs/2bd4eaf4eb28a09b42ab4ecd5830a8f3ad068faa"
+    },
+    {
+      "season": 2022,
+      "git_blob_sha1": "2b6726106fefb22b40c2816e4c703a48e9d312be",
+      "url": "https://api.github.com/repos/Tennismylife/TML-Database/git/blobs/2b6726106fefb22b40c2816e4c703a48e9d312be"
+    },
+    {
+      "season": 2023,
+      "git_blob_sha1": "5ceb7397e3a217e51f197c9e83ea435faf690eeb",
+      "url": "https://api.github.com/repos/Tennismylife/TML-Database/git/blobs/5ceb7397e3a217e51f197c9e83ea435faf690eeb"
+    },
+    {
+      "season": 2024,
+      "git_blob_sha1": "cf513429259b4a15e84e2021206895d9bd4ff772",
+      "url": "https://api.github.com/repos/Tennismylife/TML-Database/git/blobs/cf513429259b4a15e84e2021206895d9bd4ff772"
+    },
+    {
+      "season": 2025,
+      "git_blob_sha1": "1aff9b077cf4de7806b665ec0c6d8b4032a040f3",
+      "url": "https://api.github.com/repos/Tennismylife/TML-Database/git/blobs/1aff9b077cf4de7806b665ec0c6d8b4032a040f3"
+    }
+  ],
+  "aggregate_report": {
+    "aggregate": {
+      "coinflip_brier": 0.25,
+      "coinflip_log_loss": 0.6931471805600301,
+      "global_elo_brier": 0.2203622277110962,
+      "global_elo_log_loss": 0.6297340915746316,
+      "global_elo_minus_coinflip_log_loss": -0.06341308898539855,
+      "n": 7194,
+      "surface_elo_brier": 0.22054957775527642,
+      "surface_elo_log_loss": 0.6309176483852493,
+      "surface_elo_minus_coinflip_log_loss": -0.06222953217478078
+    },
+    "allocation_enabled": false,
+    "bootstrap": {
+      "event_clusters": 177,
+      "global_elo_minus_coinflip_95ci": [
+        -0.07589208314514215,
+        -0.05134223482034925
+      ],
+      "replicates": 200,
+      "seed": 29,
+      "status": "EVENT_BOOTSTRAP_DESCRIPTIVE_ONLY",
+      "surface_elo_minus_coinflip_95ci": [
+        -0.07671983666414058,
+        -0.04846609879557818
+      ]
+    },
+    "elo_k_fixed": 24,
+    "embargo_days_after_tournament_start": 28,
+    "event_date_variants_grouped": 3,
+    "excluded_reasons": {
+      "MALFORMED_ROWS": 1,
+      "MISSING_MATCH_ID": 489,
+      "NON_COMPLETED": 443,
+      "OUT_OF_SCOPE_LEVEL": 1612
+    },
+    "fold_count": 3,
+    "folds": [
+      {
+        "coinflip_brier": 0.25,
+        "coinflip_log_loss": 0.6931471805599064,
+        "global_elo_brier": 0.2234393518038646,
+        "global_elo_log_loss": 0.6368703615850754,
+        "global_elo_minus_coinflip_log_loss": -0.056276818974831055,
+        "n": 2600,
+        "surface_elo_brier": 0.22353984011427921,
+        "surface_elo_log_loss": 0.6374294174309088,
+        "surface_elo_minus_coinflip_log_loss": -0.05571776312899768,
+        "year": 2023
+      },
+      {
+        "coinflip_brier": 0.25,
+        "coinflip_log_loss": 0.6931471805599064,
+        "global_elo_brier": 0.2186234466352871,
+        "global_elo_log_loss": 0.6252029590854966,
+        "global_elo_minus_coinflip_log_loss": -0.06794422147440982,
+        "n": 2594,
+        "surface_elo_brier": 0.2191382040377845,
+        "surface_elo_log_loss": 0.6273018556755943,
+        "surface_elo_minus_coinflip_log_loss": -0.06584532488431216,
+        "year": 2024
+      },
+      {
+        "coinflip_brier": 0.25,
+        "coinflip_log_loss": 0.6931471805599112,
+        "global_elo_brier": 0.21861716544582221,
+        "global_elo_log_loss": 0.6263338193994538,
+        "global_elo_minus_coinflip_log_loss": -0.06681336116045744,
+        "n": 2000,
+        "surface_elo_brier": 0.21849278840016015,
+        "surface_elo_log_loss": 0.6271420317703063,
+        "surface_elo_minus_coinflip_log_loss": -0.06600514878960495,
+        "year": 2025
+      }
+    ],
+    "holdout_years": [
+      2023,
+      2024,
+      2025
+    ],
+    "individual_match_time_verified": false,
+    "market_edge_verified": false,
+    "mode": "PERSONAL_NONCOMMERCIAL_RESEARCH",
+    "model_validation_trusted": false,
+    "participant_known_at_event_start": false,
+    "provider_rows_quarantined": 490,
+    "source_inventory": [
+      {
+        "season": 2021,
+        "sha256": "80d570be31d778b143eb58380258243785bf3fcb18db144b42704bc6c56d941b",
+        "size_bytes": 576869,
+        "source_file": "2021-80d570be31d778b143eb58380258243785bf3fcb18db144b42704bc6c56d941b.csv",
+        "source_rows": 2735,
+        "source_url": "https://stats.tennismylife.org/data/2021.csv"
+      },
+      {
+        "season": 2022,
+        "sha256": "d70036c6ee6c27dd3deda6e6c9ccd500b66e6e78106fb00794cb277e37353357",
+        "size_bytes": 612757,
+        "source_file": "2022-d70036c6ee6c27dd3deda6e6c9ccd500b66e6e78106fb00794cb277e37353357.csv",
+        "source_rows": 2918,
+        "source_url": "https://stats.tennismylife.org/data/2022.csv"
+      },
+      {
+        "season": 2023,
+        "sha256": "9faaf53186ef908b3322d521a8dd2a717401167c0e400a99e1efddb23e13600f",
+        "size_bytes": 630603,
+        "source_file": "2023-9faaf53186ef908b3322d521a8dd2a717401167c0e400a99e1efddb23e13600f.csv",
+        "source_rows": 2995,
+        "source_url": "https://stats.tennismylife.org/data/2023.csv"
+      },
+      {
+        "season": 2024,
+        "sha256": "db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8",
+        "size_bytes": 653073,
+        "source_file": "2024-db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8.csv",
+        "source_rows": 3076,
+        "source_url": "https://stats.tennismylife.org/data/2024.csv"
+      },
+      {
+        "season": 2025,
+        "sha256": "a00f5f991b4949c2c6867637ac02a8c44b9058780da67aba8600e9140002f8d3",
+        "size_bytes": 619784,
+        "source_file": "2025-a00f5f991b4949c2c6867637ac02a8c44b9058780da67aba8600e9140002f8d3.csv",
+        "source_rows": 2944,
+        "source_url": "https://stats.tennismylife.org/data/2025.csv"
+      }
+    ],
+    "source_match_rows_eligible": 12123,
+    "source_result_availability_exact": false,
+    "stake": 0,
+    "status": "HISTORICAL_SKILL_RESEARCH_ONLY",
+    "surface_weight_fixed": 0.35,
+    "t60_quote_verified": false,
+    "test_matches": 7194,
+    "warnings": [
+      "EVENT_START_NOT_INDIVIDUAL_MATCH_START",
+      "EVALUATED_MATCHUPS_IDENTIFIED_RETROSPECTIVELY",
+      "28_DAY_EMBARGO_ESTIMATE_NOT_CONFIRMED_PUBLICATION_TIME",
+      "NO_HISTORIC_NO_VIG_MARKET_BASELINE_OR_EXECUTABLE_T60",
+      "ELIGIBLE_RESULTS_REQUIRE_INDEPENDENT_OFFICIAL_DRAW_AUDIT",
+      "NO_REAL_MONEY_ALLOCATION_OR_PROFIT_CLAIM",
+      "BLANK_PROVIDER_MATCH_IDS_ARE_EXCLUDED_NOT_SYNTHESIZED",
+      "ONE_DAY_EVENT_START_VARIANTS_GROUPED_TO_EARLIEST_DATE"
+    ]
+  },
+  "python": "3.11.18",
+  "replication_comparison": {
+    "global_elo_brier": {
+      "difference": 2.2771109620123298e-7,
+      "observed": 0.2203622277110962,
+      "reference": 0.220362,
+      "within_rounded_reference_tolerance": true
+    },
+    "global_elo_log_loss": {
+      "difference": 9.157463154441103e-8,
+      "observed": 0.6297340915746316,
+      "reference": 0.629734,
+      "within_rounded_reference_tolerance": true
+    },
+    "source_match_rows_eligible": {
+      "difference": 0,
+      "observed": 12123,
+      "reference": 12123
+    },
+    "surface_elo_brier": {
+      "difference": -4.222447235746607e-7,
+      "observed": 0.22054957775527642,
+      "reference": 0.22055,
+      "within_rounded_reference_tolerance": true
+    },
+    "surface_elo_log_loss": {
+      "difference": -3.5161475064882097e-7,
+      "observed": 0.6309176483852493,
+      "reference": 0.630918,
+      "within_rounded_reference_tolerance": true
+    },
+    "test_matches": {
+      "difference": 0,
+      "observed": 7194,
+      "reference": 7194
+    }
+  }
+}

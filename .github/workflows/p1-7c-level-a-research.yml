@@ -1,0 +1,21 @@
+name: P1.7c pinned level-A normalization research
+on:
+  push:
+    branches: [research/p1-7c-level-a-normalization]
+    paths:
+      - '.github/workflows/p1-7c-level-a-research.yml'
+      - 'scripts/p1_7c_level_a_research.py'
+      - 'src/atp_gate/tml_elo_experiment.py'
+permissions:
+  contents: read
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install -e ".[test,ml]"
+      - run: python -m scripts.p1_7c_level_a_research

@@ -1,0 +1,21 @@
+name: TML 2025 revision research (one-off)
+on:
+  push:
+    branches: [research/p1-tml-2025-revision-audit]
+    paths:
+      - 'scripts/tml_2025_revision_audit.py'
+      - 'tests/test_tml_revision_audit.py'
+permissions:
+  contents: read
+jobs:
+  revision-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install -e ".[test]"
+      - run: python -m pytest -q tests/test_tml_revision_audit.py
+      - run: python -m scripts.tml_2025_revision_audit

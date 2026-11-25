@@ -1,0 +1,301 @@
+{
+  "schema": "P1_8A_PINNED_IDENTITY_EXECUTION_V1",
+  "run_id": 45454578092,
+  "job_id": 138660467282,
+  "run_commit": "c2a65502606362ecc835fe978f7383be643b1e4d",
+  "status": "INTERNAL_SOURCE_DIAGNOSTICS_REVIEW_REQUIRED",
+  "source_provenance": "Original sources fetched from exact verified Git blobs and checked against byte SHA256 pins; revised 2025 fetched from publisher and checked against the prior SHA256 pin.",
+  "interpretation": "Zero internal structural anomalies in 314 candidate knockout events does not certify full official draw coverage. Duplicate candidate pair-round groups and ID/display-name variants remain review leads. Source-inventory per-season row counters are not global pair-group checks; do not interpret the per-season conflicting_candidate_outcome_groups field as separately computed.",
+  "results": [
+    {
+      "audit": {
+        "allocation_enabled": false,
+        "counts": {
+          "candidate_disconnected_bracket_events": 0,
+          "candidate_loser_reappears_events": 0,
+          "candidate_missing_final_events": 0,
+          "candidate_multiple_final_events": 0,
+          "conflicting_candidate_outcome_groups": 0,
+          "cross_year_start_rows": 83,
+          "date_spread_gt_one_day_events": 0,
+          "duplicate_candidate_pair_round_groups": 5,
+          "duplicate_numeric_match_key_groups": 0,
+          "duplicate_raw_match_key_groups": 0,
+          "event_surface_variant_events": 0,
+          "invalid_match_num_rows": 0,
+          "invalid_player_pair_rows": 0,
+          "invalid_source_date_rows": 0,
+          "knockout_candidate_events": 314,
+          "malformed_rows": 1,
+          "missing_event_id_rows": 0,
+          "missing_match_num_rows": 489,
+          "missing_player_name_fields": 0,
+          "missing_round_rows": 0,
+          "name_tokens_with_multiple_player_ids": 0,
+          "noncanonical_match_num_rows": 0,
+          "one_day_date_variant_events": 3,
+          "player_ids_with_multiple_name_tokens": 1,
+          "source_rows": 14668,
+          "unsupported_knockout_format_events": 0,
+          "well_formed_rows": 14667
+        },
+        "eligible_for_model_training": 0,
+        "individual_match_start_verified": false,
+        "knockout_scope": "MAIN_TOUR_LEVELS_PLUS_PINNED_2024_REVIEWED_EVENTS",
+        "mode": "PERSONAL_NONCOMMERCIAL_RESEARCH",
+        "model_validation_trusted": false,
+        "official_match_draw_verified": false,
+        "schema": "TML_PINNED_IDENTITY_AUDIT_V1",
+        "source_date_semantics": "TOURNAMENT_START_NOT_INDIVIDUAL_MATCH_START",
+        "source_independence_verified": false,
+        "source_inventory": [
+          {
+            "counts": {
+              "conflicting_candidate_outcome_groups": 0,
+              "invalid_match_num_rows": 0,
+              "invalid_player_pair_rows": 0,
+              "malformed_rows": 0,
+              "missing_event_id_rows": 0,
+              "missing_match_num_rows": 0,
+              "missing_player_name_fields": 0,
+              "missing_round_rows": 0,
+              "noncanonical_match_num_rows": 0,
+              "source_rows": 2735,
+              "well_formed_rows": 2735
+            },
+            "season": 2021,
+            "sha256": "80d570be31d778b143eb58380258243785bf3fcb18db144b42704bc6c56d941b",
+            "size_bytes": 576869
+          },
+          {
+            "counts": {
+              "conflicting_candidate_outcome_groups": 0,
+              "invalid_match_num_rows": 0,
+              "invalid_player_pair_rows": 0,
+              "malformed_rows": 0,
+              "missing_event_id_rows": 0,
+              "missing_match_num_rows": 0,
+              "missing_player_name_fields": 0,
+              "missing_round_rows": 0,
+              "noncanonical_match_num_rows": 0,
+              "source_rows": 2918,
+              "well_formed_rows": 2918
+            },
+            "season": 2022,
+            "sha256": "d70036c6ee6c27dd3deda6e6c9ccd500b66e6e78106fb00794cb277e37353357",
+            "size_bytes": 612757
+          },
+          {
+            "counts": {
+              "conflicting_candidate_outcome_groups": 0,
+              "invalid_match_num_rows": 0,
+              "invalid_player_pair_rows": 0,
+              "malformed_rows": 0,
+              "missing_event_id_rows": 0,
+              "missing_match_num_rows": 0,
+              "missing_player_name_fields": 0,
+              "missing_round_rows": 0,
+              "noncanonical_match_num_rows": 0,
+              "source_rows": 2995,
+              "well_formed_rows": 2995
+            },
+            "season": 2023,
+            "sha256": "9faaf53186ef908b3322d521a8dd2a717401167c0e400a99e1efddb23e13600f",
+            "size_bytes": 630603
+          },
+          {
+            "counts": {
+              "conflicting_candidate_outcome_groups": 0,
+              "invalid_match_num_rows": 0,
+              "invalid_player_pair_rows": 0,
+              "malformed_rows": 0,
+              "missing_event_id_rows": 0,
+              "missing_match_num_rows": 0,
+              "missing_player_name_fields": 0,
+              "missing_round_rows": 0,
+              "noncanonical_match_num_rows": 0,
+              "source_rows": 3076,
+              "well_formed_rows": 3076
+            },
+            "season": 2024,
+            "sha256": "db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8",
+            "size_bytes": 653073
+          },
+          {
+            "counts": {
+              "conflicting_candidate_outcome_groups": 0,
+              "invalid_match_num_rows": 0,
+              "invalid_player_pair_rows": 0,
+              "malformed_rows": 1,
+              "missing_event_id_rows": 0,
+              "missing_match_num_rows": 489,
+              "missing_player_name_fields": 0,
+              "missing_round_rows": 0,
+              "noncanonical_match_num_rows": 0,
+              "source_rows": 2944,
+              "well_formed_rows": 2943
+            },
+            "season": 2025,
+            "sha256": "a00f5f991b4949c2c6867637ac02a8c44b9058780da67aba8600e9140002f8d3",
+            "size_bytes": 619784
+          }
+        ],
+        "stake": 0,
+        "status": "INTERNAL_SOURCE_DIAGNOSTICS_REVIEW_REQUIRED",
+        "warnings": [
+          "NAME_TOKENS_ARE_REVIEW_LEADS_NOT_PLAYER_ID_ALIASES",
+          "INTERNAL_CONNECTIVITY_DOES_NOT_PROVE_OFFICIAL_DRAW_COMPLETENESS",
+          "INVALID_PLAYER_PAIR_ROWS_EXCLUDED_FROM_GRAPH",
+          "UNSUPPORTED_ROUNDS_NOT_TREATED_AS_KNOCKOUT",
+          "SOURCE_ROWS_NOT_COMPLETED_MATCH_LABELS"
+        ]
+      },
+      "variant": "ORIGINAL_PINNED"
+    },
+    {
+      "audit": {
+        "allocation_enabled": false,
+        "counts": {
+          "candidate_disconnected_bracket_events": 0,
+          "candidate_loser_reappears_events": 0,
+          "candidate_missing_final_events": 0,
+          "candidate_multiple_final_events": 0,
+          "conflicting_candidate_outcome_groups": 0,
+          "cross_year_start_rows": 83,
+          "date_spread_gt_one_day_events": 0,
+          "duplicate_candidate_pair_round_groups": 4,
+          "duplicate_numeric_match_key_groups": 0,
+          "duplicate_raw_match_key_groups": 0,
+          "event_surface_variant_events": 0,
+          "invalid_match_num_rows": 0,
+          "invalid_player_pair_rows": 0,
+          "invalid_source_date_rows": 0,
+          "knockout_candidate_events": 314,
+          "malformed_rows": 0,
+          "missing_event_id_rows": 0,
+          "missing_match_num_rows": 0,
+          "missing_player_name_fields": 0,
+          "missing_round_rows": 0,
+          "name_tokens_with_multiple_player_ids": 0,
+          "noncanonical_match_num_rows": 0,
+          "one_day_date_variant_events": 3,
+          "player_ids_with_multiple_name_tokens": 2,
+          "source_rows": 14667,
+          "unsupported_knockout_format_events": 0,
+          "well_formed_rows": 14667
+        },
+        "eligible_for_model_training": 0,
+        "individual_match_start_verified": false,
+        "knockout_scope": "MAIN_TOUR_LEVELS_PLUS_PINNED_2024_REVIEWED_EVENTS",
+        "mode": "PERSONAL_NONCOMMERCIAL_RESEARCH",
+        "model_validation_trusted": false,
+        "official_match_draw_verified": false,
+        "schema": "TML_PINNED_IDENTITY_AUDIT_V1",
+        "source_date_semantics": "TOURNAMENT_START_NOT_INDIVIDUAL_MATCH_START",
+        "source_independence_verified": false,
+        "source_inventory": [
+          {
+            "counts": {
+              "conflicting_candidate_outcome_groups": 0,
+              "invalid_match_num_rows": 0,
+              "invalid_player_pair_rows": 0,
+              "malformed_rows": 0,
+              "missing_event_id_rows": 0,
+              "missing_match_num_rows": 0,
+              "missing_player_name_fields": 0,
+              "missing_round_rows": 0,
+              "noncanonical_match_num_rows": 0,
+              "source_rows": 2735,
+              "well_formed_rows": 2735
+            },
+            "season": 2021,
+            "sha256": "80d570be31d778b143eb58380258243785bf3fcb18db144b42704bc6c56d941b",
+            "size_bytes": 576869
+          },
+          {
+            "counts": {
+              "conflicting_candidate_outcome_groups": 0,
+              "invalid_match_num_rows": 0,
+              "invalid_player_pair_rows": 0,
+              "malformed_rows": 0,
+              "missing_event_id_rows": 0,
+              "missing_match_num_rows": 0,
+              "missing_player_name_fields": 0,
+              "missing_round_rows": 0,
+              "noncanonical_match_num_rows": 0,
+              "source_rows": 2918,
+              "well_formed_rows": 2918
+            },
+            "season": 2022,
+            "sha256": "d70036c6ee6c27dd3deda6e6c9ccd500b66e6e78106fb00794cb277e37353357",
+            "size_bytes": 612757
+          },
+          {
+            "counts": {
+              "conflicting_candidate_outcome_groups": 0,
+              "invalid_match_num_rows": 0,
+              "invalid_player_pair_rows": 0,
+              "malformed_rows": 0,
+              "missing_event_id_rows": 0,
+              "missing_match_num_rows": 0,
+              "missing_player_name_fields": 0,
+              "missing_round_rows": 0,
+              "noncanonical_match_num_rows": 0,
+              "source_rows": 2995,
+              "well_formed_rows": 2995
+            },
+            "season": 2023,
+            "sha256": "9faaf53186ef908b3322d521a8dd2a717401167c0e400a99e1efddb23e13600f",
+            "size_bytes": 630603
+          },
+          {
+            "counts": {
+              "conflicting_candidate_outcome_groups": 0,
+              "invalid_match_num_rows": 0,
+              "invalid_player_pair_rows": 0,
+              "malformed_rows": 0,
+              "missing_event_id_rows": 0,
+              "missing_match_num_rows": 0,
+              "missing_player_name_fields": 0,
+              "missing_round_rows": 0,
+              "noncanonical_match_num_rows": 0,
+              "source_rows": 3076,
+              "well_formed_rows": 3076
+            },
+            "season": 2024,
+            "sha256": "db27fb184b62bc1716ecc84c5a8365088e34e8e9a0101a59782ec7907f6e2de8",
+            "size_bytes": 653073
+          },
+          {
+            "counts": {
+              "conflicting_candidate_outcome_groups": 0,
+              "invalid_match_num_rows": 0,
+              "invalid_player_pair_rows": 0,
+              "malformed_rows": 0,
+              "missing_event_id_rows": 0,
+              "missing_match_num_rows": 0,
+              "missing_player_name_fields": 0,
+              "missing_round_rows": 0,
+              "noncanonical_match_num_rows": 0,
+              "source_rows": 2943,
+              "well_formed_rows": 2943
+            },
+            "season": 2025,
+            "sha256": "5ccf52d912085d6a5ba3effdc5f2f216f170aabfd8850086b5f92c7ccedfd53e",
+            "size_bytes": 620959
+          }
+        ],
+        "stake": 0,
+        "status": "INTERNAL_SOURCE_DIAGNOSTICS_REVIEW_REQUIRED",
+        "warnings": [
+          "NAME_TOKENS_ARE_REVIEW_LEADS_NOT_PLAYER_ID_ALIASES",
+          "INTERNAL_CONNECTIVITY_DOES_NOT_PROVE_OFFICIAL_DRAW_COMPLETENESS",
+          "INVALID_PLAYER_PAIR_ROWS_EXCLUDED_FROM_GRAPH",
+          "UNSUPPORTED_ROUNDS_NOT_TREATED_AS_KNOCKOUT",
+          "SOURCE_ROWS_NOT_COMPLETED_MATCH_LABELS"
+        ]
+      },
+      "variant": "REVISED_2025_PINNED"
+    }
+  ]
+}
