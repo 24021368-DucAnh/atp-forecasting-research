@@ -61,10 +61,14 @@ def test_invalid_settlement_twice_rejected():
         settle_selection(b,'fixture-1','WIN',T+timedelta(hours=3))
 
 
-def test_unsettled_risk_prevents_month_rollover():
+def test_unsettled_risk_carries_cost_basis_through_month_rollover():
     b=record_selection(book(),'fixture-1',selection(),Decimal('1.90'),T)
-    with pytest.raises(ValueError,match='open'):
-        close_month(b,'2027-02')
+    future, report=close_month(b,'2027-02')
+    assert report.net == Decimal('0')
+    assert report.carried_open_exposure == Decimal('10')
+    assert future.risk.free_cash == Decimal('990')
+    assert future.risk.open_exposure == Decimal('10')
+    assert future.open_positions['fixture-1'].stake == Decimal('10')
 
 
 def test_monthly_reset_counts_losses_as_external_replenishment():
