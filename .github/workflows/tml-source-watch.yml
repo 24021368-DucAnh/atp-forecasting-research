@@ -1,0 +1,75 @@
+name: TML ATP Public Source Watch (noncommercial research)
+
+on:
+  schedule:
+    # Daily at 08:21 Asia/Bangkok (01:21 UTC); inactive until this PR is merged.
+    - cron: '21 1 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tml-public-source-watch
+  cancel-in-progress: false
+
+jobs:
+  metadata-only-source-watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout research-only code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install audit package
+        run: python -m pip install -e .
+      - name: Check TML historical and current season CSVs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p reports
+          python -m atp_gate tml-update --year 2024 --root data/tml > reports/tml-2024-update.json
+          season="$(date -u +%Y)"
+          python -m atp_gate tml-update --year "$season" --root data/tml > reports/tml-current-update.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for name in ("tml-2024-update.json", "tml-current-update.json"):
+              record=json.loads((Path("reports") / name).read_text(encoding="utf-8"))
+              print("TML source version:", name, record["sha256"])
+              if record.get("source_anomalies"):
+                  print("SOURCE QUARANTINE:", record["source_anomalies"])
+                  print("UNIDENTIFIABLE_ROWS_REVIEW_REQUIRED")
+                  # Preserve source metadata and continue monitoring: raw rows
+                  # remain quarantined by tml_snapshot, never model-ready.
+                  # A full-source parse/hash failure already aborts tml-update.
+          PY
+          source_file="$(python -c "import json;print(json.load(open('reports/tml-2024-update.json'))['local_snapshot'])")"
+          python -m atp_gate tml-february-audit "$source_file" \
+            docs/registries/tml_2024_feb_source_crosswalk_v1.json \
+            docs/registries/atp_2024_february_official_events_v1.json \
+            --out reports/tml-2024-feb-audit.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          with Path("reports/tml-2024-feb-audit.json").open(encoding="utf-8") as handle:
+              result=json.load(handle)
+          print("Research-only TML source audit:", result["status"])
+          print("Source SHA256:", result["source_sha256"])
+          print("Target match rows:", result["observed_target_matches"])
+          print("Anomalies:", len(result["anomalies"]))
+          print("TRAINING/ALLOCATION: DISABLED")
+          if result["anomalies"]:
+              raise SystemExit("Provider source changed or failed quality checks; manual review required")
+          PY
+      - name: Upload aggregate JSON reports only — NEVER raw vendor CSVs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tml-source-metadata-${{ github.run_id }}
+          path: reports/tml*.json
+          if-no-files-found: warn
+          retention-days: 14
