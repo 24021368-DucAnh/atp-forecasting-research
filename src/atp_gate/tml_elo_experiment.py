@@ -208,7 +208,9 @@ def _load(paths: Sequence[Path], *, normalize_level_a_2024: bool = False
                 "sha256": sha,
                 "size_bytes": len(payload),
                 "source_rows": count,
-                "source_url": f"https://stats.tennismylife.org/data/{season}.csv",
+                "nominal_publisher_url": f"https://stats.tennismylife.org/data/{season}.csv",
+                "actual_fetch_uri": None,
+                "acquisition_mode": "LOCAL_INPUT_UNATTESTED",
             })
         except (UnicodeError, csv.Error) as exc:
             raise ValueError("invalid TML source UTF-8/CSV encoding") from exc
