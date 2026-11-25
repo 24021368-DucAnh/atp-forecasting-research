@@ -60,6 +60,7 @@ class _Match:
     player_a: str
     player_b: str
     outcome_a: int
+    source_season: int | None = None
 
 
 def orient_result(winner_id: str, loser_id: str) -> tuple[str, str, int]:
@@ -199,7 +200,7 @@ def _load(paths: Sequence[Path], *, normalize_level_a_2024: bool = False
                 except ValueError:
                     excluded["INVALID_PLAYER_ID"] += 1
                     continue
-                events.append(_Match(tid, start, surface, a, b, y))
+                events.append(_Match(tid, start, surface, a, b, y, source_season=season))
                 if entry is not None:
                     normalized_eligible[tid] += 1
             inventory.append({
@@ -337,44 +338,93 @@ def _bootstrap(
     years: list[int], predictions: dict[int, list[tuple[str, int, float, float]]],
     *, replicates: int, seed: int,
 ) -> dict:
-    clusters_by_year: list[list[list[tuple[str, int, float, float]]]] = []
-    count = 0
+    """Paired event-cluster bootstrap of fixed, historical predictions.
+
+    Sample events with replacement within calendar-year strata. The same
+    event multiplicities apply to every contrast. Weight by sampled matches,
+    not by events; variable event size implies variable replicate size.
+    No model refit or prospective uncertainty claim.
+    """
+    contrasts = (
+        "global_elo_minus_coinflip_95ci",
+        "surface_elo_minus_coinflip_95ci",
+        "surface_elo_minus_global_elo_log_loss_95ci",
+        "surface_elo_minus_global_elo_brier_95ci",
+    )
+    clusters_by_year = []
+    counts = {}
+    event_year = {}
     for year in years:
-        clusters: dict[str, list[tuple[str, int, float, float]]] = defaultdict(list)
+        clusters = defaultdict(list)
         for item in predictions[year]:
+            if event_year.setdefault(item[0], year) != year:
+                raise ValueError("event cluster spans calendar strata")
             clusters[item[0]].append(item)
-        groups = list(clusters.values())
-        count += len(groups)
+        counts[year] = len(clusters)
+        groups = []
+        for event_id in sorted(clusters):
+            rows = clusters[event_id]
+            values = []
+            for _, y, g, s in rows:
+                gl = -(y*math.log(g) + (1-y)*math.log1p(-g))
+                sl = -(y*math.log(s) + (1-y)*math.log1p(-s))
+                values.append((gl-math.log(2), sl-math.log(2), sl-gl,
+                               (s-y)**2 - (g-y)**2))
+            groups.append((len(rows), *(math.fsum(v[i] for v in values)
+                                        for i in range(4))))
         clusters_by_year.append(groups)
+    count = sum(counts.values())
     result = {
         "status": "INSUFFICIENT_EVENT_SUPPORT",
         "event_clusters": count,
+        "event_clusters_by_year": counts,
         "replicates": replicates,
         "seed": seed,
-        "global_elo_minus_coinflip_95ci": None,
-        "surface_elo_minus_coinflip_95ci": None,
+        "cluster_unit": "EVENT_ID",
+        "stratification": "EVENT_START_CALENDAR_YEAR",
+        "interval_method": "PAIRED_PERCENTILE_95",
+        "estimand": "MATCH_WEIGHTED_MEAN_LOSS_DIFFERENCE",
+        "sampling_scope": "FIXED_HISTORICAL_PREDICTIONS_NO_REFIT",
+        "assumptions": "EVENT_CLUSTER_RESAMPLING_NOT_PROOF_OF_INDEPENDENCE",
+        **{key: None for key in contrasts},
     }
-    if count < 12 or any(len(groups)<2 for groups in clusters_by_year):
+    if count < 12 or any(len(groups) < 2 for groups in clusters_by_year):
         return result
     rng = random.Random(seed)
-    gdiff: list[float] = []
-    sdiff: list[float] = []
+    samples = [[] for _ in contrasts]
     for _ in range(replicates):
-        sampled: list[tuple[str, int, float, float]] = []
-        for groups in clusters_by_year:
-            for _ in range(len(groups)):
-                sampled.extend(rng.choice(groups))
-        scored = _score(sampled)
-        gdiff.append(scored["global_elo_minus_coinflip_log_loss"])
-        sdiff.append(scored["surface_elo_minus_coinflip_log_loss"])
+        selected = [rng.choice(groups) for groups in clusters_by_year
+                    for _ in range(len(groups))]
+        n = sum(group[0] for group in selected)
+        for i, sample in enumerate(samples, 1):
+            sample.append(math.fsum(group[i] for group in selected) / n)
     result["status"] = "EVENT_BOOTSTRAP_DESCRIPTIVE_ONLY"
-    result["global_elo_minus_coinflip_95ci"] = [
-        _quantile(gdiff, .025), _quantile(gdiff, .975)
-    ]
-    result["surface_elo_minus_coinflip_95ci"] = [
-        _quantile(sdiff, .025), _quantile(sdiff, .975)
-    ]
+    for key, sample in zip(contrasts, samples):
+        result[key] = [_quantile(sample, .025), _quantile(sample, .975)]
     return result
+
+
+def _calendar_attribution(matches: list[_Match], test_years: tuple[int, ...]) -> dict:
+    matrix = defaultdict(Counter)
+    cross_by_fold = {year: 0 for year in test_years}
+    cross_total = 0
+    for m in matches:
+        if m.source_season is None:
+            raise ValueError("missing source season for calendar attribution")
+        year = m.start.year
+        matrix[m.source_season][year] += 1
+        if m.source_season != year:
+            cross_total += 1
+            if year in cross_by_fold:
+                cross_by_fold[year] += 1
+    return {
+        "source_season_to_event_start_year": {
+            season: dict(sorted(counts.items())) for season, counts in sorted(matrix.items())
+        },
+        "cross_year_eligible_rows": cross_total,
+        "cross_year_evaluated_by_fold": cross_by_fold,
+        "evaluation_year_semantics": "NORMALIZED_EVENT_START_CALENDAR_YEAR",
+    }
 
 
 def run_tml_elo_experiment(
@@ -438,6 +488,8 @@ def run_tml_elo_experiment(
         "event_date_variants_grouped": date_variants,
         "excluded_reasons": dict(sorted(excluded.items())),
         "holdout_years": list(test_years),
+        "evaluation_status": "HISTORICAL_CALENDAR_EVALUATION_NOT_PROSPECTIVE",
+        "calendar_attribution": _calendar_attribution(matches, test_years),
         "fold_count": len(test_years),
         "test_matches": len(selected),
         "embargo_days_after_tournament_start": embargo_days,
