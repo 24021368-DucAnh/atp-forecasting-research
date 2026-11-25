@@ -14,7 +14,7 @@ import math
 import random
 import re
 from collections import Counter, defaultdict
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Sequence
@@ -61,6 +61,8 @@ class _Match:
     player_b: str
     outcome_a: int
     source_season: int | None = None
+    match_num: str | None = field(default=None, compare=False)
+    tier: str | None = field(default=None, compare=False)
 
 
 def orient_result(winner_id: str, loser_id: str) -> tuple[str, str, int]:
@@ -200,7 +202,8 @@ def _load(paths: Sequence[Path], *, normalize_level_a_2024: bool = False
                 except ValueError:
                     excluded["INVALID_PLAYER_ID"] += 1
                     continue
-                events.append(_Match(tid, start, surface, a, b, y, source_season=season))
+                events.append(_Match(tid, start, surface, a, b, y, source_season=season,
+                                     match_num=mid, tier=level))
                 if entry is not None:
                     normalized_eligible[tid] += 1
             inventory.append({
