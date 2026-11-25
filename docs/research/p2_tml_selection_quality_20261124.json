@@ -1,0 +1,109 @@
+{
+  "schema": "P2_TML_SELECTION_QUALITY_PROFILE_V1",
+  "source": "Exact GitHub blob snapshots identified by the Python reproduction",
+  "source_profile_by_season": [
+    {
+      "year": 2021,
+      "rows": 2735,
+      "eligible": 2396,
+      "missing_match_id": 0,
+      "other_excluded": 339
+    },
+    {
+      "year": 2022,
+      "rows": 2918,
+      "eligible": 2533,
+      "missing_match_id": 0,
+      "other_excluded": 385
+    },
+    {
+      "year": 2023,
+      "rows": 2995,
+      "eligible": 2600,
+      "missing_match_id": 0,
+      "other_excluded": 395
+    },
+    {
+      "year": 2024,
+      "rows": 3076,
+      "eligible": 2540,
+      "missing_match_id": 0,
+      "other_excluded": 536
+    },
+    {
+      "year": 2025,
+      "rows": 2944,
+      "eligible": 2054,
+      "missing_match_id": 489,
+      "other_excluded": 401
+    }
+  ],
+  "details_2025": {
+    "missing_tournament_id": 0,
+    "missing_match_num": 489,
+    "other_identity_fields_present": 489,
+    "duplicate_candidate_identity_groups": 0,
+    "groups": [
+      {
+        "event_id": "2025-560",
+        "event_start": "20250824",
+        "level": "G",
+        "count": 127
+      },
+      {
+        "event_id": "2025-422",
+        "event_start": "20250807",
+        "level": "M",
+        "count": 95
+      },
+      {
+        "event_id": "2025-5014",
+        "event_start": "20250924",
+        "level": "M",
+        "count": 95
+      },
+      {
+        "event_id": "2025-6242",
+        "event_start": "20250818",
+        "level": "250",
+        "count": 47
+      },
+      {
+        "event_id": "2025-329",
+        "event_start": "20250924",
+        "level": "500",
+        "count": 31
+      },
+      {
+        "event_id": "2025-747",
+        "event_start": "20250924",
+        "level": "500",
+        "count": 31
+      },
+      {
+        "event_id": "2025-7581",
+        "event_start": "20250917",
+        "level": "250",
+        "count": 27
+      },
+      {
+        "event_id": "2025-4713",
+        "event_start": "20250917",
+        "level": "250",
+        "count": 27
+      },
+      {
+        "event_id": "2025-9210",
+        "event_start": "20250919",
+        "level": "A",
+        "count": 9
+      }
+    ]
+  },
+  "limitations": [
+    "Independent connector profile checks line-based CSV structure against pinned provider blobs; aggregate counts reconcile with actual Python run.",
+    "Candidate identity fields do not establish canonical match identity. No new match IDs created or rows promoted.",
+    "Season counts are not calendar-year fold counts.",
+    "No official match timing or market certification."
+  ]
+}
