@@ -1,0 +1,10 @@
+{
+  "version": "TML_SACKMANN_ALIAS_2024_1",
+  "scope": "2024_FEB_ATP",
+  "mapping": {
+    "Albert Ramos-Vinolas": "Albert Ramos",
+    "Abdullah Shelbayh": "Abedallah Shelbayh"
+  },
+  "source_notes": "Explicit player display-name variants observed from TML and Sackmann archive 2024 matches; NOT an ATP player ID crosswalk. Do not expand automatically or join on numeric/alphanumeric IDs.",
+  "reviewed_on": "2026-11-24"
+}

@@ -1,0 +1,213 @@
+{
+  "registry_version": "TML_2024_FEB_SOURCE_METADATA_CROSSWALK_1",
+  "mode": "PERSONAL_NONCOMMERCIAL_RESEARCH",
+  "source_file": "2024.csv",
+  "source_github_url": "https://github.com/Tennismylife/TML-Database/blob/master/2024.csv",
+  "source_github_blob_sha1": "cf513429259b4a15e84e2021206895d9bd4ff772",
+  "official_download_url": "https://stats.tennismylife.org/data/2024.csv",
+  "provider_terms_url": "https://stats.tennismylife.org/tennis-match-database",
+  "reviewed_on": "2026-11-24",
+  "source_snapshot_rows_observed": 3076,
+  "source_snapshot_columns": 50,
+  "source_snapshot_month_group_rows_observed": 455,
+  "source_snapshot_target_event_rows_observed": 340,
+  "tourney_date_semantics": "TOURNAMENT_START_DATE_NOT_MATCH_START",
+  "match_id_semantics": "COMPOSITE_TOURNEY_ID_PLUS_MATCH_NUM_NOT_OFFICIAL_MATCH_ID",
+  "official_draw_verified": false,
+  "real_match_date_verified": false,
+  "t60_quote_verified": false,
+  "entries": [
+    {
+      "official_event_key": "ATP_2024_CORDOBA",
+      "source_tourney_id": "2024-9158",
+      "source_tourney_name": "Cordoba",
+      "official_tier": "ATP_250",
+      "tourney_date": "20240205",
+      "surface": "Clay",
+      "observed_row_count": 27,
+      "expected_rounds": {
+        "R32": 12,
+        "R16": 8,
+        "QF": 4,
+        "SF": 2,
+        "F": 1
+      }
+    },
+    {
+      "official_event_key": "ATP_2024_DALLAS",
+      "source_tourney_id": "2024-424",
+      "source_tourney_name": "Dallas",
+      "official_tier": "ATP_250",
+      "tourney_date": "20240205",
+      "surface": "Hard",
+      "observed_row_count": 27,
+      "expected_rounds": {
+        "R32": 12,
+        "R16": 8,
+        "QF": 4,
+        "SF": 2,
+        "F": 1
+      }
+    },
+    {
+      "official_event_key": "ATP_2024_MARSEILLE",
+      "source_tourney_id": "2024-496",
+      "source_tourney_name": "Marseille",
+      "official_tier": "ATP_250",
+      "tourney_date": "20240205",
+      "surface": "Hard",
+      "observed_row_count": 27,
+      "expected_rounds": {
+        "R32": 12,
+        "R16": 8,
+        "QF": 4,
+        "SF": 2,
+        "F": 1
+      }
+    },
+    {
+      "official_event_key": "ATP_2024_ROTTERDAM",
+      "source_tourney_id": "2024-407",
+      "source_tourney_name": "Rotterdam",
+      "official_tier": "ATP_500",
+      "tourney_date": "20240212",
+      "surface": "Hard",
+      "observed_row_count": 31,
+      "expected_rounds": {
+        "R32": 16,
+        "R16": 8,
+        "QF": 4,
+        "SF": 2,
+        "F": 1
+      }
+    },
+    {
+      "official_event_key": "ATP_2024_BUENOS_AIRES",
+      "source_tourney_id": "2024-506",
+      "source_tourney_name": "Buenos Aires",
+      "official_tier": "ATP_250",
+      "tourney_date": "20240212",
+      "surface": "Clay",
+      "observed_row_count": 27,
+      "expected_rounds": {
+        "R32": 12,
+        "R16": 8,
+        "QF": 4,
+        "SF": 2,
+        "F": 1
+      }
+    },
+    {
+      "official_event_key": "ATP_2024_DELRAY_BEACH",
+      "source_tourney_id": "2024-499",
+      "source_tourney_name": "Delray Beach",
+      "official_tier": "ATP_250",
+      "tourney_date": "20240212",
+      "surface": "Hard",
+      "observed_row_count": 27,
+      "expected_rounds": {
+        "R32": 12,
+        "R16": 8,
+        "QF": 4,
+        "SF": 2,
+        "F": 1
+      }
+    },
+    {
+      "official_event_key": "ATP_2024_DOHA",
+      "source_tourney_id": "2024-451",
+      "source_tourney_name": "Doha",
+      "official_tier": "ATP_250",
+      "tourney_date": "20240219",
+      "surface": "Hard",
+      "observed_row_count": 27,
+      "expected_rounds": {
+        "R32": 12,
+        "R16": 8,
+        "QF": 4,
+        "SF": 2,
+        "F": 1
+      }
+    },
+    {
+      "official_event_key": "ATP_2024_RIO_DE_JANEIRO",
+      "source_tourney_id": "2024-6932",
+      "source_tourney_name": "Rio De Janeiro",
+      "official_tier": "ATP_500",
+      "tourney_date": "20240219",
+      "surface": "Clay",
+      "observed_row_count": 31,
+      "expected_rounds": {
+        "R32": 16,
+        "R16": 8,
+        "QF": 4,
+        "SF": 2,
+        "F": 1
+      }
+    },
+    {
+      "official_event_key": "ATP_2024_LOS_CABOS",
+      "source_tourney_id": "2024-7480",
+      "source_tourney_name": "Los Cabos",
+      "official_tier": "ATP_250",
+      "tourney_date": "20240219",
+      "surface": "Hard",
+      "observed_row_count": 27,
+      "expected_rounds": {
+        "R32": 12,
+        "R16": 8,
+        "QF": 4,
+        "SF": 2,
+        "F": 1
+      }
+    },
+    {
+      "official_event_key": "ATP_2024_ACAPULCO",
+      "source_tourney_id": "2024-807",
+      "source_tourney_name": "Acapulco",
+      "official_tier": "ATP_500",
+      "tourney_date": "20240226",
+      "surface": "Hard",
+      "observed_row_count": 31,
+      "expected_rounds": {
+        "R32": 16,
+        "R16": 8,
+        "QF": 4,
+        "SF": 2,
+        "F": 1
+      }
+    },
+    {
+      "official_event_key": "ATP_2024_DUBAI",
+      "source_tourney_id": "2024-495",
+      "source_tourney_name": "Dubai",
+      "official_tier": "ATP_500",
+      "tourney_date": "20240226",
+      "surface": "Hard",
+      "observed_row_count": 31,
+      "expected_rounds": {
+        "R32": 16,
+        "R16": 8,
+        "QF": 4,
+        "SF": 2,
+        "F": 1
+      }
+    },
+    {
+      "official_event_key": "ATP_2024_SANTIAGO",
+      "source_tourney_id": "2024-8996",
+      "source_tourney_name": "Santiago",
+      "official_tier": "ATP_250",
+      "tourney_date": "20240226",
+      "surface": "Clay",
+      "observed_row_count": 27,
+      "expected_rounds": {
+        "R32": 12,
+        "R16": 8,
+        "QF": 4,
+        "SF": 2,
+        "F": 1
+      }
+    }
+  ]
+}
