@@ -3,8 +3,8 @@ name: ATP Lab CI
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
+  # Review stacked PRs against their real feature-base, not only main.
+  pull_request: {}
 
 permissions:
   contents: read

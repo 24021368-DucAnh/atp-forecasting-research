@@ -26,6 +26,10 @@ class JournalEvent(BaseModel):
     event: Literal["RESERVE", "SETTLE_WIN", "SETTLE_LOSS", "SETTLE_VOID", "PROFIT_LOCK"]
     amount: Decimal
     at: AwareDatetime
+    # The original accepted paper quote belongs to RESERVE only. Optional
+    # fields permit replay of legacy LOSS/VOID period counts, never legacy WIN.
+    side: Literal["A", "B"] | None = None
+    odds: Decimal | None = Field(default=None, gt=Decimal("1"), allow_inf_nan=False)
 
 
 class PaperBook(BaseModel):
@@ -42,6 +46,7 @@ class MonthlyReport(BaseModel):
     protected: Decimal
     ending_unlocked: Decimal
     needed_topup: Decimal
+    carried_open_exposure: Decimal = Decimal("0")
     # 'needed_topup' is the deficit needed to begin next month at X;
     # NOT a return, and it must be counted in cash-flow accounting.
 
@@ -115,8 +120,10 @@ def record_selection(book: PaperBook, match_id: str, decision: DecisionOutput,
     if (match_id in book.risk.seen_match_ids or match_id in book.open_positions
             or any(e.event == "RESERVE" and e.match_id == match_id for e in book.journal)):
         raise ValueError("match already selected")
-    if decimal_odds <= 1:
-        raise ValueError("bad odds")
+    if (not isinstance(decimal_odds, Decimal)
+            or not decimal_odds.is_finite()
+            or decimal_odds <= Decimal("1")):
+        raise ValueError("invalid nonfinite decimal odds price")
     # Gate's risk checks should already have run; preserve basic ledger invariants.
     if book.risk.free_cash < decision.stake:
         raise ValueError("insufficient available balance")
@@ -152,7 +159,8 @@ def record_selection(book: PaperBook, match_id: str, decision: DecisionOutput,
         "risk": new_risk,
         "open_positions": {**book.open_positions, match_id: pos},
         "journal": [*book.journal, JournalEvent(match_id=match_id, event="RESERVE",
-                                               amount=stake, at=at)],
+                                               amount=stake, at=at,
+                                               side=decision.side, odds=decimal_odds)],
     })
 
 
@@ -189,12 +197,11 @@ def settle_selection(book: PaperBook, match_id: str,
 
 
 def close_month(book: PaperBook, next_month: str) -> tuple[PaperBook, MonthlyReport]:
-    """Close a settled paper month, record real net and reset to X independently.
+    """Close paper month at stake cost basis, carrying unsettled positions intact.
 
-    A caller should use an auditable month-close event and prohibit editing it later.
+    No unrealized profit/loss is inferred from future match outcomes or odds.
+    Externally funded topups restore the research-equity reference at rollover.
     """
-    if book.open_positions or book.risk.open_exposure != 0:
-        raise ValueError("open positions must settle before month rollover")
     year,mon=map(int,book.risk.month.split("-"))
     expected_year=year+1 if mon==12 else year
     expected_mon=1 if mon==12 else mon+1
