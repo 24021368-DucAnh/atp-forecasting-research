@@ -23,7 +23,8 @@ from atp_lab.prediction import commitment, inference
 from atp_lab.prediction.features import FEATURE_NAMES, FEATURE_VERSION
 from .artifact import (ARTIFACT_VERSION, artifact_directory, decode_artifact,
                        publish_artifact, read_artifact)
-from .dataset import (_collect, _mature_match_ids, dataset_payload, validate_dataset)
+from .dataset import (_collect, _mature_match_ids, _previously_recorded_mature_matches,
+                      dataset_payload, validate_dataset)
 from .fit import fit_logistic
 from .protocol import _read_protocol, fixed_config, protocol_payload, require_digest
 
@@ -216,14 +217,27 @@ def _cohort_for(conn, candidate):
     return cohort, members
 
 
-def _information_set(conn, fixture_id, model_id):
+def _scored_evidence(conn, fixture_id, model_id, sample, limit):
+    """Bind the exact immutable receipts used by a scored report row."""
+    probability, outcome, result_id = sample
     row = conn.execute(
-        "SELECT p.created_at,f.feature_digest FROM predictions p "
-        "JOIN feature_snapshots f ON f.feature_id=p.feature_id "
-        "WHERE p.fixture_id=? AND p.model_id=?", (fixture_id, model_id)).fetchone()
-    if row is None:
-        raise ValueError("scored commitment missing information set")
-    return tuple(row)
+        "SELECT p.prediction_id,p.commitment_digest,p.feature_id,f.feature_digest,"
+        "p.created_at,e.evaluation_id,e.evaluated_at,p.probability_a,a.outcome_a "
+        "FROM predictions p JOIN feature_snapshots f ON f.feature_id=p.feature_id "
+        "JOIN evaluations e ON e.prediction_id=p.prediction_id "
+        "JOIN assessment_receipts a ON a.evaluation_id=e.evaluation_id "
+        "WHERE p.fixture_id=? AND p.model_id=? AND e.result_id=? "
+        "AND e.status='RECORDED' AND a.reason='ELIGIBLE' AND e.evaluated_at<=?",
+        (fixture_id, model_id, result_id, limit)).fetchone()
+    if row is None or tuple(row[-2:]) != (probability, outcome):
+        raise ValueError("scored row missing exact assessment evidence")
+    keys = ("prediction_id", "commitment_digest", "feature_id", "feature_digest",
+            "cutoff", "evaluation_id", "evaluated_at", "probability_a", "outcome_a")
+    return {**dict(zip(keys, row)), "result_id": result_id}
+
+
+def _information_set(evidence):
+    return evidence["cutoff"], evidence["feature_digest"]
 
 
 def _comparison(conn, candidate, limit):
@@ -241,16 +255,28 @@ def _comparison(conn, candidate, limit):
         models[model_id] = {**service._summarize(group), "groups": service._groups(group)}
     samples = {base: {}, r.model_id: {}}
     reasons = Counter()
+    matched_evidence, unmatched_evidence = [], []
     for b, a in zip(rows[base], rows[r.model_id]):
         fid = b[0]["fixture_id"]
+        evidence = {model_id: None if item[4] is None else
+                    _scored_evidence(conn, fid, model_id, item[4], limit)
+                    for model_id, item in ((base, b), (r.model_id, a))}
         if b[4] is None or a[4] is None:
-            reasons["MISSING_OR_UNSCORED"] += 1
+            reason = "MISSING_OR_UNSCORED"
         elif b[4][1:] != a[4][1:]:
-            reasons["RESULT_REVISION_MISMATCH"] += 1
-        elif _information_set(conn, fid, base) != _information_set(conn, fid, r.model_id):
-            reasons["DIFFERENT_INFORMATION_SET"] += 1
+            reason = "RESULT_REVISION_MISMATCH"
+        elif _information_set(evidence[base]) != _information_set(evidence[r.model_id]):
+            reason = "DIFFERENT_INFORMATION_SET"
         else:
             samples[base][fid], samples[r.model_id][fid] = b[4], a[4]
+            matched_evidence.append({"fixture_id": fid, "result_id": b[4][2],
+                                     "outcome_a": b[4][1], "models": evidence})
+            continue
+        reasons[reason] += 1
+        unmatched_evidence.append({"fixture_id": fid, "reason": reason, "models": {
+            model_id: {"committed": item[1], "status": item[2], "reason": item[3],
+                       "scored": evidence[model_id]}
+            for model_id, item in ((base, b), (r.model_id, a))}})
     matched = matched_metrics(samples)
     n = matched["matched_n"]
     ll = None if n == 0 else (matched["models"][r.model_id]["log_loss"]
@@ -266,6 +292,7 @@ def _comparison(conn, candidate, limit):
         "target_n": len(members), "models": models,
         "matched_n": n, "matched_keys": matched["matched_keys"],
         "matched_metrics": matched["models"],
+        "matched_evidence": matched_evidence, "unmatched_evidence": unmatched_evidence,
         "unmatched_reasons": dict(sorted(reasons.items())),
         "ll_delta": ll, "status": status, "minimum_matched_n": p.min_matched,
         "uncertainty": "DESCRIPTIVE_ONLY",
@@ -490,6 +517,6 @@ def training_readiness(conn: sqlite3.Connection, *, last_check_at: str, as_of: s
     if limit < last:
         raise ValueError("readiness clock reversed")
     with training_transaction(conn, write=False):
-        previous = _mature_match_ids(conn, last)
+        previous = _previously_recorded_mature_matches(conn, last)
         current = _mature_match_ids(conn, limit)
         return readiness_flag(len(current - previous), last_check_at=last, as_of=limit)

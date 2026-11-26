@@ -280,3 +280,28 @@ def _mature_match_ids(conn, limit):
                 raise ValueError("duplicate eligible match in readiness inventory")
             matches.add(row.match_id)
     return matches
+
+
+def _previously_recorded_mature_matches(conn, limit):
+    """Conservative prior inventory: a correction cannot make old evidence new.
+
+    Count a baseline match already assessed as eligible by the checkpoint
+    and mature at that checkpoint, even if its then-latest revision was
+    unavailable. Current eligibility still uses the effective revision.
+    """
+    matches = set()
+    for c, _, day in _baseline_commitments(conn, limit):
+        if c is None or not _mature(day, limit):
+            continue
+        row = conn.execute(
+            "SELECT 1 FROM evaluations e JOIN assessment_receipts a "
+            "ON a.evaluation_id=e.evaluation_id JOIN result_versions r "
+            "ON r.result_id=e.result_id WHERE e.prediction_id=? "
+            "AND r.match_id=? AND e.status='RECORDED' AND a.reason='ELIGIBLE' "
+            "AND a.outcome_a IN (0,1) AND e.evaluated_at<=? "
+            "AND r.state='COMPLETED' AND r.observed_at<=e.evaluated_at "
+            "AND r.available_at<=e.evaluated_at LIMIT 1",
+            (c.prediction.prediction_id, c.prediction.match_id, limit)).fetchone()
+        if row is not None:
+            matches.add(c.prediction.match_id)
+    return matches

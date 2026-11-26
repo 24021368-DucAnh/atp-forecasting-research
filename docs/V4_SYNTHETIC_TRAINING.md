@@ -93,7 +93,10 @@ S5's revision-aware policy. candidate_comparison returns fixed cohort
 counts, coverage, grouped metrics and matched metrics only on the
 same fixture, outcome/revision and information set. Missing,
 unscored, or different information sets are counted, not silently
-compared. Log loss delta (candidate minus baseline) is primary;
+compared. The comparison digest also binds exact result revision,
+prediction, commitment, feature and assessment identities for each
+scored row plus per-fixture exclusion reasons, so even a same-winner
+correction changes the approval evidence. Log loss delta (candidate minus baseline) is primary;
 accuracy, Brier and ECE remain descriptive. The window must close
 and the preregistered matched minimum be reached for
 SUFFICIENT_SYNTHETIC. This is support for a manual review, not
@@ -117,9 +120,11 @@ still default to baseline. Old commitments and assessments never
 change. No actual production promotion or security authorization
 is provided by these synthetic receipts.
 
-training_readiness counts distinct matured newly eligible baseline
-matches between two verified synthetic as-of views; corrections
-cannot duplicate an already eligible match. Weekly (>=7 days)
+training_readiness counts currently eligible distinct mature baseline
+matches not previously recorded as eligible and already mature at the
+last checkpoint. This conservative history rule excludes reactivated
+matches even if an intervening revision was unavailable, and never
+counts them as NEW. Weekly (>=7 days)
 and 200 new outcomes are operational request flags only, not power
 or automatic training. No scheduler is enabled.
 
