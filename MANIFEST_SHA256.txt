@@ -115,6 +115,7 @@ c6688210aa1180312ea938db7926fe6891235199a3deb55b494fb843c0cfd069  docs/superpowe
 d37bca5da6c4dc4a9b9261fb585ed52c31aa9201da910729bb3aceeb2dd710c9  docs/superpowers/plans/2026-11-25-p2-5-synthetic-a2-a3.md
 873fa857c90ceb18f073527f43305af19caf68fb47c2090defa316bedf6751d9  docs/superpowers/plans/2026-11-26-p0-p3a-integrated-review-remediation.md
 73238ab5ffab4f6338fbbc319b4a047bb100692ed42c2a9d0e9de491a6387849  docs/superpowers/plans/2026-11-26-p2-5-synthetic-commitment-v2-ledger.md
+1a5f039cdb4c5fa6fe071a98057c012bd6404cc905e80f54b809478073067ed9  docs/superpowers/plans/2026-11-26-v4-s1-historical-reader.md
 a7c4f6e4fc5e6b14240e7f4dc860808a28654499d96d3980c1edc5b571b1d10c  docs/superpowers/specs/2026-11-23-atp-input-gate-design.md
 d723402570040251c7bef4767d79625bb1b6f35d70e2ba70dba157d806a99941  docs/superpowers/specs/2026-11-23-p1-inventory-anomaly-review.md
 f744d79d7ba754f0b3074a6bb403f581b96d7b2749a4b956f2e8a9373f5638d4  docs/superpowers/specs/2026-11-23-p1-legacy-crosswalk.md
@@ -149,6 +150,7 @@ fbf11bcbe24650916f40863b0784e6e171e1efe8a452a146753f5091be5f650b  docs/superpowe
 a729e584ae99ac909b3ce5dcf74705d696da729c529d57ea392daa28bcf7b592  docs/superpowers/specs/2026-11-25-p2-3-fixed-ml-calibration.md
 8469cd3caeff2cecc61f125f6adf4d90cbe99ecf36db6ccdf424c5f3fb1fae3d  docs/superpowers/specs/2026-11-25-p2-4-fixed-ablation.md
 c8450808b40f4c4411c11dc0e2a0f7a21a4594f0cbc50ae1f34667e81ff9cbbb  docs/superpowers/specs/2026-11-25-p2-5-synthetic-boundary.md
+3a7570699e8716df99fc79374ed0dbad5eb1107e317bcdacce124ffa705d5f34  docs/superpowers/specs/2026-11-26-v4-local-dashboard-design.md
 a373c07aa0e99f1b5e591972b534840f440cfe8ee2442abddf022366ba547717  examples/historical_toy.csv
 e2e1a9c3aad7f0905cb90fd934b018a566eea0a04941c9c04ceb656db4a6e640  examples/research_synthetic.csv
 3d0b165b6905fcf0f784ec3f3bf49e289c860d4e11e669e3c3e941e71e4ae57a  examples/synthetic_unvalidated.json
@@ -259,3 +261,4 @@ b562798c0dddcde1533657eaad1e74f2013be90c23553cba1a0d2377af2ab341  tests/test_tml
 ab437738d987d7b6001747a8f6e63b3e6bc5c4072ba5de95a4eee2204eef061e  tests/test_tml_source_watch.py
 894acba03ed70566b4c18263f3199ec94f65f7f90bbd2a753056d1197edf2453  tests/test_valuebetennis_source.py
 f76c74db75ad1d8fd020abeaf249c8a1d1dec4ffd8f8e92621801dfe566094a6  tests/test_valuebetennis_tournaments.py
+bfac2449bc03a38d13c3e4749be9074e50bac71c5a5c3b0a454060578364977b  tests/v4/test_historical.py
