@@ -90,6 +90,9 @@ def decide(conn, commitment, as_of):
             or (actual is not None and actual > observed)
             or (actual is not None and published is not None and actual > published)):
         raise ValueError("invalid persisted result chronology")
+    # A later correction cannot erase an earlier observation at/before commitment.
+    if any(_clock(row[3]) <= p.created_at for row in rows):
+        return Assessment("INELIGIBLE", "RESULT_OBSERVED_BEFORE_COMMIT", rid)
     if state in ("VOID", "WALKOVER"):
         return Assessment("VOID", "VOID_RESULT" if state == "VOID" else "WALKOVER", rid)
     if state in ("RETIRED", "UNKNOWN"):

@@ -53,13 +53,20 @@ of caller work and preserves atomic rollback.
    and has no trusted assessment row. A known available COMPLETED
    result requires known actual start and publication and strict
    commitment < actual start <= publication <= observation <=
-   availability <= as_of. The committed fixture must not be superseded
+   availability <= as_of. Any observed result revision at or before
+   commitment excludes the available effective revision, even if a later
+   correction claims normal timing (RESULT_OBSERVED_BEFORE_COMMIT).
+   The committed fixture must not be superseded
    by a visible higher revision or other source by actual start; no
    automatic rescheduling transfer. Unknown timing, late, RETIRED and
    UNKNOWN are INELIGIBLE; VOID and WALKOVER are VOID. A terminal
    assessment stores one immutable reason and optional binary outcome
    for the exact result revision. Exact replay preserves the first
-   evaluated_at. Conflicting evidence is rejected, not overwritten.
+   evaluated_at. If later evidence contradicts an existing assessment,
+   return a derived INELIGIBLE / ASSESSMENT_EVIDENCE_CONFLICT exclusion
+   without an evaluation ID or outcome; retain the original immutable
+   receipt and the full cohort denominator. Missing assessment receipts
+   fail closed, not as a fabricated exclusion.
 5. evaluation_report(conn, cohort_id, as_of=...) opens its own verified
    read snapshot. For each model, count every member: MISSING, PENDING,
    RECORDED, VOID, INELIGIBLE. Only S5 receipt commitments in the frozen
@@ -84,8 +91,9 @@ Complete synthetic inventories, normalized typed source clocks, local
 immutable SQLite records, and the single-writer order are assumed.
 Caller clocks/metadata and SHA256 do not prove independent time or
 provider authenticity; arbitrary raw SQL/backdated insertions outside
-the typed workflow are not certified. Conflicting assessment evidence
-fails closed. Only one S4 no-fit baseline inference is supported;
+the typed workflow are not certified. Contradictory evidence never
+inherits an old score or overwrites its immutable receipt. Only one S4
+no-fit baseline inference is supported;
 candidate training and independent model lifecycle are S6. UI and
 worker deployment are S7. S8 remains LOCKED pending explicit rights
 and timing/activation approval.

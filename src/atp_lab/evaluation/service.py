@@ -126,8 +126,11 @@ def _stored_assessment(conn, prediction_id, decision, as_of):
         return None
     if row[1] > as_of:
         return Assessment("PENDING", "NOT_EVALUATED", decision.result_id)
+    if row[3] is None:
+        raise ValueError("missing immutable assessment receipt")
     if tuple(row[2:]) != (decision.status, decision.reason, decision.outcome_a):
-        raise ValueError("conflicting immutable assessment evidence")
+        # Preserve the original receipt; new conflicting evidence must not be scored.
+        return Assessment("INELIGIBLE", "ASSESSMENT_EVIDENCE_CONFLICT", decision.result_id)
     return replace(decision, evaluation_id=row[0], evaluated_at=row[1])
 
 
