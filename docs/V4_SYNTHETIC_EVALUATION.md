@@ -31,7 +31,8 @@ of caller work and preserves atomic rollback.
    membership and window are immutable; exact replay is permitted.
    Each model has the same fixed target_n. No post-outcome registration
    or retroactive addition. Model versions other than the fixed baseline
-   may be registered in the cohort, but S5 cannot fit or infer them.
+   may be registered in the cohort. S6 supports explicitly registered
+   synthetic candidates; see V4_SYNTHETIC_TRAINING.md.
 3. Call prediction.commitment.commit_prediction(conn, fixture_id,
    event_metadata, cutoff=..., created_at=...). V1 requires equal
    normalized clocks, strict pre-scheduled-start, latest available
@@ -92,8 +93,7 @@ immutable SQLite records, and the single-writer order are assumed.
 Caller clocks/metadata and SHA256 do not prove independent time or
 provider authenticity; arbitrary raw SQL/backdated insertions outside
 the typed workflow are not certified. Contradictory evidence never
-inherits an old score or overwrites its immutable receipt. Only one S4
-no-fit baseline inference is supported;
-candidate training and independent model lifecycle are S6. UI and
+inherits an old score or overwrites its immutable receipt. S4 baseline remains the default;
+S6 adds controlled synthetic candidate inference and lifecycle. UI and
 worker deployment are S7. S8 remains LOCKED pending explicit rights
 and timing/activation approval.

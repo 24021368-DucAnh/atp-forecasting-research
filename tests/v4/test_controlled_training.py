@@ -68,7 +68,7 @@ class Lab:
         self.events=[]
         self.rows={}
 
-    def fixture(self,key,day,pair=("SYN-A","SYN-B"),surface="HARD",tournament=None,revision=1):
+    def fixture(self,key,day,pair=("SYN-A","SYN-B"),surface="HARD",tournament=None,revision=1,event_day=None):
         day=date.fromisoformat(day)
         tournament=tournament or f"SYN-t-{key}"
         fid,mid,snap=(f"SYN-{kind}-{key}" for kind in ("f","m","fs"))
@@ -83,7 +83,7 @@ class Lab:
                                            stamp(day,14),"SCHEDULED"))
         self.c.commit()
         meta=stamp(day-timedelta(days=3),8)
-        self.events.append(inference.EventMetadata(tournament,revision,day,meta,meta))
+        self.events.append(inference.EventMetadata(tournament,revision,date.fromisoformat(event_day) if event_day else day,meta,meta))
         self.rows[key]=(fid,mid,day,pair,tournament)
         return fid
 
@@ -306,8 +306,10 @@ def test_label_without_visible_assessment_not_used(prepared):
 
 def test_same_event_cannot_cross_splits(lab):
     upgrade(lab.c)
-    lab.example("one","2025-01-01",1,tournament="SYN-same-event")
-    lab.example("two","2025-03-01",0,tournament="SYN-same-event",revision=2)
+    # An earlier corrected event date preserves valid actual-start chronology
+    # but contradicts the earlier frozen calibration event metadata.
+    lab.example("one","2025-03-01",1,tournament="SYN-same-event")
+    lab.example("two","2025-03-03",0,tournament="SYN-same-event",revision=2,event_day="2025-01-01")
     proto_api().register_protocol(lab.c,protocol())
     with pytest.raises(ValueError):
         dataset(lab)

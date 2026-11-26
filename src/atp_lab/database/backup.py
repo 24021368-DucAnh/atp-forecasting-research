@@ -1,4 +1,4 @@
-"""Verified, no-clobber local SQLite snapshots for synthetic schemas v3/v4."""
+"""Verified, no-clobber local SQLite snapshots for synthetic schemas v3/v4/v5."""
 from contextlib import closing
 import os
 from pathlib import Path
@@ -82,7 +82,7 @@ def _copy_verified(source: Path, destination: Path) -> Path:
 
 
 def backup_database(source: Path, destination: Path) -> Path:
-    """Create a verified standalone copy of a committed synthetic v3/v4 DB."""
+    """Create a verified standalone copy of a committed synthetic v3/v4/v5 DB."""
     return _copy_verified(source, destination)
 
 
