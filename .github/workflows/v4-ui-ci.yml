@@ -1,0 +1,42 @@
+name: V4 Offline UI CI
+
+on:
+  pull_request:
+    paths:
+      - 'dashboard/**'
+      - 'src/atp_lab/**'
+      - 'tests/v4/**'
+      - 'requirements/v4-ui.txt'
+      - '.github/workflows/v4-ui-ci.yml'
+      - '.gitattributes'
+
+permissions:
+  contents: read
+
+jobs:
+  offline-ui:
+    name: V4 AppTest / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    env:
+      ATP_LAB_REQUIRE_UI_TESTS: "1"
+      STREAMLIT_BROWSER_GATHER_USAGE_STATS: "false"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements/v4-ui.txt
+      - name: Install separate V4 UI environment
+        run: |
+          python -m pip install -r requirements/v4-ui.txt -e .
+          python -m pip check
+      - name: Verify manifest
+        run: python -m scripts.repository_manifest verify
+      - name: Run offline UI contracts
+        run: python -m pytest tests/v4/test_dashboard.py -q
