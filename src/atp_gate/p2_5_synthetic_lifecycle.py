@@ -28,6 +28,8 @@ def _validated_rows(rows, fields):
             if type(value) is not int or value not in (0, 1):
                 raise ValueError("invalid synthetic outcome")
         result[key] = dict(row)
+        if "feature" in fields:
+            result[key]["feature"] = 0.0 if row["feature"] == 0 else float(row["feature"])
     return result
 
 
@@ -59,10 +61,26 @@ class SyntheticSession:
 
     def _state_digest(self):
         payload = {
-            "schema": "SYNTHETIC_TWO_BIN_V1",
+            "schema": "SYNTHETIC_TWO_BIN_V2",
             "request": self._request,
             "training": self._training,
             "probabilities": self._probabilities,
+        }
+        canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"), allow_nan=False)
+        return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+    def _prediction_commitment(self, predictions):
+        if type(predictions) is not dict or not predictions:
+            raise ValueError("invalid synthetic prediction map")
+        for key, value in predictions.items():
+            if (type(key) is not str
+                    or re.fullmatch(r"SYN-[A-Z0-9]+(?:-[A-Z0-9]+)*", key) is None
+                    or type(value) is not float or not 0 < value < 1):
+                raise ValueError("invalid synthetic prediction commitment")
+        payload = {
+            "schema": "SYNTHETIC_PREDICTIONS_V2",
+            "frozen_digest": self._digest,
+            "predictions": predictions,
         }
         canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"), allow_nan=False)
         return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
@@ -81,10 +99,13 @@ class SyntheticSession:
         matchups = _validated_rows(rows, {"id", "feature"})
         if matchups.keys() & {row["id"] for row in self._training}:
             raise ValueError("synthetic training/evaluation overlap")
-        self._predictions = {
+        predictions = {
             key: self._probabilities[int(row["feature"] >= 0.5)]
             for key, row in matchups.items()
         }
+        commitment = self._prediction_commitment(predictions)
+        self._predictions = predictions
+        self._prediction_digest = commitment
         self._state = "PREDICTED"
 
     def release(self, labels: list[dict], *, custodian_id: str) -> dict:
@@ -93,6 +114,8 @@ class SyntheticSession:
             raise ValueError("wrong simulated custodian")
         if self._state_digest() != self._digest:
             raise ValueError("synthetic frozen commitment mismatch")
+        if self._prediction_commitment(self._predictions) != self._prediction_digest:
+            raise ValueError("synthetic prediction commitment mismatch")
         outcomes = _validated_rows(labels, {"id", "outcome"})
         if outcomes.keys() != self._predictions.keys():
             raise ValueError("synthetic matched-key coverage mismatch")
@@ -100,6 +123,9 @@ class SyntheticSession:
         n = len(pairs)
         report = {
             **self._receipt,
+            "commitment_schema": "SYNTHETIC_TWO_BIN_V2",
+            "frozen_digest": self._digest,
+            "prediction_digest": self._prediction_digest,
             "n": n,
             "coverage": 1.0,
             "log_loss": math.fsum(-math.log(p if y else 1 - p) for y, p in pairs) / n,
