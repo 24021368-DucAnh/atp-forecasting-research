@@ -610,3 +610,94 @@ def test_readiness_counts_distinct_new_mature_matches(prepared):
     r=api().training_readiness(prepared.c,last_check_at="2025-01-01T00:00:00Z",as_of=CUTOFF)
     assert r["new_eligible_n"]==8 and not r["eligible_to_request"]
     assert registry_counts(prepared.c)==(1,0,0,1)
+
+
+def test_same_winner_correction_invalidates_old_promotion_evidence(trained):
+    lab,r=trained
+    old=future_cycle(lab,r)
+    before=api().candidate_comparison(lab.c,r.model_id,as_of=REPORT)
+    consent=approval(lab,r,before)
+    rid=lab.result("future0",revision=2,outcome=0,
+                   observed="2025-05-20T10:00:00Z",available="2025-05-20T11:00:00Z")
+    for p in old[0]:
+        assert lab.evaluate(p,"future0","2025-05-20T12:00:00Z").status=="RECORDED"
+    after=api().candidate_comparison(lab.c,r.model_id,as_of=REPORT)
+    assert before["matched_keys"]==after["matched_keys"]
+    assert before["matched_metrics"]==after["matched_metrics"]
+    assert before["digest"]!=after["digest"]
+    entry=next(row for row in after["matched_evidence"] if row["fixture_id"]=="SYN-f-future0")
+    assert entry["result_id"]==rid
+    assert entry["models"][BASE]["prediction_id"]==old[0][0].prediction.prediction_id
+    assert entry["models"][r.model_id]["commitment_digest"]==old[0][1].prediction.commitment_digest
+    assert all(item["evaluation_id"] for item in entry["models"].values())
+    with pytest.raises(ValueError):
+        api().promote_candidate(lab.c,r.model_id,consent,model_dir=lab.root)
+    assert api().active_model_id(lab.c)==BASE
+
+
+def test_readiness_does_not_recount_a_temporarily_unavailable_mature_match(prepared):
+    lab=prepared
+    p=lab.commit("cal0")
+    lab.result("cal0",revision=2,outcome=0,
+               observed="2025-05-02T10:00:00Z",available=None)
+    lab.result("cal0",revision=3,outcome=1,
+               observed="2025-05-04T10:00:00Z",available="2025-05-04T11:00:00Z")
+    assert lab.evaluate(p,"cal0","2025-05-04T12:00:00Z").status=="RECORDED"
+    readiness=api().training_readiness(lab.c,last_check_at="2025-05-03T12:00:00Z",
+                                      as_of="2025-05-12T12:00:00Z")
+    assert readiness["new_eligible_n"]==0
+
+
+def test_calibration_maturity_exact_28_day_boundary(prepared):
+    prepared.example("mature","2025-04-03",1)
+    prepared.example("too-recent","2025-04-04",0)
+    proto_api().register_protocol(prepared.c,protocol(
+        protocol_id="SYN-maturity",evaluation_cohort_id="SYN-maturity-cohort",
+        calibration_end="2025-04-05"))
+    data=dataset_api().collect_dataset(prepared.c,"SYN-maturity")
+    ids={row.match_id for row in data.calibration}
+    assert "SYN-m-mature" in ids and "SYN-m-too-recent" not in ids
+
+
+def test_s3_synthetic_ingestion_and_s5_assessment_work_after_v5_migration(lab):
+    from atp_lab.ingestion import adapter,pipeline
+    upgrade(lab.c)
+    lab.fixture("ingest","2025-01-01")
+    lab.c.execute("BEGIN IMMEDIATE")
+    for alias,player in (("a","SYN-A"),("b","SYN-B")):
+        i.put_alias(lab.c,i.PlayerAlias("SYN-feed",alias,player))
+    i.put_match_alias(lab.c,i.MatchAlias("SYN-feed","ingest","SYN-m-ingest"))
+    lab.c.commit()
+    p=lab.commit("ingest")
+    class Fake:
+        def fetch(self,url):
+            assert url==adapter.RESULTS_ENDPOINT
+            return json.dumps({"results":[{"match_id":"ingest","player_1":"a",
+                "player_2":"b","revision":1,"published_at":"2025-01-01T16:00:00Z",
+                "actual_start":"2025-01-01T14:00:00Z","state":"COMPLETED","winner":"a"}]}).encode()
+    report=pipeline.ingest_batch(lab.c,adapter.SourcePolicy("SYN-feed",enabled=True),
+        adapter.RESULTS_ENDPOINT,Fake(),job_id="SYN-job-v5",
+        started_at="2025-01-01T16:00:00Z",observed_at="2025-01-01T17:00:00Z",
+        available_at="2025-01-01T18:00:00Z",ended_at="2025-01-01T19:00:00Z",
+        sleep=lambda _:None)
+    assert report.status=="SUCCEEDED" and report.inserted==1
+    assert lab.evaluate(p,"ingest").status=="RECORDED"
+    assert lab.c.execute("PRAGMA user_version").fetchone()[0]==5
+
+
+@pytest.mark.parametrize("bad",["zero-scale","short-coef","wrong-feature","extra-parameter"])
+def test_canonical_artifact_rejects_malformed_numeric_schema(trained,bad):
+    from atp_lab.training.artifact import decode_artifact
+    lab,r=trained
+    payload=json.loads((lab.root/r.artifact_name).read_text(encoding="utf-8"))
+    if bad=="zero-scale":
+        payload["parameters"]["scale"][0]=0
+    elif bad=="short-coef":
+        payload["parameters"]["coef"].pop()
+    elif bad=="wrong-feature":
+        payload["feature_names"][0]="wrong"
+    else:
+        payload["parameters"]["unexpected"]=1
+    raw=json.dumps(payload,sort_keys=True,separators=(",",":"),ensure_ascii=True,allow_nan=False)
+    with pytest.raises(ValueError):
+        decode_artifact(raw)
