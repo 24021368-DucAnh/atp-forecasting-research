@@ -121,6 +121,7 @@ d37bca5da6c4dc4a9b9261fb585ed52c31aa9201da910729bb3aceeb2dd710c9  docs/superpowe
 1a5f039cdb4c5fa6fe071a98057c012bd6404cc905e80f54b809478073067ed9  docs/superpowers/plans/2026-11-26-v4-s1-historical-reader.md
 b17acf0b0428dcccbe40cb02ab00f2a6cce69850b3da8d0fde8b55476f525db4  docs/superpowers/plans/2026-11-26-v4-s1-ui-contract.md
 feb4905c4828795b6b5375e702b8e06a43d4a04f92b929b443904208c7e6c0e0  docs/superpowers/plans/2026-11-26-v4-s2-bootstrap.md
+36d98595f61bae2043df13b015189f3d5bba372dff5a148b13a8bce823545960  docs/superpowers/plans/2026-11-26-v4-s2-identity.md
 a7c4f6e4fc5e6b14240e7f4dc860808a28654499d96d3980c1edc5b571b1d10c  docs/superpowers/specs/2026-11-23-atp-input-gate-design.md
 d723402570040251c7bef4767d79625bb1b6f35d70e2ba70dba157d806a99941  docs/superpowers/specs/2026-11-23-p1-inventory-anomaly-review.md
 f744d79d7ba754f0b3074a6bb403f581b96d7b2749a4b956f2e8a9373f5638d4  docs/superpowers/specs/2026-11-23-p1-legacy-crosswalk.md
@@ -274,4 +275,5 @@ ab437738d987d7b6001747a8f6e63b3e6bc5c4072ba5de95a4eee2204eef061e  tests/test_tml
 f76c74db75ad1d8fd020abeaf249c8a1d1dec4ffd8f8e92621801dfe566094a6  tests/test_valuebetennis_tournaments.py
 e6a2cdafe6dfaf378b76ed8d1665d09a425106adf36b9a898a5d100cf8257d2f  tests/v4/test_dashboard.py
 4adc707e1ba3520b3a73b6e8436ad782f3153f80744f13c737099449b3b83836  tests/v4/test_database_bootstrap.py
+cb3848072a03d169023467509b2c46c653c8106c97b41c51e2467c4b55b634dd  tests/v4/test_database_identity.py
 bfac2449bc03a38d13c3e4749be9074e50bac71c5a5c3b0a454060578364977b  tests/v4/test_historical.py
