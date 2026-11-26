@@ -105,8 +105,8 @@ def _insert(conn: sqlite3.Connection, record, record_type: type) -> bool:
     require_writer(conn)
     if not conn.in_transaction:
         raise ValueError("explicit caller transaction required")
-    if conn.execute("PRAGMA user_version").fetchone()[0] != VERSION:
-        raise ValueError("forecast schema v3 required")
+    if conn.execute("PRAGMA user_version").fetchone()[0] not in (VERSION, 4):
+        raise ValueError("forecast schema v3 or v4 required")
     table = _TABLES[record_type]
     values = {field.name: _canonical(field.name, getattr(record, field.name))
               for field in fields(record_type)}
@@ -151,8 +151,8 @@ def record_quality_issue(conn: sqlite3.Connection, record: QualityIssue) -> bool
 def list_prediction_history(conn: sqlite3.Connection, match_id: str) -> list[dict]:
     """Return exact stored revisions using one read snapshot, with no writes."""
     match_id = _canonical("match_id", match_id)
-    if conn.execute("PRAGMA user_version").fetchone()[0] != VERSION:
-        raise ValueError("forecast schema v3 required")
+    if conn.execute("PRAGMA user_version").fetchone()[0] not in (VERSION, 4):
+        raise ValueError("forecast schema v3 or v4 required")
     p_fields = tuple(field.name for field in fields(Prediction))
     e_fields = tuple(field.name for field in fields(Evaluation))
     columns = ", ".join([f"p.{name}" for name in p_fields] +

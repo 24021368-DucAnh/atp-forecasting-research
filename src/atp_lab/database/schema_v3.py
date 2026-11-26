@@ -94,7 +94,10 @@ def _expected_objects() -> list:
 
 
 def verify_forecast_schema(conn: sqlite3.Connection) -> None:
-    """Verify exact local schema and FK consistency; no writes."""
+    """Verify recognized exact forecast/evaluation schema; no writes."""
+    if _version(conn) == 4:
+        from .schema_v4 import verify_evaluation_schema
+        return verify_evaluation_schema(conn)
     if _version(conn) != VERSION or _objects(conn) != _expected_objects():
         raise ValueError("unrecognized forecast schema")
     if conn.execute("SELECT id, marker FROM atp_lab_schema").fetchall() != [(1, _MARKER)]:
