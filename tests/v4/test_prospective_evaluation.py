@@ -549,3 +549,120 @@ def test_matched_keys_require_same_outcome_revision():
     assert out["matched_keys"] == ("SYN-f1",) and out["matched_n"] == 1
     assert out["models"]["SYN-model-a"]["accuracy"] == 1.
     assert out["models"]["SYN-model-b"]["accuracy"] == 0.
+
+
+@pytest.mark.parametrize("observed",["2025-06-29T11:59:00Z",COMMIT])
+def test_old_precommit_result_observation_cannot_be_hidden_by_correction(db,observed):
+    c,_ = db
+    upgrade(c)
+    cohort(c,fixtures=("SYN-f1",))
+    p = commit(c)
+    # Typed source receipts can reveal contradictory earlier timestamps
+    # after commitment. A later normal result must not erase this fact.
+    result(c,revision=1,observed=observed,available=observed,actual=None,
+           published=None,state="UNKNOWN",winner=None)
+    latest = result(c,revision=2)
+    decision = evaluate(c,p)
+    assert (decision.status,decision.reason,decision.result_id,decision.outcome_a) == (
+        "INELIGIBLE","RESULT_OBSERVED_BEFORE_COMMIT",latest,None)
+    model = report(c)["models"][MODEL]
+    assert model["target_n"] == 1 and model["scored_n"] == 0
+    assert model["reason_counts"] == {"RESULT_OBSERVED_BEFORE_COMMIT":1}
+
+
+def test_conflicting_later_evidence_keeps_cohort_and_original_assessment(db):
+    c,_ = db
+    upgrade(c)
+    cohort(c,fixtures=("SYN-f1",))
+    p = commit(c)
+    result(c)
+    first = evaluate(c,p)
+    assert first.status == "RECORDED"
+    # Later discovery of contradictory synthetic fixture timing must
+    # not overwrite the original assessment or crash the whole report.
+    revise(c)
+    second = evaluate(c,p,LATER)
+    assert (second.status,second.reason,second.outcome_a,second.evaluation_id) == (
+        "INELIGIBLE","ASSESSMENT_EVIDENCE_CONFLICT",None,None)
+    summary = report(c,LATER)["models"][MODEL]
+    assert summary["target_n"] == 1 and summary["committed_n"] == 1
+    assert summary["scored_n"] == 0
+    assert summary["reason_counts"] == {"ASSESSMENT_EVIDENCE_CONFLICT":1}
+    assert c.execute("SELECT evaluation_id,status FROM evaluations").fetchall() == [
+        (first.evaluation_id,"RECORDED")]
+
+
+def test_partial_v4_migration_ddl_failure_rolls_back(db):
+    c,_ = db
+    def authorize(action,arg1,arg2,dbname,trigger):
+        if action == sqlite3.SQLITE_CREATE_TABLE and arg1 == "assessment_receipts":
+            return sqlite3.SQLITE_DENY
+        return sqlite3.SQLITE_OK
+    c.set_authorizer(authorize)
+    try:
+        with pytest.raises(sqlite3.DatabaseError):
+            upgrade(c)
+    finally:
+        c.set_authorizer(None)
+    assert c.execute("PRAGMA user_version").fetchone()[0] == 3
+    assert not c.execute("SELECT 1 FROM sqlite_master WHERE name='prediction_receipts'").fetchone()
+    assert not c.in_transaction
+    assert upgrade(c) == 4
+
+
+def test_assessment_sidecar_failure_rolls_back_evaluation(db):
+    c,_ = db
+    upgrade(c)
+    p = commit(c)
+    result(c)
+    def authorize(action,arg1,arg2,dbname,trigger):
+        if action == sqlite3.SQLITE_INSERT and arg1 == "assessment_receipts":
+            return sqlite3.SQLITE_DENY
+        return sqlite3.SQLITE_OK
+    c.set_authorizer(authorize)
+    try:
+        with pytest.raises(sqlite3.DatabaseError):
+            evaluate(c,p)
+    finally:
+        c.set_authorizer(None)
+    assert counts(c) == (1,1,1,0,0,0)
+    assert not c.in_transaction
+    assert evaluate(c,p).status == "RECORDED"
+
+
+def test_v4_fake_fixture_to_result_ingestion_full_sequence(db):
+    c,_ = db
+    upgrade(c)
+    c.execute("BEGIN IMMEDIATE")
+    i.put_match(c,i.Match("SYN-m4","SYN-event","SYN-A","SYN-B"))
+    i.put_match_alias(c,i.MatchAlias("SYN-feed","m4","SYN-m4"))
+    c.commit()
+
+    class Fake:
+        def __init__(self,endpoint,payload):
+            self.endpoint,self.payload = endpoint,payload
+
+        def fetch(self,url):
+            assert url == self.endpoint and not c.in_transaction
+            return json.dumps(self.payload).encode()
+
+    policy = adapter.SourcePolicy("SYN-feed",enabled=True)
+    target = {"match_id":"m4","player_1":"b","player_2":"a","revision":1}
+    fixture_payload = {"fixtures":[dict(target,scheduled_start=START,state="SCHEDULED")]}
+    first = pipeline.ingest_batch(c,policy,adapter.FIXTURES_ENDPOINT,
+        Fake(adapter.FIXTURES_ENDPOINT,fixture_payload),job_id="SYN-new-fixture-job",
+        started_at=OBS,observed_at=OBS,available_at=READY,ended_at=READY,sleep=lambda _:None)
+    assert first.status == "SUCCEEDED" and first.inserted == 1
+    fid = c.execute("SELECT fixture_id FROM fixture_versions WHERE match_id='SYN-m4'").fetchone()[0]
+    cohort(c,fixtures=(fid,))
+    p = commit(c,fid)
+    result_payload = {"results":[dict(target,actual_start=START,published_at=PUBLISHED,
+                                      state="COMPLETED",winner="a")]}
+    second = pipeline.ingest_batch(c,policy,adapter.RESULTS_ENDPOINT,
+        Fake(adapter.RESULTS_ENDPOINT,result_payload),job_id="SYN-new-result-job",
+        started_at=PUBLISHED,observed_at=ROBS,available_at=RREADY,ended_at=ASOF,sleep=lambda _:None)
+    assert second.status == "SUCCEEDED" and second.inserted == 1
+    assert evaluate(c,p).status == "RECORDED"
+    summary = report(c)["models"][MODEL]
+    assert (summary["target_n"],summary["committed_n"],summary["scored_n"]) == (1,1,1)
+    assert summary["metrics"]["accuracy"] == 1.
