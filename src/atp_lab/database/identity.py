@@ -149,8 +149,8 @@ def _insert(conn: sqlite3.Connection, record, record_type: type) -> bool:
     require_writer(conn)
     if not conn.in_transaction:
         raise ValueError("explicit caller transaction required")
-    if conn.execute("PRAGMA user_version").fetchone()[0] not in (VERSION, 3):
-        raise ValueError("identity schema v2 or v3 required")
+    if conn.execute("PRAGMA user_version").fetchone()[0] not in (VERSION, 3, 4):
+        raise ValueError("identity schema v2, v3 or v4 required")
     table, keys = _RECORDS[record_type]
     values = {field.name: _canonical(field.name, getattr(record, field.name))
               for field in fields(record_type)}

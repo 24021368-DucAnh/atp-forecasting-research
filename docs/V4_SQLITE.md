@@ -1,9 +1,12 @@
 # V4 SQLite persistence - offline synthetic research
 
-Scope: S2 database foundation, identity, forecast provenance and recovery.
+Scope: S2 database foundation, identity, forecast provenance and recovery,
+with S5 additive synthetic commitment and assessment receipts.
 This is a local persistence layer, not a production tennis-data service.
-Real ingestion, actual model fitting, model artifact export, scheduler,
-UI database wiring and prospective scoring remain locked or deferred.
+Offline synthetic prospective scoring is described in
+[V4_SYNTHETIC_EVALUATION.md](V4_SYNTHETIC_EVALUATION.md).
+Real ingestion, actual model fitting, model artifact export, scheduler
+and UI database wiring remain locked or deferred.
 V3 historical engine and evidence are unchanged.
 
 ## Local files and connections
@@ -27,15 +30,19 @@ on a changing DB.
 ## Explicit migrations
 
 Use a new synthetic database, initialize v1 with migrate(), upgrade v1
-to v2 with migrate_identity(), and upgrade v2 to v3 with
-migrate_forecast(). For an existing database invoke the migration for
-its known version; a v3 database is checked with migrate_forecast().
+to v2 with migrate_identity(), upgrade v2 to v3 with
+migrate_forecast(), then upgrade v3 to v4 with migrate_evaluation().
+For an existing database invoke the migration for its known version;
+migrate_evaluation() upgrades verified v3 or verifies exact v4 on retry.
 Never reset user_version or rerun earlier migration entry points against
 a later version. Unsupported or damaged schema fails closed.
 Migration operations own their transactions and require an idle writer.
 
 v1: bootstrap marker. v2: nine identity/fixture/result tables plus marker.
 v3: six forecast/operational tables, total sixteen including marker.
+v4: three immutable commitment, assessment and cohort receipt tables,
+total nineteen. Existing v3 rows remain unchanged; legacy predictions
+without an S5 commitment receipt are not certified or scored.
 Use explicit caller BEGIN IMMEDIATE / commit / rollback around record
 writes. Same canonical record retry is a no-op; conflicting replay fails.
 The schema preserves immutable source, identity, result and forecast
@@ -56,6 +63,7 @@ from atp_lab.database.connection import open_writer, open_reader
 from atp_lab.database.migrations import migrate
 from atp_lab.database.identity import migrate_identity
 from atp_lab.database.forecast import migrate_forecast
+from atp_lab.database.schema_v4 import migrate_evaluation
 from atp_lab.database.backup import backup_database, restore_database
 from atp_lab.database.schema_v3 import verify_forecast_schema
 
@@ -68,6 +76,7 @@ with closing(open_writer(live)) as writer:
     migrate(writer)
     migrate_identity(writer)
     migrate_forecast(writer)
+    migrate_evaluation(writer)
 
 saved = backup_database(live, root / "snapshot-001.sqlite")
 recovered = restore_database(saved, root / "recovered-001.sqlite")
@@ -100,7 +109,8 @@ No automated recovery, rotation or scheduled backup is activated here.
 ## Evidence boundary
 
 The database stores supplied metadata and local commitment digests.
-It does not establish independent timestamps, prestart forecast eligibility,
-outcome-leakage freedom, settlement correctness or real model skill.
-The future S3-S8 gates remain distinct. Do not use synthetic results as
-real-world performance evidence.
+S5 validates local synthetic prospective eligibility and scoring under
+its typed single-writer contract; the database does not independently
+establish timestamps, provider authenticity, real prestart eligibility,
+settlement correctness or real model skill. S6-S8 remain separate gates.
+Do not use synthetic results as real-world performance evidence.

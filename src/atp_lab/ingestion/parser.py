@@ -129,13 +129,13 @@ def parse_batch(conn: sqlite3.Connection, receipt: FetchedPayload, *,
                 observed_at: str, available_at: str | None) -> ParsedBatch:
     """Normalize bounded fake input without database writes or network calls.
 
-    Caller verifies v3 schema before entry; source scope is checked here.
+    Caller verifies v3/v4 schema before entry; source scope is checked here.
     The receipt and supplied local clocks are not authenticated evidence.
     Operational SQLite errors propagate rather than masquerade as bad data.
     """
     kind = _receipt_kind(receipt)
-    if conn.execute("PRAGMA user_version").fetchone()[0] != 3:
-        raise ValueError("verified forecast schema v3 required")
+    if conn.execute("PRAGMA user_version").fetchone()[0] not in (3, 4):
+        raise ValueError("verified forecast schema v3 or v4 required")
     source = conn.execute(
         "SELECT mode, permission_status FROM data_sources WHERE source_id=?",
         (receipt.source_id,),

@@ -186,20 +186,14 @@ def _metadata_payload(row):
     return payload
 
 
-def predict_fixture(conn: sqlite3.Connection, fixture_id: str,
-                    event_metadata: tuple[EventMetadata, ...] | list[EventMetadata],
-                    *, cutoff: str) -> InferencePreview:
-    """Compute an immutable preview in one verified read snapshot.
-
-    Requires complete synthetic event/fixture/result revision inventories.
-    The fixed model is not fitted; clocks and metadata are caller claims.
-    No prediction or feature row is committed here.
-    """
-    if conn.in_transaction:
-        raise InferenceError("idle connection required")
+def _predict_in_transaction(conn: sqlite3.Connection, fixture_id: str,
+                            event_metadata: tuple[EventMetadata, ...] | list[EventMetadata],
+                            *, cutoff: str):
+    """Shared verified snapshot computation; never opens/closes caller transaction."""
+    if not conn.in_transaction:
+        raise InferenceError("active snapshot required")
     limit = _clock(cutoff)
     _id(fixture_id)
-    conn.execute("BEGIN")
     try:
         verify_forecast_schema(conn)
         events = _event_inventory(event_metadata, limit)
@@ -218,9 +212,28 @@ def predict_fixture(conn: sqlite3.Connection, fixture_id: str,
             "cutoff": limit, "probability_a": probability,
             "events": [_metadata_payload(events[key]) for key in sorted(event_ids)],
         }
-        return InferencePreview(target.match_id, target.fixture_id, model,
-                                features, probability, _digest(evidence))
+        preview = InferencePreview(target.match_id, target.fixture_id, model,
+                                   features, probability, _digest(evidence))
+        return preview, evidence
     except TemporalError as exc:
         raise InferenceError(str(exc)) from None
+
+
+def predict_fixture(conn: sqlite3.Connection, fixture_id: str,
+                    event_metadata: tuple[EventMetadata, ...] | list[EventMetadata],
+                    *, cutoff: str) -> InferencePreview:
+    """Compute an immutable preview in one verified read snapshot.
+
+    Requires complete synthetic event/fixture/result revision inventories.
+    The fixed model is not fitted; clocks and metadata are caller claims.
+    No prediction or feature row is committed here.
+    """
+    if conn.in_transaction:
+        raise InferenceError("idle connection required")
+    conn.execute("BEGIN")
+    try:
+        preview, _ = _predict_in_transaction(conn, fixture_id, event_metadata, cutoff=cutoff)
+        return preview
     finally:
-        conn.rollback()
+        if conn.in_transaction:
+            conn.execute("ROLLBACK")
