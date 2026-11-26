@@ -35,6 +35,7 @@ def test_archive_roundtrip_idempotence_and_separate_digest(tmp_path):
     assert hashlib.sha256(files[0].read_bytes()).hexdigest() == first["archive_sha256"]
     report = verify_cash_evidence(tmp_path, first["archive_sha256"])
     assert report["cash_consistency_verified"] is True
+    assert report["policy_compliance_verified"] is False
     assert report["archive_sha256"] == first["archive_sha256"]
     assert report["external_authenticity_verified"] is False
     assert report["allocation_enabled"] is False and report["stake"] == 0

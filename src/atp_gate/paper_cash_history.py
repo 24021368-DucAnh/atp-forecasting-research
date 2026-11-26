@@ -262,6 +262,7 @@ def _audit(book, opening, closes, as_of, expected_sha256):
         "status": "PAPER_CASH_CONSISTENCY_VERIFIED",
         "schema": SCHEMA,
         "cash_consistency_verified": True,
+        "policy_compliance_verified": False,
         "evidence_sha256": digest,
         "anchor_matches": True if expected_sha256 is not None else None,
         "external_authenticity_verified": False,

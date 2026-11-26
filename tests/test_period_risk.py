@@ -143,3 +143,48 @@ def test_cross_month_unsettled_settlement_fails_closed():
     book = record_selection(book, "m-1", decision(), Decimal("1.90"), t)
     with pytest.raises(ValueError):
         settle_selection(book, "m-1", "LOSS", at(2027, 1, 31, 17, 10))
+
+
+def test_profit_lock_rejected_while_another_position_remains_open():
+    t = at(2027, 1, 20, 9)
+    events = [
+        JournalEvent(match_id="SYN-M1", event="RESERVE", amount=Decimal("10"),
+                     odds=Decimal("6"), side="A", at=t),
+        JournalEvent(match_id="SYN-M2", event="RESERVE", amount=Decimal("10"),
+                     odds=Decimal("2"), side="A", at=t),
+        JournalEvent(match_id="SYN-M1", event="SETTLE_WIN", amount=Decimal("60"), at=t),
+        JournalEvent(match_id="SYN-M1", event="PROFIT_LOCK", amount=Decimal("1040"), at=t),
+    ]
+    with pytest.raises(ValueError):
+        replay_journal(events, t)
+
+
+def test_profit_lock_accepted_after_all_positions_settle():
+    t = at(2027, 1, 20, 9)
+    events = [
+        JournalEvent(match_id="SYN-M1", event="RESERVE", amount=Decimal("10"),
+                     odds=Decimal("6"), side="A", at=t),
+        JournalEvent(match_id="SYN-M2", event="RESERVE", amount=Decimal("10"),
+                     odds=Decimal("2"), side="A", at=t),
+        JournalEvent(match_id="SYN-M2", event="SETTLE_VOID", amount=Decimal("10"), at=t),
+        JournalEvent(match_id="SYN-M1", event="SETTLE_WIN", amount=Decimal("60"), at=t),
+        JournalEvent(match_id="SYN-M1", event="PROFIT_LOCK", amount=Decimal("1040"), at=t),
+    ]
+    assert replay_journal(events, t).open_stakes == {}
+
+
+@pytest.mark.parametrize("match_id", ["", "   ", " SYN-M1", "SYN-M1 ", "SYN-M1\n"])
+def test_journal_rejects_noncanonical_match_id(match_id):
+    t = at(2027, 1, 20, 9)
+    with pytest.raises(ValueError):
+        entry = JournalEvent(match_id=match_id, event="RESERVE", amount=Decimal("10"), at=t)
+        replay_journal([entry], t)
+
+
+@pytest.mark.parametrize("match_id", ["", "   ", " SYN-M1", "SYN-M1 "])
+def test_record_selection_rejects_noncanonical_match_id(match_id):
+    t = at(2027, 1, 20, 9)
+    book = reconcile_periods(PaperBook(risk=risk()), t)
+    with pytest.raises(ValueError):
+        record_selection(book, match_id, decision(), Decimal("2"), t)
+    assert not book.journal and not book.open_positions

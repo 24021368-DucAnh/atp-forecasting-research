@@ -8,7 +8,7 @@ from zoneinfo import ZoneInfo
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 from .contracts import RiskState, DecisionOutput
 from .policy import X, apply_profit_lock, MAX_STAKE, MAX_OPEN, MONTHLY_FLOOR, WEEKLY_LOSS_MAX, ANNUAL_NEGATIVE_MONTH_MAX, MIN_STAKE
-from .period_risk import BANGKOK, period_keys, replay_journal, PeriodReplay
+from .period_risk import BANGKOK, period_keys, replay_journal, PeriodReplay, require_canonical_match_id
 
 
 class PaperPosition(BaseModel):
@@ -116,6 +116,7 @@ def reconcile_periods(book: PaperBook, at: datetime) -> PaperBook:
 def record_selection(book: PaperBook, match_id: str, decision: DecisionOutput,
                      decimal_odds: Decimal, at: datetime) -> PaperBook:
     """Reserve stake once; caller must pass an evaluated, trusted pre-match decision."""
+    require_canonical_match_id(match_id)
     if decision.decision != "SELECT" or decision.side is None or decision.stake <= 0:
         raise ValueError("only SELECT decisions may be reserved")
     book = reconcile_periods(book, at)

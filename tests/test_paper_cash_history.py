@@ -46,6 +46,7 @@ def test_cash_replay_conservation_across_months():
     b, o, c = fixture()
     result = audit_cash_history(b, o, c, END)
     assert result["cash_consistency_verified"] is True
+    assert result["policy_compliance_verified"] is False
     assert result["free_cash"] == "1000"
     assert D(result["simulated_topups"]) == D("10")
     assert D(result["simulated_withdrawals"]) == D("9")
