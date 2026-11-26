@@ -18,6 +18,9 @@ def open_writer(path: Path) -> sqlite3.Connection:
                            uri=True, isolation_level=None)
     try:
         _configure(conn)
+        conn.execute("PRAGMA recursive_triggers = ON")
+        if conn.execute("PRAGMA recursive_triggers").fetchone()[0] != 1:
+            raise RuntimeError("SQLite recursive triggers unavailable")
         if conn.execute("PRAGMA journal_mode = WAL").fetchone()[0] != "wal":
             raise RuntimeError("SQLite WAL unavailable")
         return conn
