@@ -1,6 +1,8 @@
 """A3 synthetic-only lifecycle; all inputs are invented and local."""
+import hashlib
 import importlib
 import importlib.util
+import json
 import math
 import re
 
@@ -70,6 +72,7 @@ def test_aggregate_only_happy_path():
         "status", "real_data_authorized", "holdout_accessed",
         "model_validation_trusted", "allocation_enabled", "stake",
         "n", "coverage", "log_loss", "brier",
+        "commitment_schema", "frozen_digest", "prediction_digest",
     }
     assert report["status"] == "SIMULATION_ONLY"
     for key in ("real_data_authorized", "holdout_accessed",
@@ -253,3 +256,68 @@ def test_state_order_and_one_time_release():
         release(s)
     with pytest.raises(ValueError):
         s.fit(train())
+
+
+def test_release_binds_frozen_model_and_prediction_map():
+    s, d = frozen()
+    s.predict(matchups(), digest=d)
+    report = release(s)
+    assert report["commitment_schema"] == "SYNTHETIC_TWO_BIN_V2"
+    assert report["frozen_digest"] == d
+    # Independent literal fixture, not the implementation's hashing helper.
+    payload = {"schema": "SYNTHETIC_PREDICTIONS_V2", "frozen_digest": d,
+               "predictions": {"SYN-E1": 1 / 3, "SYN-E2": 3 / 4}}
+    expected = hashlib.sha256(json.dumps(
+        payload, sort_keys=True, separators=(",", ":"), allow_nan=False
+    ).encode("utf-8")).hexdigest()
+    assert report["prediction_digest"] == expected
+
+
+@pytest.mark.parametrize("bad", [0.999999, float("nan"), True])
+def test_prediction_mutation_rejected_before_scoring(bad):
+    s = predicted()
+    original = s._predictions["SYN-E1"]
+    s._predictions["SYN-E1"] = bad
+    with pytest.raises(ValueError):
+        release(s)
+    s._predictions["SYN-E1"] = original
+    assert release(s)["n"] == 2
+
+
+def test_prediction_key_mutation_rejected_even_if_labels_match():
+    s = predicted()
+    s._predictions["SYN-E3"] = s._predictions.pop("SYN-E2")
+    changed = [{"id": "SYN-E1", "outcome": 0}, {"id": "SYN-E3", "outcome": 1}]
+    with pytest.raises(ValueError):
+        release(s, changed)
+
+
+@pytest.mark.parametrize("left,right", [(0, 0.0), (0.0, -0.0), (1, 1.0)])
+def test_numeric_feature_equivalence_preserves_frozen_digest(left, right):
+    a, b = session(), session()
+    a.fit([{"id": "SYN-T1", "feature": left, "outcome": 0}])
+    b.fit([{"id": "SYN-T1", "feature": right, "outcome": 0}])
+    assert a.freeze() == b.freeze()
+
+
+def test_distinct_features_in_same_bin_remain_distinct_commitments():
+    a, b = session(), session()
+    a.fit([{"id": "SYN-T1", "feature": 0.1, "outcome": 0}])
+    b.fit([{"id": "SYN-T1", "feature": 0.2, "outcome": 0}])
+    assert a.freeze() != b.freeze()
+
+
+def test_prediction_commitment_is_order_independent_but_key_sensitive():
+    a, da = frozen()
+    a.predict(matchups(), digest=da)
+    ra = release(a)
+    b, db = frozen()
+    b.predict(list(reversed(matchups())), digest=db)
+    rb = release(b)
+    assert ra["prediction_digest"] == rb["prediction_digest"]
+    c, dc = frozen()
+    rows = matchups()
+    rows[1]["id"] = "SYN-E3"
+    c.predict(rows, digest=dc)
+    rc = release(c, [{"id": "SYN-E1", "outcome": 0}, {"id": "SYN-E3", "outcome": 1}])
+    assert ra["prediction_digest"] != rc["prediction_digest"]
