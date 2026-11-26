@@ -133,6 +133,7 @@ e8b945eca73c76257153cd84e6d3b80521ba8d0509fb5503115e9e17fabbd9e0  docs/superpowe
 da8d4cc2eaa6c7d85960a392226c5978feeca23acb43729479be39fc9db104df  docs/superpowers/plans/2026-11-26-v4-s4-features.md
 55e39efe4226048a66629f2384dd0a1fa60f698ecd0332e83f84795eb2d6f208  docs/superpowers/plans/2026-11-26-v4-s4-inference.md
 e5521007a64bf2e786c45bc2d9fcb87969d23ceb5c9fe249d3371bddd541d46f  docs/superpowers/plans/2026-11-26-v4-s4-temporal.md
+00bdce98b6896fc235fd8cee01252f83fe25f458317de04f70b23438e1df284a  docs/superpowers/plans/2026-11-27-v4-s5-evaluation.md
 a7c4f6e4fc5e6b14240e7f4dc860808a28654499d96d3980c1edc5b571b1d10c  docs/superpowers/specs/2026-11-23-atp-input-gate-design.md
 d723402570040251c7bef4767d79625bb1b6f35d70e2ba70dba157d806a99941  docs/superpowers/specs/2026-11-23-p1-inventory-anomaly-review.md
 f744d79d7ba754f0b3074a6bb403f581b96d7b2749a4b956f2e8a9373f5638d4  docs/superpowers/specs/2026-11-23-p1-legacy-crosswalk.md
@@ -309,3 +310,4 @@ ec93ec46e55e0e9cadaeeb9b7c772293c81c9e6d184cd70df8d4accf17bb3252  tests/v4/test_
 500ef7f6b2184f7e51631cb8844573134a5a058c219d3b7912e1a511a98e7415  tests/v4/test_prediction_features.py
 24d16679ed90328f29f732e65f8a47e3f4b9cd89af6d0ff2743737e3640e9d72  tests/v4/test_prediction_inference.py
 fef0de7ee83e3dc6c211765ca03357f475abab0d274b05e91f9ededed48da78a  tests/v4/test_prediction_temporal.py
+81f9b665e09ef1ed5cfb203320a8ef443e7faf0b003a3015223d3438c3a87619  tests/v4/test_prospective_evaluation.py
