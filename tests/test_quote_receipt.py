@@ -113,3 +113,33 @@ def test_naive_asof_and_missing_exact_fields_are_rejected():
     del s["quote"]["quote_id"]
     with pytest.raises(ValueError):
         check(s)
+
+
+@pytest.mark.parametrize("other", [" P1", "P1 ", " P1 ", "P1\n"])
+def test_same_player_with_padded_identity_rejected(other):
+    s = receipt()
+    for part in ("fixture", "quote"):
+        s[part].update(player_a_id="P1", player_b_id=other)
+    with pytest.raises(ValueError):
+        check(s, {"receipt-001": "a" * 64})
+
+
+@pytest.mark.parametrize("part,field", [
+    ("fixture", "match_id"), ("quote", "match_id"),
+    ("fixture", "player_a_id"), ("quote", "player_b_id"),
+    ("quote", "quote_id"), ("receipt", "report_id"),
+])
+def test_noncanonical_identity_rejected_even_if_not_a_player_collision(part, field):
+    s = receipt()
+    s[part][field] += " "
+    with pytest.raises(ValueError):
+        check(s, {"receipt-001": "a" * 64})
+
+
+def test_old_publication_recent_observation_is_review_only_not_execution():
+    s = receipt()
+    s["quote"]["published_at"] = (T - timedelta(days=30)).isoformat()
+    out = check(s, {"receipt-001": "a" * 64})
+    assert out["status"] == "QUOTE_REVIEW_ONLY"
+    assert out["t60_execution_verified"] is False
+    assert out["allocation_enabled"] is False and out["stake"] == 0
