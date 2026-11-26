@@ -1,3 +1,5 @@
 # Byte-pinned research registry documents must be identical across checkouts.
 docs/registries/p2_1r_tml_development_protocol_v1.json text eol=lf
 docs/registries/p2_3_research_permission_v1.json text eol=lf
+# V4 offline reader checks the archived evidence bytes, not Git-normalized text.
+docs/research/p2_4_fixed_ablation_evidence_20261125.json text eol=lf
