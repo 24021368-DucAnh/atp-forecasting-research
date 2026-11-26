@@ -18,7 +18,11 @@ foreign keys, recursive triggers and a five-second busy timeout.
 open_reader(path) opens an existing file with SQLite mode=ro and query_only.
 Callers close connections explicitly. Read-only access to a live WAL DB
 requires access to its WAL/SHM files or permission for SQLite to manage
-them in the local directory. Do not use immutable=1 on a changing DB.
+them in the local directory. SQLite may create source WAL/SHM sidecars
+when opening a read-only connection, even if verification later rejects
+that database. These are not published backup or staging files. Never
+remove source sidecars as part of backup cleanup. Do not use immutable=1
+on a changing DB.
 
 ## Explicit migrations
 

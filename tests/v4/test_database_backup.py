@@ -146,9 +146,22 @@ def test_unsupported_schema_rejected(tmp_path):
     with closing(open_writer(source)) as c:
         migrate(c)
     before = set(tmp_path.iterdir())
-    with pytest.raises(ValueError):
-        a.backup_database(source,tmp_path/"backup.sqlite")
-    assert set(tmp_path.iterdir()) == before
+    original_bytes = source.read_bytes()
+    destination = tmp_path/"backup.sqlite"
+    with pytest.raises(ValueError, match="unrecognized forecast schema"):
+        a.backup_database(source,destination)
+    # SQLite may create its own source WAL/SHM even for mode=ro.
+    # Do not unlink them: another connection could be using them.
+    allowed_source_sidecars = {Path(str(source)+suffix)
+                               for suffix in ("-wal", "-shm")}
+    after = set(tmp_path.iterdir())
+    assert before <= after <= before | allowed_source_sidecars
+    assert not destination.exists()
+    assert source.read_bytes() == original_bytes
+    with closing(open_reader(source)) as reader:
+        assert reader.execute("PRAGMA user_version").fetchone()[0] == 1
+        assert reader.execute("SELECT id, marker FROM atp_lab_schema").fetchall() == [
+            (1,"S2_BOOTSTRAP_V1")]
 
 
 def test_schema_damage_rejected(live,tmp_path):
