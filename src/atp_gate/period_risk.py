@@ -38,6 +38,12 @@ class PeriodReplay:
     reserve_sides: dict[str, str]
 
 
+def require_canonical_match_id(value: str) -> None:
+    """Reject ambiguous identities rather than silently rewriting evidence."""
+    if type(value) is not str or not value or value != value.strip():
+        raise ValueError("invalid paper journal match identity")
+
+
 def replay_journal(events: Sequence[JournalEvent], at: datetime) -> PeriodReplay:
     """Replay reserve/settlement history, refusing nonmonotone or forged events.
 
@@ -58,6 +64,7 @@ def replay_journal(events: Sequence[JournalEvent], at: datetime) -> PeriodReplay
     profit_locked: set[tuple[int, int]] = set()
 
     for entry in events:
+        require_canonical_match_id(entry.match_id)
         day, week = period_keys(entry.at)
         # model_copy(update=...) bypasses Pydantic field validation, so replay
         # must validate original and potentially mutated journal values too.
@@ -120,7 +127,7 @@ def replay_journal(events: Sequence[JournalEvent], at: datetime) -> PeriodReplay
             month_key = (day.year, day.month)
             if (last_settlement != (entry.match_id, entry.at)
                     or entry.amount != Decimal("1040")
-                    or month_key in profit_locked):
+                    or month_key in profit_locked or open_stakes):
                 raise ValueError("unverified or repeated paper profit lock")
             profit_locked.add(month_key)
             last_settlement = None

@@ -48,7 +48,7 @@ def _odds(value: object, label: str) -> Decimal:
 
 
 def _text(value: object, label: str) -> str:
-    if not isinstance(value, str) or not value.strip():
+    if type(value) is not str or not value or value != value.strip():
         raise ValueError(f"invalid {label} text")
     return value
 
@@ -125,6 +125,8 @@ def audit_quote_receipt(
         reasons.append("ACTUAL_START_INSIDE_T60")
     if not (published <= observed <= retrieved <= as_of):
         reasons.append("QUOTE_NOT_ASOF")
+    # Freshness is observation age, not publication age. This is mechanical
+    # review only and does not certify a currently executable offer.
     if observed <= as_of and as_of - observed > _MAX_AGE:
         reasons.append("QUOTE_STALE")
     if quote["market"] != "MATCH_WINNER":
@@ -136,6 +138,8 @@ def audit_quote_receipt(
     if not Decimal("0.90") <= overround <= Decimal("1.35"):
         reasons.append("ODDS_OVERROUND_INVALID")
 
+    # A matching public report identifier/hash is not authentication or a
+    # cryptographic binding to this quote payload. No URL is dereferenced.
     trusted = trusted_receipts or {}
     independent = (
         trusted.get(report_id) == report_sha

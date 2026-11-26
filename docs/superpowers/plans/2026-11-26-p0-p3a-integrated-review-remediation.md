@@ -12,6 +12,6 @@ Base 4208fac3761f89c72700295907ea1b96424e9b99; owner-supplied independent review
 
 No real data, holdout, financial activity, policy-threshold changes, market/source acquisition, or historical evidence edits. All safety flags preserved.
 - [x] Verify findings and register regression contracts.
-- [ ] Observe intended RED with canonical manifest verified.
+- [x] Observe intended RED: run 45761646773, each of four jobs 22 failed / 630 passed, 261 manifest entries verified. All failures in registered findings; raw logs verified.
 - [ ] Implement narrow fixes and verify full matrix GREEN.
 - [ ] Independent review and explicit owner approval before merge; verify push CI.
