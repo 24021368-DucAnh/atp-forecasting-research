@@ -64,8 +64,7 @@ def _run(args: argparse.Namespace) -> int:
     if args.command == "demo" and args.demo_command == "seed":
         data_dir.mkdir(parents=True, exist_ok=True)
         with worker_lease(data_dir, worker_id="SYN-worker-demo-seed"):
-            path = database_path(data_dir)
-            _verify_database(path)
+            path = initialize_database(data_dir)
             counts = seed_demo(path)
         _emit({"status": "SUCCEEDED", "mode": "SYNTHETIC_DEMO", **counts,
                "network": "DISABLED", "real_data": "LOCKED"})

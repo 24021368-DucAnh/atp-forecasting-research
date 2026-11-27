@@ -78,8 +78,11 @@ def test_synthetic_demo_mode_renders_local_read_only_pages(tmp_path, monkeypatch
     assert at.dataframe and len(at.dataframe[0].value) == 2
     assert "commitment_digest" not in at.dataframe[0].value.columns
     assert at.dataframe[0].value.columns.tolist() == [
-        "Event", "Match", "Commitment", "P(Player A)", "Assessment", "Outcome A",
+        "Event", "Match", "Forecast", "Assessment", "Result context", "Outcome A",
     ]
+    assert at.dataframe[0].value.iloc[1]["Forecast"] == "VERIFIED · 0.4827"
+    assert at.dataframe[0].value.iloc[1]["Assessment"] == "RECORDED"
+    assert at.dataframe[0].value.iloc[1]["Result context"] == "r1 → r1 · COMPLETED"
     assert not at.button
 
     at.sidebar.radio[1].set_value("Tournaments").run()

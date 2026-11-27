@@ -150,3 +150,30 @@ def test_valid_commitment_with_unreceipted_assessment_is_not_scored(tmp_path):
     assert corrected["commitment_state"] == "VERIFIED"
     assert corrected["status"] == "UNVERIFIED"
     assert corrected["outcome_a"] is None
+
+
+def test_results_marks_assessment_historical_after_later_result_revision(tmp_path):
+    from atp_lab.worker.demo import seed_demo
+
+    database = tmp_path / "data" / "synthetic.sqlite"
+    _database(database)
+    seed_demo(database)
+    observed = "2025-04-01T12:00:00Z"
+    snapshot = "SYN-later-result-revision-snapshot"
+    with closing(open_writer(database)) as conn:
+        conn.execute("BEGIN IMMEDIATE")
+        identity.put_snapshot(conn, identity.Snapshot(
+            snapshot, "SYN-demo-feed", sha256(snapshot.encode()).hexdigest(), observed))
+        identity.append_result(conn, identity.Result(
+            "SYN-demo-result-revision-2", "SYN-demo-match-scored", 2,
+            "SYN-demo-feed", snapshot, observed, None,
+            None, None, "UNKNOWN", None))
+        conn.commit()
+
+    view = load_dashboard_view(database, mode="SYNTHETIC_DEMO")
+    recorded = next(row for row in view.results if row["result_id"] == "SYN-demo-result-scored")
+    assert recorded["status"] == "RECORDED"
+    assert recorded["assessment_label"] == "RECORDED (HISTORICAL)"
+    assert recorded["result_revision"] == 1
+    assert recorded["latest_result_revision"] == 2
+    assert recorded["latest_result_state"] == "PENDING"

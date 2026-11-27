@@ -5,8 +5,10 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 import sqlite3
+from datetime import datetime, timezone
 
 from atp_lab.database.connection import open_reader
+from atp_lab.database.identity import utc_timestamp
 from atp_lab.database.schema_v3 import verify_forecast_schema
 from atp_lab.evaluation.eligibility import decide
 from atp_lab.evaluation.service import _stored_assessment
@@ -136,8 +138,33 @@ def _snapshot(conn: sqlite3.Connection, data_dir: Path, mode: str) -> DashboardV
         "LEFT JOIN assessment_receipts a ON a.evaluation_id=e.evaluation_id "
         "LEFT JOIN result_versions r ON r.result_id=e.result_id "
         "ORDER BY p.created_at DESC,e.evaluated_at DESC LIMIT 1000").fetchall()
+    match_ids = sorted({r[1] for r in result_rows if r[1] is not None})
+    latest_result_rows = []
+    if match_ids:
+        placeholders = ",".join("?" for _ in match_ids)
+        latest_result_rows = conn.execute(
+            "WITH heads AS ("
+            "SELECT match_id,MAX(revision) AS revision,COUNT(DISTINCT source_id) AS sources "
+            f"FROM result_versions WHERE match_id IN ({placeholders}) GROUP BY match_id), ranked AS ("
+            "SELECT match_id,result_id,state,revision,available_at,ROW_NUMBER() OVER ("
+            "PARTITION BY match_id ORDER BY revision DESC,result_id) AS position "
+            f"FROM result_versions WHERE match_id IN ({placeholders})) "
+            "SELECT h.match_id,h.revision,h.sources,r.result_id,r.state,r.available_at "
+            "FROM heads h JOIN ranked r ON r.match_id=h.match_id AND r.position=1",
+            [*match_ids, *match_ids]).fetchall()
+    now = utc_timestamp(datetime.now(timezone.utc).isoformat())
+    latest_results = {
+        r[0]: (r[1], None if r[2] > 1 else r[3],
+               "AMBIGUOUS" if r[2] > 1 else
+               "PENDING" if r[5] is None or utc_timestamp(r[5]) > now else r[4])
+        for r in latest_result_rows
+    }
     results_view = []
     for r in result_rows:
+        latest_result = latest_results.get(r[1])
+        latest_revision = latest_result[0] if latest_result else None
+        latest_result_id = latest_result[1] if latest_result else None
+        latest_state = latest_result[2] if latest_result else None
         commitment, commitment_error = _verified_commitment(conn, r[0])
         if commitment is None:
             commitment_state = "UNVERIFIED"
@@ -169,6 +196,11 @@ def _snapshot(conn: sqlite3.Connection, data_dir: Path, mode: str) -> DashboardV
             "result_id": result_id, "evaluated_at": evaluated_at,
             "status": status, "reason": reason, "outcome_a": outcome,
             "result_revision": result_revision, "result_state": result_state,
+            "assessment_label": (f"{status} (HISTORICAL)"
+                                 if result_id is not None and result_id != latest_result_id
+                                 else status),
+            "latest_result_revision": latest_revision,
+            "latest_result_state": latest_state,
             "event": r[15], "edition": r[16], "player_a": r[17], "player_b": r[18],
         })
     results = tuple(results_view)

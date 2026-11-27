@@ -169,6 +169,7 @@ def restore_backup_bundle(bundle_path: Path, destination: Path) -> Path:
         raise FileExistsError(destination)
     files = _verify_bundle(bundle_path)
     stage = Path(tempfile.mkdtemp(prefix=".atp-restore-", dir=destination.parent))
+    published: list[tuple[Path, int, int, bool]] = []
     try:
         (stage / DATABASE_MEMBER).write_bytes(files[DATABASE_MEMBER])
         artifacts = {name.removeprefix("model_artifacts/"): raw
@@ -181,17 +182,37 @@ def restore_backup_bundle(bundle_path: Path, destination: Path) -> Path:
         # Reserve the destination atomically so a concurrent path creator is
         # never replaced; then publish only files into our own new directory.
         destination.mkdir()
+        destination_info = destination.stat()
+        published.append((destination, destination_info.st_dev, destination_info.st_ino, True))
         for item in stage.iterdir():
             target = destination / item.name
             if item.is_dir():
                 target.mkdir()
+                directory_info = target.stat()
+                published.append((target, directory_info.st_dev, directory_info.st_ino, True))
                 for child in item.iterdir():
-                    os.link(child, target / child.name)
+                    child_target = target / child.name
+                    source_info = child.stat()
+                    published.append((child_target, source_info.st_dev, source_info.st_ino, False))
+                    os.link(child, child_target)
             else:
+                source_info = item.stat()
+                published.append((target, source_info.st_dev, source_info.st_ino, False))
                 os.link(item, target)
         shutil.rmtree(stage)
         return destination
     except BaseException:
+        for path, device, inode, is_directory in reversed(published):
+            try:
+                current = path.lstat()
+                if (current.st_dev, current.st_ino) != (device, inode):
+                    continue
+                if is_directory:
+                    path.rmdir()
+                else:
+                    path.unlink()
+            except OSError:
+                pass
         if stage.exists():
             shutil.rmtree(stage, ignore_errors=True)
         raise

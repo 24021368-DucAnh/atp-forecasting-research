@@ -107,14 +107,20 @@ def _show_local_page(page: str, data_dir: Path):
         else:
             st.info("No synthetic tournaments have been added.")
     elif page == "Results":
-        st.caption("Forecast commitments and assessment receipts are immutable local research records.")
+        st.caption("Assessment labels refer to the immutable assessed revision; HISTORICAL marks rows superseded by a later stored result revision.")
         if view.results:
             rows = [{
                 "Event": f"{row['event']} {row['edition']}",
                 "Match": f"{row['player_a']} vs {row['player_b']}",
-                "Commitment": row["commitment_state"],
-                "P(Player A)": row["probability_a"],
-                "Assessment": row["status"], "Outcome A": row["outcome_a"],
+                "Forecast": (f"{row['commitment_state']} · {row['probability_a']:.4f}"
+                             if row["probability_a"] is not None else row["commitment_state"]),
+                "Assessment": row["assessment_label"],
+                "Result context": (
+                    f"r{row['result_revision'] or '—'} → "
+                    f"r{row['latest_result_revision'] or '—'} · "
+                    f"{row['latest_result_state'] or 'No result yet'}"
+                ),
+                "Outcome A": row["outcome_a"],
             } for row in view.results]
             st.dataframe(pd.DataFrame(rows), hide_index=True, width="stretch")
         else:

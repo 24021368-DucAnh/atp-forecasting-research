@@ -8,7 +8,10 @@ records. Upcoming rows show fixture state; cancelled and postponed fixtures
 cannot appear as ordinary committed forecasts. Results labels commitments
 and assessments only when their S5 receipts verify. Legacy rows without valid
 receipts remain visible as `UNVERIFIED`, with probability and outcome evidence
-withheld. Overview counts are stored-row counts and may include legacy entries.
+withheld. Each assessment shows the result revision it assessed and the latest
+stored result revision/state; an assessment for an older revision is labelled
+`HISTORICAL` without changing its immutable receipt. Overview counts are
+stored-row counts and may include legacy entries.
 
 The dashboard does not fetch data, write the database, train models, start a
 worker, schedule jobs, or activate candidates.
