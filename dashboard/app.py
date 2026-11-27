@@ -90,9 +90,10 @@ def _show_local_page(page: str, data_dir: Path):
                 "Event": row["event"], "Edition": row["edition"],
                 "Scheduled (UTC)": row["scheduled_start_utc"],
                 "State": row["state"],
+                "Source": row["source_id"],
                 "Player A": row["player_a"], "Player B": row["player_b"],
-                "Forecast": row["forecast_state"],
-                "P(Player A)": row["probability_a"],
+                "Forecast": (f"{row['forecast_state']} · {row['probability_a']:.4f}"
+                             if row["probability_a"] is not None else row["forecast_state"]),
             } for row in view.upcoming]
             st.dataframe(pd.DataFrame(rows), hide_index=True, width="stretch")
         else:
@@ -126,7 +127,8 @@ def _show_local_page(page: str, data_dir: Path):
         else:
             st.info("No local forecast records are available.")
     elif page == "Model Lab":
-        st.metric("Displayed baseline", view.models["active_model_id"] or "Not registered")
+        selection = view.models["active_model_id"] or view.models["selection_state"]
+        st.metric("Verified active selection", selection)
         st.caption("Models are read-only here. Fitting, candidate promotion, and activation are not available in S7.")
         if view.models.get("versions"):
             rows = [{"Model": row["model_id"], "Scope": row["scope"],

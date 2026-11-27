@@ -4,8 +4,11 @@ The dashboard provides six read-only local research pages: Overview,
 Upcoming, Tournaments, Results, Model Lab, and Data Health. Historical mode
 shows only the exact hash-verified P2.4 development evidence. Synthetic Demo
 mode reads only the local SQLite snapshot and clearly identifies fictional
-records. Upcoming rows show fixture state; cancelled and postponed fixtures
-cannot appear as ordinary committed forecasts. Results labels commitments
+records. Upcoming rows show fixture source and state; a match represented by
+more than one fixture source is labelled `AMBIGUOUS` and its forecast is
+withheld. Cancelled and postponed fixtures cannot appear as ordinary committed
+forecasts. The Model Lab shows a selected model only after the S6 lifecycle
+chain verifies; an invalid chain is labelled `UNVERIFIED`. Results labels commitments
 and assessments only when their S5 receipts verify. Legacy rows without valid
 receipts remain visible as `UNVERIFIED`, with probability and outcome evidence
 withheld. Each assessment shows the result revision it assessed and the latest

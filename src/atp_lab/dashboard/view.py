@@ -5,15 +5,16 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 import sqlite3
-from datetime import datetime, timezone
 
 from atp_lab.database.connection import open_reader
 from atp_lab.database.identity import utc_timestamp
 from atp_lab.database.schema_v3 import verify_forecast_schema
+from atp_lab.database.schema_v5 import verify_training_schema
 from atp_lab.evaluation.eligibility import decide
 from atp_lab.evaluation.service import _stored_assessment
 from atp_lab.prediction.commitment import UnverifiedCommitment, _get_commitment
 from atp_lab.prediction.inference import MODEL_ID
+from atp_lab.training.registry import _chain
 from atp_lab.worker.lease import read_lease
 
 MODES = ("HISTORICAL", "SYNTHETIC_DEMO")
@@ -40,7 +41,8 @@ def _empty(mode: str, state: str, error: str | None = None) -> DashboardView:
     return DashboardView(
         mode, state, error,
         {"fixtures": 0, "predictions": 0, "scored": 0}, (), (), (),
-        {"active_model_id": None, "candidates": (), "protocols": 0},
+        {"active_model_id": None, "selection_state": "NOT_AVAILABLE",
+         "candidates": (), "protocols": 0},
         {"real_data": "LOCKED", "worker_state": "IDLE",
          "last_job": None, "quality_issues": 0, "database_version": None},
     )
@@ -87,7 +89,7 @@ def _snapshot(conn: sqlite3.Connection, data_dir: Path, mode: str) -> DashboardV
     upcoming_rows = conn.execute(
         "SELECT f.fixture_id,f.match_id,f.revision,f.scheduled_start,f.state,"
         "m.canonical_a,m.canonical_b,t.event_key,t.edition,t.tier,t.surface,"
-        "p.prediction_id,p.model_id,p.probability_a,p.created_at "
+        "p.prediction_id,p.model_id,p.probability_a,p.created_at,f.source_id "
         "FROM fixture_versions f JOIN matches m ON m.match_id=f.match_id "
         "JOIN tournaments t ON t.tournament_id=m.tournament_id "
         "LEFT JOIN predictions p ON p.fixture_id=f.fixture_id "
@@ -95,9 +97,20 @@ def _snapshot(conn: sqlite3.Connection, data_dir: Path, mode: str) -> DashboardV
         "WHERE x.match_id=f.match_id AND x.source_id=f.source_id) "
         "AND f.state IN ('SCHEDULED','CANCELLED','POSTPONED') AND f.scheduled_start>=? "
         "ORDER BY f.scheduled_start,f.match_id LIMIT 500", (now,)).fetchall()
+    upcoming_match_ids = sorted({r[1] for r in upcoming_rows})
+    source_counts = {}
+    if upcoming_match_ids:
+        placeholders = ",".join("?" for _ in upcoming_match_ids)
+        source_counts = dict(conn.execute(
+            "SELECT match_id,COUNT(DISTINCT source_id) FROM fixture_versions "
+            f"WHERE match_id IN ({placeholders}) GROUP BY match_id",
+            upcoming_match_ids).fetchall())
+    ambiguous_matches = {match_id for match_id, count in source_counts.items() if count > 1}
     upcoming_rows_view = []
     for r in upcoming_rows:
-        if r[4] in ("CANCELLED", "POSTPONED"):
+        if r[1] in ambiguous_matches:
+            prediction_state, model_id, probability, forecast_at = "AMBIGUOUS", None, None, None
+        elif r[4] in ("CANCELLED", "POSTPONED"):
             prediction_state, model_id, probability, forecast_at = r[4], None, None, None
         elif r[11] is None:
             prediction_state, model_id, probability, forecast_at = "NO_FORECAST", None, None, None
@@ -115,6 +128,7 @@ def _snapshot(conn: sqlite3.Connection, data_dir: Path, mode: str) -> DashboardV
             "scheduled_start_utc": r[3], "state": r[4],
             "player_a": r[5], "player_b": r[6], "event": r[7], "edition": r[8],
             "tier": r[9], "surface": r[10], "model_id": model_id,
+            "source_id": r[15],
             "probability_a": probability, "forecast_at": forecast_at,
             "forecast_state": prediction_state,
         })
@@ -208,13 +222,18 @@ def _snapshot(conn: sqlite3.Connection, data_dir: Path, mode: str) -> DashboardV
         "SELECT model_id,scope,training_cutoff,created_at,model_digest,config_digest "
         "FROM model_versions ORDER BY created_at,model_id").fetchall()
     active_model = MODEL_ID
+    selection_state = "NOT_AVAILABLE"
     if _table_exists(conn, "model_lifecycle_events"):
-        row = conn.execute(
-            "SELECT to_model_id FROM model_lifecycle_events ORDER BY rowid DESC LIMIT 1").fetchone()
-        if row is not None:
-            active_model = row[0]
+        try:
+            verify_training_schema(conn)
+            active_model = _chain(conn)[0]
+            selection_state = "VERIFIED"
+        except (sqlite3.DatabaseError, ValueError, TypeError, KeyError, IndexError):
+            active_model = None
+            selection_state = "UNVERIFIED"
     models = {
         "active_model_id": active_model if any(r[0] == active_model for r in model_rows) else None,
+        "selection_state": selection_state,
         "versions": tuple({"model_id": r[0], "scope": r[1], "training_cutoff": r[2],
                            "created_at": r[3], "model_digest": r[4], "config_digest": r[5]}
                           for r in model_rows),

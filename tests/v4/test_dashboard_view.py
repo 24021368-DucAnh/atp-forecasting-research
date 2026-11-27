@@ -85,6 +85,36 @@ def test_upcoming_clearly_labels_cancelled_or_postponed_fixtures(tmp_path, fixtu
     assert cancelled["probability_a"] is None
 
 
+def test_upcoming_blocks_forecasts_when_match_has_multiple_fixture_sources(tmp_path):
+    from atp_lab.worker.demo import seed_demo
+
+    database = tmp_path / "data" / "synthetic.sqlite"
+    _database(database)
+    seed_demo(database)
+    source_id = "SYN-second-feed"
+    observed = "2026-11-02T09:00:00Z"
+    snapshot = "SYN-second-feed-snapshot"
+    with closing(open_writer(database)) as conn:
+        conn.execute("BEGIN IMMEDIATE")
+        identity.put_source(conn, identity.Source(source_id, "SYNTHETIC", "LOCKED"))
+        match_id, player_a, player_b = conn.execute(
+            "SELECT match_id,player_a,player_b FROM fixture_versions "
+            "WHERE fixture_id='SYN-demo-fixture-upcoming'").fetchone()
+        identity.put_snapshot(conn, identity.Snapshot(
+            snapshot, source_id, sha256(snapshot.encode()).hexdigest(), observed))
+        identity.append_fixture(conn, identity.Fixture(
+            "SYN-second-source-fixture", match_id, 1, source_id, snapshot,
+            player_a, player_b, observed, observed,
+            "2027-01-20T14:00:00Z", "SCHEDULED"))
+        conn.commit()
+
+    view = load_dashboard_view(database, mode="SYNTHETIC_DEMO")
+    rows = [row for row in view.upcoming if row["match_id"] == match_id]
+    assert len(rows) == 2
+    assert all(row["forecast_state"] == "AMBIGUOUS" for row in rows)
+    assert all(row["probability_a"] is None for row in rows)
+
+
 def test_legacy_predictions_and_evaluations_are_not_presented_as_verified(tmp_path):
     from atp_lab.worker.demo import seed_demo
 
@@ -177,3 +207,27 @@ def test_results_marks_assessment_historical_after_later_result_revision(tmp_pat
     assert recorded["result_revision"] == 1
     assert recorded["latest_result_revision"] == 2
     assert recorded["latest_result_state"] == "PENDING"
+
+
+def test_invalid_model_lifecycle_chain_is_not_shown_as_active(tmp_path):
+    from atp_lab.worker.demo import seed_demo
+
+    database = tmp_path / "data" / "synthetic.sqlite"
+    _database(database)
+    seed_demo(database)
+    with closing(open_writer(database)) as conn:
+        conn.execute("BEGIN IMMEDIATE")
+        baseline = forecast.ModelVersion(*conn.execute(
+            "SELECT model_id,model_digest,config_digest,training_cutoff,created_at,scope "
+            "FROM model_versions WHERE model_id='SYN-global-elo-v1'").fetchone())
+        rogue = replace(baseline, model_id="SYN-rogue-model")
+        forecast.append_model(conn, rogue)
+        conn.execute(
+            "INSERT INTO model_lifecycle_events VALUES (?,?,?,?,?,?,?,?,?)",
+            ("SYN-rogue-event", 1, "SYN-rogue-approval", "PROMOTE", baseline.model_id,
+             rogue.model_id, "2025-03-01T00:00:00Z", "{}", "0" * 64))
+        conn.commit()
+
+    view = load_dashboard_view(database, mode="SYNTHETIC_DEMO")
+    assert view.models["active_model_id"] is None
+    assert view.models["selection_state"] == "UNVERIFIED"

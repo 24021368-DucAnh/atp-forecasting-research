@@ -68,9 +68,11 @@ def test_synthetic_demo_mode_renders_local_read_only_pages(tmp_path, monkeypatch
     assert not at.exception
     assert at.dataframe and len(at.dataframe[0].value) == 1
     assert at.dataframe[0].value.columns.tolist() == [
-        "Event", "Edition", "Scheduled (UTC)", "State", "Player A", "Player B",
-        "Forecast", "P(Player A)",
+        "Event", "Edition", "Scheduled (UTC)", "State", "Source", "Player A", "Player B",
+        "Forecast",
     ]
+    assert at.dataframe[0].value.iloc[0]["Source"] == "SYN-demo-feed"
+    assert at.dataframe[0].value.iloc[0]["Forecast"] == "COMMITTED · 0.5173"
     assert not at.button
 
     at.sidebar.radio[1].set_value("Results").run()
@@ -89,6 +91,8 @@ def test_synthetic_demo_mode_renders_local_read_only_pages(tmp_path, monkeypatch
     assert not at.exception and len(at.dataframe[0].value) == 3
     at.sidebar.radio[1].set_value("Model Lab").run()
     assert not at.exception
+    assert any(m.label == "Verified active selection" and m.value == "SYN-global-elo-v1"
+               for m in at.metric)
     assert at.dataframe[0].value.columns.tolist() == [
         "Model", "Scope", "Training cutoff", "Created",
     ]
