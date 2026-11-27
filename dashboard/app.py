@@ -77,10 +77,11 @@ def _show_local_page(page: str, data_dir: Path):
     if page == "Overview":
         cols = st.columns(4)
         cols[0].metric("Local fixtures", str(view.overview["fixtures"]))
-        cols[1].metric("Committed forecasts", str(view.overview["predictions"]))
-        cols[2].metric("Recorded outcomes", str(view.overview["scored"]))
+        cols[1].metric("Stored forecast rows", str(view.overview["predictions"]))
+        cols[2].metric("Stored recorded rows", str(view.overview["scored"]))
         cols[3].metric("Real data", "LOCKED")
         st.info("This is a deterministic synthetic demonstration stored on this PC. It is not current ATP information or model validation.")
+        st.caption("Stored counts may include legacy rows. Results labels a commitment or assessment only after its S5 receipt is verified.")
         st.caption(f"Worker: {view.health['worker_state']} · Scheduler: DISABLED · Network: DISABLED")
     elif page == "Upcoming":
         st.caption("Locally stored synthetic fixtures only. No live feed or refresh runs from this page.")
@@ -88,6 +89,7 @@ def _show_local_page(page: str, data_dir: Path):
             rows = [{
                 "Event": row["event"], "Edition": row["edition"],
                 "Scheduled (UTC)": row["scheduled_start_utc"],
+                "State": row["state"],
                 "Player A": row["player_a"], "Player B": row["player_b"],
                 "Forecast": row["forecast_state"],
                 "P(Player A)": row["probability_a"],
@@ -110,6 +112,7 @@ def _show_local_page(page: str, data_dir: Path):
             rows = [{
                 "Event": f"{row['event']} {row['edition']}",
                 "Match": f"{row['player_a']} vs {row['player_b']}",
+                "Commitment": row["commitment_state"],
                 "P(Player A)": row["probability_a"],
                 "Assessment": row["status"], "Outcome A": row["outcome_a"],
             } for row in view.results]

@@ -8,6 +8,9 @@ import sqlite3
 
 from atp_lab.database.connection import open_reader
 from atp_lab.database.schema_v3 import verify_forecast_schema
+from atp_lab.evaluation.eligibility import decide
+from atp_lab.evaluation.service import _stored_assessment
+from atp_lab.prediction.commitment import UnverifiedCommitment, _get_commitment
 from atp_lab.prediction.inference import MODEL_ID
 from atp_lab.worker.lease import read_lease
 
@@ -46,6 +49,30 @@ def _table_exists(conn: sqlite3.Connection, name: str) -> bool:
                         (name,)).fetchone() is not None
 
 
+def _verified_commitment(conn: sqlite3.Connection, prediction_id: str):
+    try:
+        return _get_commitment(conn, prediction_id), None
+    except UnverifiedCommitment:
+        return None, "NO_S5_RECEIPT"
+    except (OSError, sqlite3.DatabaseError, TypeError, ValueError):
+        return None, "INVALID_S5_RECEIPT"
+
+
+def _verified_assessment(conn: sqlite3.Connection, *, prediction_id: str,
+                         commitment, evaluation_id: str, result_id: str,
+                         evaluated_at: str, stored_status: str):
+    try:
+        decision = decide(conn, commitment, evaluated_at)
+        assessment = _stored_assessment(conn, prediction_id, decision, evaluated_at)
+    except (OSError, sqlite3.DatabaseError, TypeError, ValueError):
+        return None
+    if (assessment is None or assessment.evaluation_id != evaluation_id
+            or assessment.result_id != result_id or assessment.evaluated_at != evaluated_at
+            or assessment.status != stored_status):
+        return None
+    return assessment
+
+
 def _snapshot(conn: sqlite3.Connection, data_dir: Path, mode: str) -> DashboardView:
     verify_forecast_schema(conn)
     version = conn.execute("PRAGMA user_version").fetchone()[0]
@@ -58,7 +85,7 @@ def _snapshot(conn: sqlite3.Connection, data_dir: Path, mode: str) -> DashboardV
     upcoming_rows = conn.execute(
         "SELECT f.fixture_id,f.match_id,f.revision,f.scheduled_start,f.state,"
         "m.canonical_a,m.canonical_b,t.event_key,t.edition,t.tier,t.surface,"
-        "p.model_id,p.probability_a,p.created_at "
+        "p.prediction_id,p.model_id,p.probability_a,p.created_at "
         "FROM fixture_versions f JOIN matches m ON m.match_id=f.match_id "
         "JOIN tournaments t ON t.tournament_id=m.tournament_id "
         "LEFT JOIN predictions p ON p.fixture_id=f.fixture_id "
@@ -66,15 +93,30 @@ def _snapshot(conn: sqlite3.Connection, data_dir: Path, mode: str) -> DashboardV
         "WHERE x.match_id=f.match_id AND x.source_id=f.source_id) "
         "AND f.state IN ('SCHEDULED','CANCELLED','POSTPONED') AND f.scheduled_start>=? "
         "ORDER BY f.scheduled_start,f.match_id LIMIT 500", (now,)).fetchall()
-    upcoming = tuple({
-        "fixture_id": r[0], "match_id": r[1], "revision": r[2],
-        "scheduled_start_utc": r[3], "state": r[4],
-        "player_a": r[5], "player_b": r[6], "event": r[7], "edition": r[8],
-        "tier": r[9], "surface": r[10], "model_id": r[11],
-        "probability_a": r[12] if r[11] is not None else None,
-        "forecast_at": r[13],
-        "forecast_state": ("COMMITTED" if r[11] is not None else "NO_FORECAST"),
-    } for r in upcoming_rows)
+    upcoming_rows_view = []
+    for r in upcoming_rows:
+        if r[4] in ("CANCELLED", "POSTPONED"):
+            prediction_state, model_id, probability, forecast_at = r[4], None, None, None
+        elif r[11] is None:
+            prediction_state, model_id, probability, forecast_at = "NO_FORECAST", None, None, None
+        else:
+            commitment, _ = _verified_commitment(conn, r[11])
+            if commitment is None:
+                prediction_state, model_id, probability, forecast_at = "UNVERIFIED", None, None, None
+            else:
+                prediction_state = "COMMITTED"
+                model_id = commitment.prediction.model_id
+                probability = commitment.prediction.probability_a
+                forecast_at = commitment.prediction.created_at
+        upcoming_rows_view.append({
+            "fixture_id": r[0], "match_id": r[1], "revision": r[2],
+            "scheduled_start_utc": r[3], "state": r[4],
+            "player_a": r[5], "player_b": r[6], "event": r[7], "edition": r[8],
+            "tier": r[9], "surface": r[10], "model_id": model_id,
+            "probability_a": probability, "forecast_at": forecast_at,
+            "forecast_state": prediction_state,
+        })
+    upcoming = tuple(upcoming_rows_view)
     tournament_rows = conn.execute(
         "SELECT t.tournament_id,t.event_key,t.edition,t.tier,t.surface,count(DISTINCT m.match_id) "
         "FROM tournaments t LEFT JOIN matches m ON m.tournament_id=t.tournament_id "
@@ -86,7 +128,7 @@ def _snapshot(conn: sqlite3.Connection, data_dir: Path, mode: str) -> DashboardV
     } for r in tournament_rows)
     result_rows = conn.execute(
         "SELECT p.prediction_id,p.match_id,p.fixture_id,p.model_id,p.created_at,"
-        "p.probability_a,p.commitment_digest,e.result_id,e.evaluated_at,e.status,"
+        "p.probability_a,p.commitment_digest,e.evaluation_id,e.result_id,e.evaluated_at,e.status,"
         "a.reason,a.outcome_a,r.revision,r.state,t.event_key,t.edition,m.canonical_a,m.canonical_b "
         "FROM predictions p LEFT JOIN evaluations e ON e.prediction_id=p.prediction_id "
         "LEFT JOIN matches m ON m.match_id=p.match_id "
@@ -94,14 +136,42 @@ def _snapshot(conn: sqlite3.Connection, data_dir: Path, mode: str) -> DashboardV
         "LEFT JOIN assessment_receipts a ON a.evaluation_id=e.evaluation_id "
         "LEFT JOIN result_versions r ON r.result_id=e.result_id "
         "ORDER BY p.created_at DESC,e.evaluated_at DESC LIMIT 1000").fetchall()
-    results = tuple({
-        "prediction_id": r[0], "match_id": r[1], "fixture_id": r[2],
-        "model_id": r[3], "created_at": r[4], "probability_a": r[5],
-        "commitment_digest": r[6], "result_id": r[7], "evaluated_at": r[8],
-        "status": r[9] or "PENDING", "reason": r[10] or "NOT_EVALUATED",
-        "outcome_a": r[11], "result_revision": r[12], "result_state": r[13],
-        "event": r[14], "edition": r[15], "player_a": r[16], "player_b": r[17],
-    } for r in result_rows)
+    results_view = []
+    for r in result_rows:
+        commitment, commitment_error = _verified_commitment(conn, r[0])
+        if commitment is None:
+            commitment_state = "UNVERIFIED"
+            status, reason, outcome = "UNVERIFIED", commitment_error, None
+            result_id, evaluated_at, result_revision, result_state = None, None, None, None
+            probability, digest = None, None
+        else:
+            commitment_state = "VERIFIED"
+            probability = commitment.prediction.probability_a
+            digest = commitment.prediction.commitment_digest
+            if r[7] is None:
+                status, reason, outcome = "PENDING", "NOT_EVALUATED", None
+                result_id, evaluated_at, result_revision, result_state = None, None, None, None
+            else:
+                assessment = _verified_assessment(
+                    conn, prediction_id=r[0], commitment=commitment,
+                    evaluation_id=r[7], result_id=r[8], evaluated_at=r[9], stored_status=r[10])
+                if assessment is None:
+                    status, reason, outcome = "UNVERIFIED", "INVALID_ASSESSMENT_RECEIPT", None
+                    result_id, evaluated_at, result_revision, result_state = None, None, None, None
+                else:
+                    status, reason, outcome = assessment.status, assessment.reason, assessment.outcome_a
+                    result_id, evaluated_at, result_revision, result_state = r[8], r[9], r[13], r[14]
+        results_view.append({
+            "prediction_id": r[0], "match_id": r[1], "fixture_id": r[2],
+            "model_id": commitment.prediction.model_id if commitment else r[3],
+            "created_at": r[4], "probability_a": probability,
+            "commitment_digest": digest, "commitment_state": commitment_state,
+            "result_id": result_id, "evaluated_at": evaluated_at,
+            "status": status, "reason": reason, "outcome_a": outcome,
+            "result_revision": result_revision, "result_state": result_state,
+            "event": r[15], "edition": r[16], "player_a": r[17], "player_b": r[18],
+        })
+    results = tuple(results_view)
     model_rows = conn.execute(
         "SELECT model_id,scope,training_cutoff,created_at,model_digest,config_digest "
         "FROM model_versions ORDER BY created_at,model_id").fetchall()

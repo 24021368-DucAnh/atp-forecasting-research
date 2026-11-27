@@ -60,12 +60,15 @@ def test_synthetic_demo_mode_renders_local_read_only_pages(tmp_path, monkeypatch
     assert not at.exception
     assert any("SYNTHETIC DEMO" in c.value for c in at.caption)
     assert any(m.label == "Local fixtures" and m.value == "3" for m in at.metric)
+    assert any(m.label == "Stored forecast rows" and m.value == "2" for m in at.metric)
+    assert any(m.label == "Stored recorded rows" and m.value == "1" for m in at.metric)
+    assert any("may include legacy rows" in c.value for c in at.caption)
 
     at.sidebar.radio[1].set_value("Upcoming").run()
     assert not at.exception
     assert at.dataframe and len(at.dataframe[0].value) == 1
     assert at.dataframe[0].value.columns.tolist() == [
-        "Event", "Edition", "Scheduled (UTC)", "Player A", "Player B",
+        "Event", "Edition", "Scheduled (UTC)", "State", "Player A", "Player B",
         "Forecast", "P(Player A)",
     ]
     assert not at.button
@@ -75,7 +78,7 @@ def test_synthetic_demo_mode_renders_local_read_only_pages(tmp_path, monkeypatch
     assert at.dataframe and len(at.dataframe[0].value) == 2
     assert "commitment_digest" not in at.dataframe[0].value.columns
     assert at.dataframe[0].value.columns.tolist() == [
-        "Event", "Match", "P(Player A)", "Assessment", "Outcome A",
+        "Event", "Match", "Commitment", "P(Player A)", "Assessment", "Outcome A",
     ]
     assert not at.button
 
