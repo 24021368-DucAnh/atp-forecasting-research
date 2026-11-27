@@ -200,6 +200,22 @@ def test_v5_migration_preserves_v4_receipt_and_backup(lab,tmp_path):
         assert commitment.get_commitment(reader,p.prediction.prediction_id)==p
 
 
+def test_s7_backup_restores_latest_schema_and_registered_artifact(trained,tmp_path):
+    from atp_lab.worker.recovery import create_backup_bundle, restore_backup_bundle
+    lab,candidate=trained
+    source=lab.root/candidate.artifact_name
+    assert source.is_file()
+    bundle=create_backup_bundle(lab.path,lab.root,tmp_path/"complete-backup.zip")
+    restored=restore_backup_bundle(bundle,tmp_path/"restored-data")
+    restored_db=restored/"atp_lab.sqlite"
+    restored_artifact=restored/"model_artifacts"/candidate.artifact_name
+    assert restored_db.is_file()
+    assert restored_artifact.read_bytes()==source.read_bytes()
+    with closing(open_reader(restored_db)) as conn:
+        assert conn.execute("PRAGMA user_version").fetchone()[0]==5
+        assert conn.execute("SELECT model_id FROM candidate_artifacts").fetchone()[0]==candidate.model_id
+
+
 def test_v5_partial_ddl_failure_is_atomic(lab):
     def authorize(action,arg1,arg2,db,trigger):
         if action==sqlite3.SQLITE_CREATE_TABLE and arg1=="candidate_artifacts":
