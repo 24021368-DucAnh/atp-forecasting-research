@@ -70,6 +70,16 @@ def _require_new_target(conn, fixture_id, match_id):
         raise ValueError("target already superseded or ambiguous")
 
 
+def _valid_model_probability(conn, model, values, probability):
+    if model.model_id == inference.MODEL_ID:
+        return (model == inference.synthetic_model_version(created_at=model.created_at)
+                and probability == inference._elo_p(dict(values)["overall_elo_diff"], 0.))
+    from atp_lab.training.registry import _stored_candidate, _model_version
+    candidate, _ = _stored_candidate(conn, model.model_id)
+    return (model == _model_version(candidate.receipt)
+            and abs(probability - candidate.predict(values)) <= 1e-12)
+
+
 def _get_commitment(conn, prediction_id):
     _id(prediction_id)
     p = conn.execute(
@@ -108,7 +118,6 @@ def _get_commitment(conn, prediction_id):
             or payload["fixture_id"] != prediction.fixture_id
             or payload["match_id"] != prediction.match_id
             or payload["model"] != asdict(model)
-            or model != inference.synthetic_model_version(created_at=model.created_at)
             or payload["created_at"] != prediction.created_at
             or utc_timestamp(prediction.created_at) != prediction.created_at
             or feature.cutoff != prediction.created_at
@@ -129,11 +138,11 @@ def _get_commitment(conn, prediction_id):
             or type(events) is not list or not events
             or type(payload["probability_a"]) not in (int, float)
             or payload["probability_a"] != prediction.probability_a
-            or prediction.probability_a != inference._elo_p(dict(values)["overall_elo_diff"], 0.)
+            or not _valid_model_probability(conn, model, values, prediction.probability_a)
         ):
             raise ValueError("commitment receipt mismatch")
         evidence = {
-            "version": "S4_SYNTHETIC_INFERENCE_1",
+            "version": inference._preview_version(model.model_id),
             "match_id": prediction.match_id, "fixture_id": prediction.fixture_id,
             "model": asdict(model), "feature_digest": feature.feature_digest,
             "cutoff": feature.cutoff, "probability_a": prediction.probability_a,
@@ -154,18 +163,18 @@ def get_commitment(conn: sqlite3.Connection, prediction_id: str) -> Commitment:
 
 def commit_prediction(conn: sqlite3.Connection, fixture_id: str, event_metadata,
                       *, cutoff: str, created_at: str,
-                      model_id: str = inference.MODEL_ID) -> Commitment:
+                      model_id: str = inference.MODEL_ID, model_dir=None) -> Commitment:
     """Recompute S4 under the same writer lock as all three durable inserts.
 
     S5 v1 requires equal normalized cutoff and commit clocks. These are
     synthetic claims, not independently authenticated timestamps.
     """
     limit, created = utc_timestamp(cutoff), utc_timestamp(created_at)
-    if limit != created or model_id != inference.MODEL_ID:
-        raise ValueError("equal clocks and fixed synthetic baseline required")
+    if limit != created:
+        raise ValueError("equal cutoff and creation clocks required")
     with evaluation_transaction(conn, write=True):
         preview, evidence = inference._predict_in_transaction(
-            conn, fixture_id, event_metadata, cutoff=limit)
+            conn, fixture_id, event_metadata, cutoff=limit, model_id=model_id, model_dir=model_dir)
         fid = _feature_id(preview.fixture_id, limit, preview.features.digest)
         pid = _prediction_id(preview.fixture_id, preview.model.model_id)
         feature = forecast.FeatureSnapshot(fid, preview.fixture_id, preview.features.digest, limit)

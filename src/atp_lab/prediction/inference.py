@@ -186,9 +186,14 @@ def _metadata_payload(row):
     return payload
 
 
+def _preview_version(model_id):
+    return ("S4_SYNTHETIC_INFERENCE_1" if model_id == MODEL_ID
+            else "S6_SYNTHETIC_CANDIDATE_INFERENCE_1")
+
+
 def _predict_in_transaction(conn: sqlite3.Connection, fixture_id: str,
                             event_metadata: tuple[EventMetadata, ...] | list[EventMetadata],
-                            *, cutoff: str):
+                            *, cutoff: str, model_id: str = MODEL_ID, model_dir=None):
     """Shared verified snapshot computation; never opens/closes caller transaction."""
     if not conn.in_transaction:
         raise InferenceError("active snapshot required")
@@ -199,14 +204,20 @@ def _predict_in_transaction(conn: sqlite3.Connection, fixture_id: str,
         events = _event_inventory(event_metadata, limit)
         target = _fixture(conn, fixture_id, events, limit)
         history = _history(conn, target, events, limit)
-        model = _model(conn, limit)
+        candidate = None
+        if model_id == MODEL_ID:
+            model = _model(conn, limit)
+        else:
+            from atp_lab.training.registry import _candidate_for_inference
+            model, candidate = _candidate_for_inference(conn, model_id, model_dir, limit, target)
         features = build_feature_snapshot(target, history, cutoff=limit)
-        probability = _elo_p(dict(features.values)["overall_elo_diff"], 0.)
+        probability = (_elo_p(dict(features.values)["overall_elo_diff"], 0.)
+                       if candidate is None else candidate.predict(features.values))
         selected_ids = set(features.result_ids)
         event_ids = {target.tournament_id}
         event_ids.update(row.tournament_id for row in history if row.result_id in selected_ids)
         evidence = {
-            "version": "S4_SYNTHETIC_INFERENCE_1",
+            "version": _preview_version(model.model_id),
             "match_id": target.match_id, "fixture_id": target.fixture_id,
             "model": asdict(model), "feature_digest": features.digest,
             "cutoff": limit, "probability_a": probability,
@@ -221,18 +232,21 @@ def _predict_in_transaction(conn: sqlite3.Connection, fixture_id: str,
 
 def predict_fixture(conn: sqlite3.Connection, fixture_id: str,
                     event_metadata: tuple[EventMetadata, ...] | list[EventMetadata],
-                    *, cutoff: str) -> InferencePreview:
+                    *, cutoff: str, model_id: str = MODEL_ID, model_dir=None) -> InferencePreview:
     """Compute an immutable preview in one verified read snapshot.
 
     Requires complete synthetic event/fixture/result revision inventories.
-    The fixed model is not fitted; clocks and metadata are caller claims.
+    The default fixed model is not fitted. An explicit registered S6
+    candidate requires verified local artifact bytes. Clocks and metadata
+    are caller claims.
     No prediction or feature row is committed here.
     """
     if conn.in_transaction:
         raise InferenceError("idle connection required")
     conn.execute("BEGIN")
     try:
-        preview, _ = _predict_in_transaction(conn, fixture_id, event_metadata, cutoff=cutoff)
+        preview, _ = _predict_in_transaction(conn, fixture_id, event_metadata, cutoff=cutoff,
+                                             model_id=model_id, model_dir=model_dir)
         return preview
     finally:
         if conn.in_transaction:

@@ -51,6 +51,9 @@ def _expected_objects():
 
 
 def verify_evaluation_schema(conn: sqlite3.Connection) -> None:
+    if _version(conn) == 5:
+        from .schema_v5 import verify_training_schema
+        return verify_training_schema(conn)
     if _version(conn) != VERSION or _objects(conn) != _expected_objects():
         raise ValueError("unrecognized evaluation schema")
     if conn.execute("SELECT id, marker FROM atp_lab_schema").fetchall() != [(1, _MARKER)]:
