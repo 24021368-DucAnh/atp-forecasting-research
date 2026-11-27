@@ -47,12 +47,55 @@ def test_historical_model_filter_is_read_only():
     assert not at.button
 
 
+def test_synthetic_demo_mode_renders_local_read_only_pages(tmp_path, monkeypatch):
+    from atp_lab.worker.database import initialize_database
+    from atp_lab.worker.demo import seed_demo
+
+    data_dir = tmp_path / "offline-data"
+    initialize_database(data_dir)
+    seed_demo(data_dir / "atp_lab.sqlite")
+    monkeypatch.setenv("ATP_LAB_DATA_DIR", str(data_dir))
+    at = run_app()
+    at.sidebar.radio[0].set_value("SYNTHETIC_DEMO").run()
+    assert not at.exception
+    assert any("SYNTHETIC DEMO" in c.value for c in at.caption)
+    assert any(m.label == "Local fixtures" and m.value == "3" for m in at.metric)
+
+    at.sidebar.radio[1].set_value("Upcoming").run()
+    assert not at.exception
+    assert at.dataframe and len(at.dataframe[0].value) == 1
+    assert at.dataframe[0].value.columns.tolist() == [
+        "Event", "Edition", "Scheduled (UTC)", "Player A", "Player B",
+        "Forecast", "P(Player A)",
+    ]
+    assert not at.button
+
+    at.sidebar.radio[1].set_value("Results").run()
+    assert not at.exception
+    assert at.dataframe and len(at.dataframe[0].value) == 2
+    assert "commitment_digest" not in at.dataframe[0].value.columns
+    assert at.dataframe[0].value.columns.tolist() == [
+        "Event", "Match", "P(Player A)", "Assessment", "Outcome A",
+    ]
+    assert not at.button
+
+    at.sidebar.radio[1].set_value("Tournaments").run()
+    assert not at.exception and len(at.dataframe[0].value) == 3
+    at.sidebar.radio[1].set_value("Model Lab").run()
+    assert not at.exception
+    assert at.dataframe[0].value.columns.tolist() == [
+        "Model", "Scope", "Training cutoff", "Created",
+    ]
+    at.sidebar.radio[1].set_value("Data Health").run()
+    assert not at.exception and len(at.dataframe[0].value) == 7
+
+
 @pytest.mark.parametrize("page", [
     "Upcoming", "Tournaments", "Results", "Model Lab", "Data Health",
 ])
 def test_locked_pages_do_not_invent_live_data(page):
     at = run_app()
-    at.sidebar.radio[0].set_value(page).run()
+    at.sidebar.radio[1].set_value(page).run()
     assert not at.exception
     assert any(h.value == page for h in at.header)
     assert any("LOCKED" in item.value for item in at.info)

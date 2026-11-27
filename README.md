@@ -1,5 +1,13 @@
 # ATP Selective Forecasting — V0.2.1 (Windows-ready, ATP index parser fix)
 
+## V4 offline local research dashboard (S7)
+
+S7 adds a six-page, read-only local dashboard, explicit synthetic demo seed,
+worker status, and verified no-clobber backup/restore. Real data, network
+ingestion, scheduling, model training from the dashboard, and model activation
+remain locked. See [`docs/V4_S7_LOCAL_DEPLOYMENT.md`](docs/V4_S7_LOCAL_DEPLOYMENT.md)
+for Windows setup and operation. V4 uses its own `.venv-v4` environment.
+
 **Status:** research-only Python project, V0.2.1 hotfix. The `ATP` field in tennis-data CSV denotes a season-local tournament ordinal, not the ATP-tour type. V0.2 wrongly discarded all records except `ATP=1`. V0.2.1 accepts valid positive tournament ordinal IDs and classifies tiers through `Series` only. See `docs/BUGFIX_V0.2.1.md`.
 
 **Status:** research-only Python project. The previous V0.1.1 strict, fail-closed paper selection gate is preserved; V0.2 adds an offline ATP data / pre-match feature / XGBoost calibration pipeline. **No real-money actions, no live T−60 odds, no validated market edge.**
