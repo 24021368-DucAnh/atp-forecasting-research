@@ -139,6 +139,7 @@ da8d4cc2eaa6c7d85960a392226c5978feeca23acb43729479be39fc9db104df  docs/superpowe
 e5521007a64bf2e786c45bc2d9fcb87969d23ceb5c9fe249d3371bddd541d46f  docs/superpowers/plans/2026-11-26-v4-s4-temporal.md
 00bdce98b6896fc235fd8cee01252f83fe25f458317de04f70b23438e1df284a  docs/superpowers/plans/2026-11-27-v4-s5-evaluation.md
 f27b36daa0d1eca73894d10576cc0ce448429620629dc13a92e56c072a75cc04  docs/superpowers/plans/2026-11-27-v4-s6-training.md
+845ca65ad4ebf7a57c20351ed850870c2518977bcd43139c02b0a7ae16df6451  docs/superpowers/plans/2026-11-28-v4-s8-multisource-plan.md
 a7c4f6e4fc5e6b14240e7f4dc860808a28654499d96d3980c1edc5b571b1d10c  docs/superpowers/specs/2026-11-23-atp-input-gate-design.md
 d723402570040251c7bef4767d79625bb1b6f35d70e2ba70dba157d806a99941  docs/superpowers/specs/2026-11-23-p1-inventory-anomaly-review.md
 f744d79d7ba754f0b3074a6bb403f581b96d7b2749a4b956f2e8a9373f5638d4  docs/superpowers/specs/2026-11-23-p1-legacy-crosswalk.md
@@ -174,6 +175,7 @@ a729e584ae99ac909b3ce5dcf74705d696da729c529d57ea392daa28bcf7b592  docs/superpowe
 8469cd3caeff2cecc61f125f6adf4d90cbe99ecf36db6ccdf424c5f3fb1fae3d  docs/superpowers/specs/2026-11-25-p2-4-fixed-ablation.md
 c8450808b40f4c4411c11dc0e2a0f7a21a4594f0cbc50ae1f34667e81ff9cbbb  docs/superpowers/specs/2026-11-25-p2-5-synthetic-boundary.md
 3a7570699e8716df99fc79374ed0dbad5eb1107e317bcdacce124ffa705d5f34  docs/superpowers/specs/2026-11-26-v4-local-dashboard-design.md
+ede97326cfde18f22352acc04b9d9550c216c4b66ebf718603f2b281d10a9ea7  docs/superpowers/specs/2026-11-28-v4-s8-multisource-design.md
 a373c07aa0e99f1b5e591972b534840f440cfe8ee2442abddf022366ba547717  examples/historical_toy.csv
 e2e1a9c3aad7f0905cb90fd934b018a566eea0a04941c9c04ceb656db4a6e640  examples/research_synthetic.csv
 3d0b165b6905fcf0f784ec3f3bf49e289c860d4e11e669e3c3e941e71e4ae57a  examples/synthetic_unvalidated.json
