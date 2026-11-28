@@ -13,7 +13,9 @@ import re
 from .tml_preflight import HistoricalCandidate, SnapshotInspection
 
 _ROUNDS = ("R128", "R64", "R32", "R16", "QF", "SF", "F")
-_TIERS = {"ATP_250": "A", "ATP_500": "A", "MASTERS_1000": "M", "GRAND_SLAM": "G"}
+# A alone is ambiguous; numeric TML levels must match the reviewed tier.
+_TIERS = {"ATP_250": ("A", "250"), "ATP_500": ("A", "500"),
+          "MASTERS_1000": ("M",), "GRAND_SLAM": ("G",)}
 _MAX_ROWS = 256
 
 
@@ -236,7 +238,7 @@ def audit_draw(tml: SnapshotInspection, scope: DrawScope, reference: ReferenceDr
             reason = "TML_QUARANTINED" if link.tml_match_num in tml.quarantined_match_numbers else "TML_NOT_OBSERVED"
         elif b is None:
             reason = "REFERENCE_NOT_OBSERVED"
-        elif a.tournament_week != scope.event_week or a.surface != scope.surface or a.provider_level != _TIERS[scope.tier]:
+        elif a.tournament_week != scope.event_week or a.surface != scope.surface or a.provider_level not in _TIERS[scope.tier]:
             reason = "EVENT_METADATA_CONFLICT"
         elif a.winner_id not in players or a.loser_id not in players:
             reason = "MISSING_PLAYER_ALIAS"

@@ -78,7 +78,9 @@ def _reason(row: dict, inspected: datetime) -> str | None:
     if (not _ID.fullmatch(row["winner_id"]) or not _ID.fullmatch(row["loser_id"])
             or row["winner_id"] == row["loser_id"]):
         return "INVALID_PLAYER_IDS"
-    if row["tourney_level"] not in ("A", "G", "M", "F") or row["round"] not in _ROUNDS:
+    # TML publishes both legacy A and numeric 250/500 levels; keep the raw
+    # provider code. The reviewed draw scope decides the official tier.
+    if row["tourney_level"] not in ("A", "G", "M", "F", "250", "500") or row["round"] not in _ROUNDS:
         return "UNSUPPORTED_SCOPE"
     if row["surface"].upper() not in ("HARD", "CLAY", "GRASS"):
         return "UNKNOWN_SURFACE"
